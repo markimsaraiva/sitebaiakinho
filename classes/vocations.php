@@ -79,29 +79,43 @@ class Vocations implements Iterator, Countable
 			else
 				new Error_Critic('#C', 'Cannot load vocation. <b>id</b> or/and <b>name</b> parameter is missing');
 		}
+		/*
+		 * Set promotion level and base vocation id
+		*/
 		foreach($_tmp_vocations as $_tmp_vocation)
 		{
+			$_tmp_vocation['promotion'] = 0;
+			$_tmp_vocation['base_id'] = $_tmp_vocation['id'];
+			$promotion_voc = $_tmp_vocation;
+			while($promotion_voc['fromvoc'] != $promotion_voc['id'])
+			{
+				$promotion_voc = $_tmp_vocations[$promotion_voc['fromvoc']];
+				$_tmp_vocation['base_id'] = $promotion_voc['id'];
+				$_tmp_vocation['promotion']++;
+			}
 			$this->vocations[$_tmp_vocation['id']] = new Vocation($_tmp_vocation);
 		}
 	}
 	/*
 	 * Get vocation
 	*/
-	public function getVocation($voc_id)
+	public function getVocation($base_id, $promotion = 0)
 	{
-		if(isset($this->vocations[$voc_id]))
-			return $this->vocations[$voc_id];
+		foreach($this->vocations as $vocation)
+			if($vocation->getBaseId() == $base_id && $vocation->getPromotion() == $promotion)
+				return $vocation;
 		return false;
 	}
 	/*
 	 * Get vocation name without getting vocation
 	*/
-	public function getVocationName($voc_id)
+	public function getVocationName($base_id, $promotion = 0)
 	{
-		if($vocs = self::getVocation($voc_id))
+		if($vocs = self::getVocation($base_id, $promotion))
 			return $vocs->getName();
-		return 'vocation does not exist';
+		return false;
 	}
+
 
     public function current()
     {

@@ -14,7 +14,7 @@ if($logged)
     $color[] = green; // for >50% 
     $time = time(); 
     $POLLS = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls').''); 
-    $level = 120; // need level to vote 
+    $level = 20; // need level to vote 
 
     function color($number, $color1, $color2, $color3, $color4) 
     { 
@@ -84,7 +84,7 @@ if($logged)
         { 
             if($_REQUEST['id'] == $POLL['id']) 
             { 
-                $ANSWERS = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.addslashes(htmlspecialchars(trim($_REQUEST['id']))).' order by `answer_id`'); 
+                $ANSWERS = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' WHERE `poll_id` = '.addslashes(htmlspecialchars(trim($_REQUEST['id']))).' order by `answer_id`'); 
                 $votes_all = $POLL['votes_all']; 
                  
                 if($votes_all == 0) 
@@ -169,7 +169,7 @@ if($logged)
                             $bgcolor = $light; 
                         } 
                         $x=0; 
-                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.$answer['answer'].'</td><td width=20%><img src="bar.php?long='.(int) $percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>'; 
+                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.$answer['answer'].'</td><td width=20%><img src="pages/bar.php?long='.(int)$percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>'; 
                         $i++; 
                     } 
                     $main_content .= '</table>'; 
@@ -286,72 +286,6 @@ if($logged)
 } 
 else 
 { 
-        $main_content .= '
-			Please enter your account number and your password.<br/>
-			<a href="?subtopic=createaccount" >Create an account</a> if you do not have one yet.<br/>
-			<br/>
-			<form action="?subtopic=polls&id='.$_REQUEST['id'].'" method="post" >
-				<div class="TableContainer" >
-					<table class="Table1" cellpadding="0" cellspacing="0" >
-						<div class="CaptionContainer" >
-							<div class="CaptionInnerContainer" > 
-								<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-								<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-								<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-								<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>								
-								<div class="Text" >Account Login</div>
-								<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-								<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-								<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-								<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-							</div>
-						</div>
-						<tr>
-							<td>
-								<div class="InnerTableContainer" >
-									<table style="width:100%;" >
-										<tr>
-											<td class="LabelV" ><span >Account Number:</span></td>
-											<td style="width:100%;" ><input type="password" name="account_login" SIZE="10" maxlength="10" ></td>
-										</tr>
-										<tr>
-											<td class="LabelV" ><span >Password:</span></td>
-											<td><input type="password" name="password_login" size="30" maxlength="29" ></td>
-										</tr>
-									</table>
-								</div>
-							</table>
-						</div>
-					</td>
-				</tr>
-				<br/>
-				<table width="100%" >
-				<tr align="center" >
-					<td><table border="0" cellspacing="0" cellpadding="0" >
-						<tr>
-							<td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/global/buttons/_sbutton_submit.gif" >
-									</div>
-								</div>
-							</td>						
-						<tr>
-					</form>
-				</table>
-			</td>
-			<td><table border="0" cellspacing="0" cellpadding="0" >
-					<form action="?subtopic=lostaccount" method="post" >
-						<tr>
-							<td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Account lost?" alt="Account lost?" src="'.$layout_name.'/images/global/buttons/_sbutton_accountlost.gif" >
-									</div>
-								</div>
-							</td>
-						</tr>
-					</form>
-				</table>
-			</td>
-		</tr>
-	</table>'; 
-}
+        $main_content .= 'Please enter your account number and your password.<br/><a href="?subtopic=createaccount" >Create an account</a> if you do not have one yet.<br/><br/><form action="?subtopic=polls" method="post" ><div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Account Login</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td class="LabelV" ><span >Account Number:</span></td><td style="width:100%;" ><input type="password" name="account_login" SIZE="10" maxlength="10" ></td></tr><tr><td class="LabelV" ><span >Password:</span></td><td><input type="password" name="password_login" size="30" maxlength="29" ></td></tr>          </table>        </div>  </table></div></td></tr><br/><table width="100%" ><tr align="center" ><td><table border="0" cellspacing="0" cellpadding="0" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif" ></div></div></td><tr></form></table></td><td><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=lostaccount" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Account lost?" alt="Account lost?" src="'.$layout_name.'/images/buttons/_sbutton_accountlost.gif" ></div></div></td></tr></form></table></td></tr></table>'; 
+}     
+?>

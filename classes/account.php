@@ -8,8 +8,8 @@ class Account extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'password' => null, 'premdays' => null, 'coins' => null, 'lastday' => null, 'email' => null, 'key' => null, 'create_ip' => null, 'creation' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'birth_date' => null, 'gender' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null, 'vote' => null, 'loyalty_points' => null, 'guild_points' => null);
-	public static $fields = array('id', 'name', 'password', 'premdays', 'coins', 'lastday', 'email', 'key', 'create_ip', 'creation', 'page_access', 'location', 'rlname','birth_date', 'gender', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag', 'vote', 'loyalty_points', 'guild_points');
+	public $data = array('name' => null, 'vip_time' => null, 'guild_points' => null, 'password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null, 'vote' => null);
+	public static $fields = array('id', 'vip_time', 'guild_points', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag', 'vote');
 	public $players;
 	public $playerRanks;
 	public $guildAccess;
@@ -83,20 +83,76 @@ class Account extends ObjectData
 		}
 		return $this->players;
 	}
-	
+
+	public function getGuildRanks($forceReload = false)
+	{
+		if(!isset($this->playerRanks) || $forceReload)
+		{
+			$this->playerRanks = new DatabaseList('AccountGuildRank');
+			$filterAccount = new SQL_Filter(new SQL_Field('account_id', 'players'), SQL_Filter::EQUAL, $this->getID());
+			$filterPlayer = new SQL_Filter(new SQL_Field('rank_id', 'players'), SQL_Filter::EQUAL, new SQL_Field('id', 'guild_ranks'));
+			$filterGuild = new SQL_Filter(new SQL_Field('guild_id', 'guild_ranks'), SQL_Filter::EQUAL, new SQL_Field('id', 'guilds'));
+			$filter = new SQL_Filter($filterAccount, SQL_Filter::CRITERIUM_AND, $filterPlayer);
+			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterGuild);
+			$this->playerRanks->setFilter($filter);
+		}
+		return $this->playerRanks;
+	}
+
+	public function loadGuildAccess($forceReload = false)
+	{
+		if(!isset($this->guildAccess) || $forceReload)
+		{
+			$this->guildAccess = array();
+			foreach($this->getGuildRanks($forceReload) as $rank)
+				if($rank->getOwnerID() == $rank->getPlayerID())
+					$this->guildAccess[$rank->getGuildID()] = Guild::LEVEL_OWNER;
+				elseif(!isset($this->guildAccess[$rank->getGuildID()]) || $rank->getLevel() > $this->guildAccess[$rank->getGuildID()])
+					$this->guildAccess[$rank->getGuildID()] = $rank->getLevel();
+		}
+	}
+
+	public function isInGuild($guildId, $forceReload = false)
+	{
+		$this->loadGuildAccess($forceReload);
+		return isset($this->guildAccess[$guildId]);
+	}
+
+	public function getGuildLevel($guildId, $forceReload = false)
+	{
+		$this->loadGuildAccess($forceReload);
+		if(isset($this->guildAccess[$guildId]))
+			return $this->guildAccess[$guildId];
+		else
+			return 0;
+	}
+
 	public function unban()
 	{
-        $this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName('account_bans') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('account_id') . ' = ' . $this->getDatabaseHandler()->quote($this->data['id']));
-
-        unset($this->bans);
+		$bans = new DatabaseList('Ban');
+		$filterType = new SQL_Filter(new SQL_Field('type'), SQL_Filter::EQUAL, Ban::TYPE_ACCOUNT);
+		$filterValue = new SQL_Filter(new SQL_Field('value'), SQL_Filter::EQUAL, $this->data['id']);
+		$filterActive = new SQL_Filter(new SQL_Field('active'), SQL_Filter::EQUAL, 1);
+		$filter = new SQL_Filter($filterType, SQL_Filter::CRITERIUM_AND, $filterValue);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterActive);
+		$bans->setFilter($filter);
+		foreach($bans as $ban)
+		{
+			$ban->setActive(0);
+			$ban->save();
+		}
 	}
 
 	public function loadBans($forceReload = false)
 	{
 		if(!isset($this->bans) || $forceReload)
 		{
-			$this->bans = new DatabaseList('AccountBan');
-			$filter = new SQL_Filter(new SQL_Field('account_id'), SQL_Filter::EQUAL, $this->data['id']);
+			$this->bans = new DatabaseList('Ban');
+			$filterType = new SQL_Filter(new SQL_Field('type'), SQL_Filter::EQUAL, Ban::TYPE_ACCOUNT);
+			$filterValue = new SQL_Filter(new SQL_Field('value'), SQL_Filter::EQUAL, $this->data['id']);
+			$filterActive = new SQL_Filter(new SQL_Field('active'), SQL_Filter::EQUAL, 1);
+			$filter = new SQL_Filter($filterType, SQL_Filter::CRITERIUM_AND, $filterValue);
+			$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterActive);
 			$this->bans->setFilter($filter);
 		}
 	}
@@ -104,23 +160,28 @@ class Account extends ObjectData
 	public function isBanned($forceReload = false)
 	{
 		$this->loadBans($forceReload);
-		return count($this->bans) > 0;
+		$isBanned = false;
+		foreach($this->bans as $ban)
+		{
+			if($ban->getExpires() <= 0 || $ban->getExpires() > time())
+				$isBanned = true;
+		}
+		return $isBanned;
 	}
 
 	public function getBanTime($forceReload = false)
 	{
 		$this->loadBans($forceReload);
 		$lastExpires = 0;
-		$now = date('Y-m-d h:i:s');
-		foreach($this->bans->data as $ban)
+		foreach($bans as $ban)
 		{
-			if($ban['expires_at'] <= $now)
+			if($ban->getExpires() <= 0)
 			{
 				$lastExpires = 0;
 				break;
 			}
-			if($ban['expires_at'] > $now && $ban['expires_at'] > $lastExpires)
-				$lastExpires = $ban['expires_at'];
+			if($ban->getExpires() > time() && $ban->getExpires() > $lastExpires)
+				$lastExpires = $ban->getExpires();
 		}
 		return $lastExpires;
 	}
@@ -149,26 +210,44 @@ class Account extends ObjectData
 	public function getMail(){return $this->data['email'];}
 	public function setKey($value){$this->data['key'] = $value;}
 	public function getKey(){return $this->data['key'];}
+	public function setGroupID($value){$this->data['group_id'] = $value;}
+	public function getGroupID(){return $this->data['group_id'];}
+/*
+ * Custom AAC fields
+ * create_ip , INT, default 0
+ * create_date , INT, default 0
+ * premium_points , INT, default 0
+ * page_access, INT, default 0
+ * location, VARCHAR(255), default ''
+ * rlname, VARCHAR(255), default ''
+*/
 	public function setCreateIP($value){$this->data['create_ip'] = $value;}
 	public function getCreateIP(){return $this->data['create_ip'];}
-	public function setCreateDate($value){$this->data['creation'] = $value;}
-	public function getCreateDate(){return $this->data['creation'];}
-	public function setPremiumPoints($value){$this->data['coins'] = $value;}
-	public function getPremiumPoints(){return $this->data['coins'];}
+	public function setCreateDate($value){$this->data['create_date'] = $value;}
+	public function getCreateDate(){return $this->data['create_date'];}
+	public function setPremiumPoints($value){$this->data['premium_points'] = $value;}
+	public function getPremiumPoints(){return $this->data['premium_points'];}
+	public function setVipTime($value){$this->data['vip_time'] = $value;}
+
+	public function getVipTime(){return $this->data['vip_time'];}
+
+	public function setGuildPoints($value){$this->data['guild_points'] = $value;}
+
+	public function getGuildPoints(){return $this->data['guild_points'];}
 	public function setPageAccess($value){$this->data['page_access'] = $value;}
 	public function getPageAccess(){return $this->data['page_access'];}
+	
 	public function setLocation($value){$this->data['location'] = $value;}
 	public function getLocation(){return $this->data['location'];}
-	public function setLoyalty($value){$this->data['loyalty_points'] = $value;}
-	public function getLoyalty(){return $this->data['loyalty_points'];}
 	public function setRLName($value){$this->data['rlname'] = $value;}
 	public function getRLName(){return $this->data['rlname'];}
-	public function setBirthDate($value){$this->data['birth_date'] = $value;}
-	public function getBirthDate(){return $this->data['birth_date'];}
-	public function setGender($value){$this->data['gender'] = $value;}
-	public function getGender(){return $this->data['gender'];}
 	public function setFlag($value){$this->data['flag'] = $value;}
 	public function getFlag(){return $this->data['flag'];}
+/*
+ * for compability with old scripts
+*/
+	public function getGroup(){return $this->getGroupID();}
+	public function setGroup($value){$this->setGroupID($value);}
 	public function getEMail(){return $this->getMail();}
 	public function setEMail($value){$this->setMail($value);}
 	public function getPlayersList(){return $this->getPlayers();}

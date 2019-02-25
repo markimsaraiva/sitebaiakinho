@@ -1,372 +1,116 @@
 <?php
+if(!defined('INITIALIZED'))
+	exit;
 
-$list = 5;
-if (isset($_REQUEST['list'])) {
-    $list = $_REQUEST['list'];
-} elseif (isset($_POST['list'])) {
-    $list = $_POST['list'];
-}
+$list = 'experience';
+if(isset($_REQUEST['list']))
+	$list = $_REQUEST['list'];
 
 $page = 0;
-if (isset($_REQUEST['page'])) {
-    $page = min(50, $_REQUEST['page']);
-}elseif (isset($_POST['page'])){
-    $page = $_POST['page'];
-}
-$vocations = [
-    10 => "(all)",
-    15 => "No Vocation",
-    2 => "Druids",
-    4 => "Knights",
-    3 => "Paladins",
-    1 => "Sorcerers"
-];
-$vocations_equival = '';
-$vocation = 10;
-if (isset($_REQUEST['vocation'])) {
-    $vocation = $_REQUEST['vocation'];
-} elseif (isset($_POST['profession'])) {
-    $vocation = $_POST['profession'];
-}
+if(isset($_REQUEST['page']))
+	$page = min(50, $_REQUEST['page']);
 
-$lists = [
-//    1 => "Achievements",
-    2 => "Axe Fighting",
-    3 => "Club Fighting",
-    4 => "Distance Fighting",
-    5 => "Experience Points",
-    6 => "Fishing",
-    7 => "First Fighting",
-//    8 => "Loyalty Points",
-    9 => "Magic Level",
-    10 => "Shielding",
-    11 => "Sword Fighting"
-];
-//$list_order = '';
-switch ($list) {
-    case 1:
-        $list = 5;
-//        $list_order = '';
-        break;
-    case 2:
-        $list_order = 'skill_axe';
-        break;
-    case 3:
-        $list_order = 'skill_club';
-        break;
-    case 4:
-        $list_order = 'skill_dist';
-        break;
-    case 5:
-        $list_order = 'experience';
-        break;
-    case 6:
-        $list_order = 'skill_fishing';
-        break;
-    case 7:
-        $list_order = 'skill_fist';
-        break;
-    case 8:
-        $list = 5;
-//        $list_order = '';
-        break;
-    case 9:
-        $list_order = 'maglevel';
-        break;
-    case 10:
-        $list_order = 'skill_shielding';
-        break;
-    case 11:
-        $list_order = 'skill_sword';
-        break;
-    default:
-        $list_order = 'experience';
-        $list = 5;
-        break;
+$vocation = '';
+if(isset($_REQUEST['vocation']))
+	$vocation = $_REQUEST['vocation'];
+
+switch($list)
+{
+	case "fist":
+		$id=Highscores::SKILL_FIST;
+		$list_name='Fist Fighting';
+		break;
+	case "club":
+		$id=Highscores::SKILL_CLUB;
+		$list_name='Club Fighting';
+		break;
+	case "sword":
+		$id=Highscores::SKILL_SWORD;
+		$list_name='Sword Fighting';
+		break;
+	case "axe":
+		$id=Highscores::SKILL_AXE;
+		$list_name='Axe Fighting';
+		break;
+	case "distance":
+		$id=Highscores::SKILL_DISTANCE;
+		$list_name='Distance Fighting';
+		break;
+	case "shield":
+		$id=Highscores::SKILL_SHIELD;
+		$list_name='Shielding';
+		break;
+	case "fishing":
+		$id=Highscores::SKILL_FISHING;
+		$list_name='Fishing';
+		break;
+	case "magic":
+		$id=Highscores::SKILL__MAGLEVEL;
+		$list_name='Magic';
+		break;
+	default:
+		$id=Highscores::SKILL__LEVEL;
+		$list_name='Experience';
+		break;
 }
-
-switch ($vocation) {
-    case 15:
-        $vocation = 0;
-        break;
-    case 1:
-        $vocations_equival = 5;
-        break;
-    case 2:
-        $vocations_equival = 6;
-        break;
-    case 3:
-        $vocations_equival = 7;
-        break;
-    case 4:
-        $vocations_equival = 8;
-        break;
-    default:
-        $vocations_equival = '';
-        break;
+if(count($config['site']['worlds']) > 1)
+{
+	foreach($config['site']['worlds'] as $idd => $world_n)
+	{
+		if($idd == (int) $_REQUEST['world'])
+		{
+			$world_id = $idd;
+			$world_name = $world_n;
+		}
+	}
 }
-
-
-$limit = 25;  //limite players por de pagina
-$offset = 0 * $limit;
-$limitOffsetAll = 300; //Limita a quantidade maxima de players no rank
-$grupacc = "1,2,3,6"; //Seleciona os grupos de class que irão aparecer no rank
-if ($_REQUEST['page'] && $_REQUEST['page'] > 0) {
-    $offset = (intval($_REQUEST['page']) - 1) * $limit;
+if(!isset($world_id))
+{
+	$world_id = 0;
+	$world_name = $config['server']['serverName'];
 }
-if ($list_order) {
-    if ($vocation == 0) {
-        $allquery = $SQL->query("SELECT * FROM `players` WHERE `vocation` = 0 AND `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
-        $tr = count($allquery);
-        $tp = $tr / $limit;
-        if ($offset > $tr) {
-            $offset = ($tp * $limit) - 1;
-            //var_dump($offset);
-        }
-        $skills = $SQL->query("SELECT * FROM `players` WHERE `vocation` = 0 AND `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
-    } elseif ($vocations_equival) {
-        $allquery = $SQL->query("SELECT * FROM `players` WHERE `vocation` IN ({$vocation},{$vocations_equival}) and `account_id`!= 1 AND `deleted` = 0 AND `group_id` IN ({$grupacc}) ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
-        $tr = count($allquery);
-        $tp = $tr / $limit;
-        if ($offset > $tr) {
-            $offset = ($tp * $limit) - 1;
-            //var_dump($offset);
-        }
-        $skills = $SQL->query("SELECT * FROM `players` WHERE `vocation` IN ({$vocation},{$vocations_equival}) and `account_id`!= 1 AND `deleted` = 0 AND `group_id` IN ({$grupacc}) ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
-    } else {
-        $allquery = $SQL->query("SELECT * FROM `players` WHERE `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
-        $tr = count($allquery);
-        $tp = $tr / $limit;
-        if ($offset > $tr) {
-            $offset = ($tp * $limit) - 1;
-            //var_dump($offset);
-        }
-        $skills = $SQL->query("SELECT * FROM `players` WHERE `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
-    }
+if(count($config['site']['worlds']) > 1)
+{
+	$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
+	<FORM ACTION="" METHOD=get><INPUT TYPE="hidden" NAME="subtopic" VALUE="highscores"><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>World Selection</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
+	<TABLE BORDER=0 CELLPADDING=1><TR><TD>Best players on world:</TD><TD><SELECT SIZE="1" NAME="world">';
+	foreach($config['site']['worlds'] as $wid => $world_n)
+	{
+		if($wid == $world_id)
+			$main_content .= '<OPTION VALUE="'.htmlspecialchars($wid).'" selected="selected">'.htmlspecialchars($world_n).'</OPTION>';
+		else
+			$main_content .= '<OPTION VALUE="'.htmlspecialchars($wid).'">'.htmlspecialchars($world_n).'</OPTION>';
+	}
+	$main_content .= '</SELECT> </TD><TD><INPUT TYPE="image" NAME="Submit" ALT="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif">
+		</TD></TR></TABLE></TABLE></FORM></TABLE>';
 }
-$main_content = '
-   <form action="./?subtopic=highscores" method="POST">
-      <div class="TableContainer">
-         <div class="CaptionContainer">
-            <div class="CaptionInnerContainer">
-               <span class="CaptionEdgeLeftTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionBorderTop" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionVerticalLeft" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        
-               <div class="Text">Highscores Filter</div>
-               <span class="CaptionVerticalRight" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        <span class="CaptionBorderBottom" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>      
-            </div>
-         </div>
-         <table class="Table1" cellpadding="0" cellspacing="0">
-            <tbody>
-               <tr>
-                  <td>
-                     <div class="InnerTableContainer">
-                        <table style="width:100%;">
-                           <tbody>
-                              <tr>
-                                 <td>World:</td>
-                                 <td>
-                                    <select size="1" name="world" style="width:165px;">
-                                       <option value="' . $config["server"]["serverName"] . '" selected="selected">' . $config["server"]["serverName"] . '</option>
-                                    </select>
-                                 </td>
-                                 <td rowspan="3">
-                                    <div class="BigButton" style="background-image:url(' . $layout_name . '/images/global/buttons/sbutton.gif)">
-                                       <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
-                                          <div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/global/buttons/sbutton_over.gif);"></div>
-                                          <input class="ButtonText" type="image" name="Submit" alt="Submit" src="' . $layout_name . '/images/global/buttons/_sbutton_submit.gif">
-                                       </div>
-                                    </div>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td>Vocation:</td>
-                                 <td>
-                                    <select name="profession">';
-foreach ($vocations as $key => $vocations) {
-    if ($vocation == 0) {
-        $vocation = 15;
-    }
-    $main_content .= "
-                                       <option value=" . ($key ? $key : '') . " " . ($key == $vocation ? 'selected=selected' : '') . ">{$vocations}</option>
-    ";
+$offset = $page * 50;
+$skills = new Highscores($id, 50, $page, $world_id, $vocation);
+$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD><CENTER><H2>Ranking for '.htmlspecialchars($list_name).' on '.htmlspecialchars($world_name).'</H2></CENTER><BR>';
+
+$main_content .= '<br><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></TABLE><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=whites><B><centeR>#</center></B></TD><TD CLASS=whites><b>Outfit</b></TD><TD WIDTH=75% CLASS=whites><B>Name</B></TD><TD WIDTH=15% CLASS=whites><b><center>Level</center></B></TD>';
+if($list == "experience")
+	$main_content .= '<TD CLASS=whites><b><center>Experience</center></B></TD>';
+//$main_content .= '</TR><TR>';
+$main_content .= '</TR>';
+$number_of_rows = 0;
+foreach($skills as $skill)
+{
+	if($list == "magic")
+		$value = $skill->getMagLevel();
+	elseif($list == "experience")
+		$value = $skill->getLevel();
+	else
+		$value = $skill->getScore();
+	$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
+	$main_content .= '<tr bgcolor="'.$bgcolor.'"><td style="text-align:center">'.($offset + $number_of_rows).'.</td><TD><img src="' . $config['site']['outfit_images_url'] . '?id=' . $skill->getLookType() . '&addons=' . $skill->getLookAddons() . '&head=' . $skill->getLookHead() . '&body=' . $skill->getLookBody() . '&legs=' . $skill->getLookLegs() . '&feet=' . $skill->getLookFeet() . '" alt="" /></TD><td><a href="?subtopic=characters&name='.urlencode($skill->getName()).'">'.($skill->getOnline()>0 ? "<font color=\"green\">".htmlspecialchars($skill->getName())."</font>" : "<font color=\"red\">".htmlspecialchars($skill->getName())."</font>").'</a><br><small>'.$skill->getLevel().' '.htmlspecialchars(Website::getVocationName($skill->getVocation(), $skill->getPromotion())).'</small></td><td><center>'.$value.'</center></td>';
+	if($list == "experience")
+		$main_content .= '<td><center>'.$skill->getExperience().'</center></td>';
+	$main_content .= '</tr>';
 }
-
-
-$main_content .= '
-                                    </select>
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td>Category:</td>
-                                 <td>
-                                    <select name="list">';
-foreach ($lists as $key => $lista) {
-    $main_content .= '<option value="' . $key . '" ' . ($key == $list ? "selected=selected" : "") . '>' . $lista . '</option>';
-}
-$main_content .= '
-                                    </select>
-                                 </td>
-                              </tr>
-                           </tbody>
-                        </table>
-                     </div>
-                  </td>
-               </tr>
-            </tbody>
-         </table>
-      </div>
-   </form>
-   <p><i>Skills displayed in the Highscores do not include any bonuses (loyalty, equipment etc.).</i></p>
-   <div class="TableContainer">
-      <div class="CaptionContainer">
-         <div class="CaptionInnerContainer">
-            <span class="CaptionEdgeLeftTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionBorderTop" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionVerticalLeft" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        
-            <div class="Text">Highscores</div>
-            <span class="CaptionVerticalRight" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        <span class="CaptionBorderBottom" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>      
-         </div>
-      </div>
-      <table class="Table3" cellpadding="0" cellspacing="0">
-         <tbody>
-            <tr>
-               <td>
-                  <div class="InnerTableContainer">
-                     <table style="width:100%;">
-                        <tbody>
-                           <tr>
-                              <td>
-                                 <div class="TableShadowContainerRightTop">
-                                    <div class="TableShadowRightTop" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-rt.gif);"></div>
-                                 </div>
-                                 <div class="TableContentAndRightShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-rm.gif);">
-                                    <div class="TableContentContainer">
-                                       <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                                          <tbody>';
-if ($list == 5) {
-    $main_content .= '                        <tr class="LabelH">
-                                                <td style="width: 5%;">Rank</td>
-                                                <td style="width: 45%;">Name</td>
-                                                <td style="width: 20%;">Vocation</td>
-                                                <td style="width: 10%; text-align: right;">Level</td>
-                                                <td style="width: 20%; text-align: right;">Points</td>
-                                             </tr>';
-} else {
-    $main_content .= '                        <tr class="LabelH">
-                                                <td style="width: 5%;">Rank</td>
-                                                <td style="width: 45%;">Name</td>
-                                                <td style="width: 20%;">Vocation</td>
-                                                <td style="width: 10%; text-align: right;">Level</td>
-                                                <!--<td style="width: 20%; text-align: right;">Points</td>-->
-                                             </tr>';
-}
-
-if(count($skills) != 0){
-
-    foreach ($skills as $skill) {
-        $voc = $skill['vocation'];
-        switch ($voc) {
-            case 0:
-                $voc = "No Vocation";
-                break;
-            case 1:
-                $voc = "Sorcerer";
-                break;
-            case 2:
-                $voc = "Druid";
-                break;
-            case 3:
-                $voc = "Paladin";
-                break;
-            case 4:
-                $voc = "Knight";
-                break;
-            case 5:
-                $voc = "Master Sorcerer";
-                break;
-            case 6:
-                $voc = "Elder Druid";
-                break;
-            case 7:
-                $voc = "Royal Paladin";
-                break;
-            case 8:
-                $voc = "Elite Knight";
-                break;
-            default:
-                break;
-        }
-        $bgcolor = (($number_of_rows++ % 2 == 1) ? $config['site']['darkborder'] : $config['site']['lightborder']);
-        if ($list == 5) {
-            $main_content .= '
-                                            <tr style="background-color: ' . $bgcolor . ';">
-                                                <td>' . ($offset + $number_of_rows) . '</td>
-                                                <td><a href="./?subtopic=characters&name=' . urlencode($skill["name"]) . '">' . htmlspecialchars($skill["name"]) . '</a></td>
-                                                <td>' . $voc . '</td>
-                                                <td style="text-align: right;">' . $skill["level"] . '</td>
-                                                <td style="text-align: right;">' . $skill["experience"] . '</td>
-                                             </tr>
-    ';
-        } else {
-
-            $main_content .= '
-                                            <tr style="background-color: ' . $bgcolor . ';">
-                                                <td>' . ($offset + $number_of_rows) . '</td>
-                                                <td><a href="./?subtopic=characters&name=' . urlencode($skill["name"]) . '">' . htmlspecialchars($skill["name"]) . '</a></td>
-                                                <td>' . $voc . '</td>
-                                                <td style="text-align: right;">' . $skill[$list_order] . '</td>
-                                                <!--<td style="text-align: right;">' . $skill["experience"] . '</td>-->
-                                             </tr>
-    ';
-        }
-
-    }
-
-}else{
-    $bgcolor = $config['site']['lightborder'];
-    $main_content .= '
-                                            <tr style="background-color: ' . $bgcolor . ';">
-                                                <td colspan="5" style="text-align: center">Nenhum personagem encontrado.</td>
-                                             </tr>
-     ';
-}
-
-$main_content .= '
-                                             <tr>
-                                                <td style="padding-right: 10px;" colspan="5">
-                                                   <small>
-                                                      <div style="float:left;"><b>» Pages:</b>';
-if(!isset($_REQUEST["page"])){
-    $_REQUEST["page"] = 1;
-}
-for ($i = 0; $i < $tp; $i++) {
-    if((int)$_REQUEST["page"]-1 != $i){
-        $main_content .= '<a style="margin-left:4px;" href="./?subtopic=highscores&world=' . $config["server"]["serverName"] . '&vocation=' . $vocation . '&page=' . ($i + 1) . '">' . ($i + 1) . '</a>';
-    }else{
-        $main_content .= "<b style='margin-left:4px;'>".($i + 1)."</b>";
-    }
-}
-$main_content .= '
-                                                      </div>
-                                                      <div style="float:right;"><b>» Results: ' . $tr . '</b></div>
-                                                   </small>
-                                                </td>
-                                             </tr>
-                                          </tbody>
-                                       </table>
-                                    </div>
-                                 </div>
-                                 <div class="TableShadowContainer">
-                                    <div class="TableBottomShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-bm.gif);">
-                                       <div class="TableBottomLeftShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-bl.gif);"></div>
-                                       <div class="TableBottomRightShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-br.gif);"></div>
-                                    </div>
-                                 </div>
-                              </td>
-                           </tr>
-                        </tbody>
-                     </table>
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-   </div>
-';
+$main_content .= '</TABLE><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>';
+if($page > 0)
+	$main_content .= '<TR><TD WIDTH=100% ALIGN=right VALIGN=bottom><A HREF="?subtopic=highscores&list='.urlencode($list).'&page='.($page - 1).'&vocation=' . urlencode($vocation) . '&world=' . urlencode($world_id) . '" CLASS="size_xxs">Previous Page</A></TD></TR>';
+if($page < 50)
+	$main_content .= '<TR><TD WIDTH=100% ALIGN=right VALIGN=bottom><A HREF="?subtopic=highscores&list='.urlencode($list).'&page='.($page + 1).'&vocation=' . urlencode($vocation) . '&world=' . urlencode($world_id) . '" CLASS="size_xxs">Next Page</A></TD></TR>';
+$main_content .= '</TABLE></TD><TD WIDTH=5%></TD><TD WIDTH=15% VALIGN=top ALIGN=right><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=whites><B>Choose a skill</B></TD></TR><TR BGCOLOR="'.$config['site']['lightborder'].'"><TD><A HREF="?subtopic=highscores&list=experience&world='.$world_id.'" CLASS="size_xs">Experience</A><BR><A HREF="?subtopic=highscores&list=magic&world='.$world_id.'" CLASS="size_xs">Magic</A><BR><A HREF="?subtopic=highscores&list=shield&world='.$world_id.'" CLASS="size_xs">Shielding</A><BR><A HREF="?subtopic=highscores&list=distance&world='.$world_id.'" CLASS="size_xs">Distance</A><BR><A HREF="?subtopic=highscores&list=club&world='.$world_id.'" CLASS="size_xs">Club</A><BR><A HREF="?subtopic=highscores&list=sword&world='.$world_id.'" CLASS="size_xs">Sword</A><BR><A HREF="?subtopic=highscores&list=axe&world='.$world_id.'" CLASS="size_xs">Axe</A><BR><A HREF="?subtopic=highscores&list=fist&world='.$world_id.'" CLASS="size_xs">Fist</A><BR><A HREF="?subtopic=highscores&list=fishing&world='.$world_id.'" CLASS="size_xs">Fishing</A><BR></TD></TR></TABLE></TD><TD></TD></TR></TABLE>';

@@ -13,8 +13,8 @@ class Guild extends ObjectData
 	const LEVEL_LEADER = 3;
 	const LEVEL_OWNER = 4;
 	public static $table = 'guilds';
-	public $data = array('name' => null, 'ownerid' => null, 'creationdata' => null, 'motd' => null, 'description' => null, 'create_ip' => null, 'guild_logo' => null);
-	public static $fields = array('id',  'name', 'ownerid', 'creationdata', 'motd', 'description', 'create_ip', 'guild_logo');
+	public $data = array('world_id' => null, 'name' => null, 'ownerid' => null, 'creationdata' => null, 'motd' => null, 'description' => null, 'create_ip' => null, 'guild_logo' => null);
+	public static $fields = array('id', 'world_id', 'name', 'ownerid', 'creationdata', 'motd', 'description', 'create_ip', 'guild_logo');
 	public $invitedPlayers;
 	public $ranks;
 	public $owner;
@@ -101,7 +101,7 @@ class Guild extends ObjectData
 			$player = new Player($playerId);
 			if($player->isLoaded())
 			{
-				$player->setRank();
+				$player->setRankID(0);
 				$player->save();
 			}
 		}
@@ -128,7 +128,7 @@ class Guild extends ObjectData
 
 	public function addInvitation($playerId, $reloadInvites = false)
 	{
-		$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName('guild_invites') . ' (' . $this->getDatabaseHandler()->fieldName('player_id') . ', ' . $this->getDatabaseHandler()->fieldName('guild_id') . ', ' . $this->getDatabaseHandler()->fieldName('date') . ') VALUES (' . $this->getDatabaseHandler()->quote($playerId) . ', ' . $this->getDatabaseHandler()->quote($this->getID()) . ', ' . time() . ')');
+		$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName('guild_invites') . ' (' . $this->getDatabaseHandler()->fieldName('player_id') . ', ' . $this->getDatabaseHandler()->fieldName('guild_id') . ') VALUES (' . $this->getDatabaseHandler()->quote($playerId) . ', ' . $this->getDatabaseHandler()->quote($this->getID()) . ')');
 		if($reloadInvites)
 			$this->getInvitations(true);
 	}
@@ -181,6 +181,8 @@ class Guild extends ObjectData
 
 	public function getID(){return $this->data['id'];}
 	public function setID($value){$this->data['id'] = $value;}
+	public function getWorldID(){return $this->data['world_id'];}
+	public function setWorldID($value){$this->data['world_id'] = $value;}
 	public function getName(){return $this->data['name'];}
 	public function setName($value){$this->data['name'] = $value;}
 	public function getOwnerID(){return $this->data['ownerid'];}
@@ -234,4 +236,6 @@ class Guild extends ObjectData
 			new Error_Critic('', 'There is no rank in guild <b>' . htmlspecialchars($guild->getName()) . '</b>, cannot add player <b>' . htmlspecialchars($player->getName()) . '</b> to guild.');
 	}
 	public function find($name){$this->loadByName($name);}
+	public function getWorld(){return $this->data['world_id'];}
+	public function setWorld($value){$this->data['world_id'] = $value;}
 }

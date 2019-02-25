@@ -1,1702 +1,620 @@
-<?php
-if(!defined('INITIALIZED'))
-	exit;
-	
-if($logged) {
-	
-	#Progress bar
-	# Donate of 5 steps
-	
-	if(!isset($_REQUEST['step']) || $_REQUEST['step'] == "")
-		$step = 1;
-	else $step = $_REQUEST['step'];
-	
-	$main_content .= '
-		<div id="ProgressBar">
-			<div id="Headline">Donate Page</div>
-			<div id="MainContainer">
-				<div id="BackgroundContainer"> 
-					<img id="BackgroundContainerLeftEnd" src="'.$layout_name.'/images/global/content/progressbar/stonebar-left-end.gif">
-					<div id="BackgroundContainerCenter">
-						<div id="BackgroundContainerCenterImage" style="background-image:url('.$layout_name.'/images/global/content/stonebar-center.gif);" />
-					</div>
-					<img id="BackgroundContainerRightEnd" src="'.$layout_name.'/images/global/content/progressbar/stonebar-right-end.gif"> 
-				</div>
-				<img id="TubeLeftEnd" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-left-green.gif"> 
-				<img id="TubeRightEnd" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-right-'.(($step >= 5) ? 'green' : 'blue').'.gif">
-				<div id="FirstStep" class="Steps">
-					<div class="SingleStepContainer"> 
-						<img class="StepIcon" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-icon-0-green.gif">
-						<div class="StepText" style="font-weight: '.(($step == 1) ? 'bold' : 'normal').';">Information</div>
-					</div>
-				</div>
-				<div id="StepsContainer1">
-					<div id="StepsContainer2">
-						<div class="Steps" style="width: 25%;">
-							<div class="TubeContainer"> 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green'.(($step == 1) ? '-blue' : '').'.gif"> </div>
-							<div class="SingleStepContainer"> 
-								<img class="StepIcon" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-icon-1-'.(($step >= 2) ? 'green' : 'blue').'.gif">
-								<div class="StepText" style="font-weight: '.(($step == 2) ? 'bold' : 'normal').';">Donate Method</div>
-							</div>
-						</div>
-						<div class="Steps" style="width: 25%;">
-							<div class="TubeContainer">';
-						if($step < 2)
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-blue.gif">';
-						elseif($step == 2)
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green-blue.gif">';
-						else
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green.gif">';
-						$main_content .= ' 
-							</div>
-							<div class="SingleStepContainer"> 
-								<img class="StepIcon" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-icon-2-'.(($step >= 3) ? 'green' : 'blue').'.gif">
-								<div class="StepText" style="font-weight: '.(($step == 3) ? 'bold' : 'normal').';">Choose Tibia Coins Package</div>
-							</div>
-						</div>
-						<div class="Steps" style="width: 25%;">
-							<div class="TubeContainer">';
-						if($step == 3)
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green-blue.gif">';
-						elseif($step >= 4)
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green.gif">';
-						else
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-blue.gif">';
-						$main_content .= '  
-							</div>
-							<div class="SingleStepContainer"> 
-								<img class="StepIcon" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-icon-3-'.(($step >= 4) ? 'green' : 'blue').'.gif">
-								<div class="StepText" style="font-weight: '.(($step == 4) ? 'bold' : 'normal').';">Order Confirmation</div>
-							</div>
-						</div>
-						<div class="Steps" style="width: 25%;">
-							<div class="TubeContainer">';
-						if($step == 4)
+
+<?PHP
+header("Content-Type: text/html; charset=ISO-8859-1",true) ;
+if($action == '')
+	{
+  $main_content .=' 
+ <div id="ProgressBar">  <div id="Headline">Informações Iniciais</div>  <div id="MainContainer">    <div id="BackgroundContainer">    
+ <img id="BackgroundContainerLeftEnd" src="layouts/tibiarl/images/vips/stonebar-left-end.gif">      <div id="BackgroundContainerCenter">       
+ <div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiarl/images/content/stonebar-center.gif);"></div>      </div>
+ <img id="BackgroundContainerRightEnd" src="layouts/tibiarl/images/vips/stonebar-right-end.gif">    </div>   
+ <img id="TubeLeftEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-left-blue.gif">
+ <img id="TubeRightEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-right-blue.gif">   
+ <div id="FirstStep" class="Steps">
+      <div class="SingleStepContainer">
+         <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-0-blue.gif">      
+ <div class="StepText" style="font-weight: bold;">Regras da Doação</div>
+      </div>
+    </div>
+    <div id="StepsContainer1">
+      <div id="StepsContainer2">    
+ <div class="Steps" style="width: 25%;">
+          <div class="TubeContainer">
+            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">   
+ </div>
+          <div class="SingleStepContainer">
+            <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-1-blue.gif">           
+ <div class="StepText" style="font-weight: normal;">Metodo de Pagamento</div>
+          </div>
+        </div>
+        <div class="Steps" style="width: 25%;">         
+ <div class="TubeContainer">
+            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">
+          </div>
+          <div class="SingleStepContainer"> 
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-2-blue.gif">
+            <div class="StepText" style="font-weight: normal;">Informações do Pedido</div>   
+ </div>
+        </div>
+        <div class="Steps" style="width: 25%;"> 
+         <div class="TubeContainer">    
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">
+          </div>
+          <div class="SingleStepContainer">       
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-3-blue.gif">
+            <div class="StepText" style="font-weight: normal;">Confirmação</div>   
+ </div>
+        </div>
+        <div class="Steps" style="width: 25%;">
+          <div class="TubeContainer">          
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">         
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-4-blue.gif">            <div class="StepText" style="font-weight: normal;">Pedido Realizado</div>    
+ </div>        </div>      </div>    </div>  </div></div><div class="TableContainer">  <div class="CaptionContainer">      <div class="CaptionInnerContainer">     
+  <span class="CaptionEdgeLeftTop" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>       
+  <span class="CaptionEdgeRightTop" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>    
+  <span class="CaptionBorderTop" style="background-image: url(layouts/tibiarl/images/content/table-headline-border.gif);"></span>   
+  <span class="CaptionVerticalLeft" style="background-image: url(layouts/tibiarl/images/content/box-frame-vertical.gif);"></span>   
+  <div class="Text">Informações Iniciais para sua doação.</div>       
+  <span class="CaptionVerticalRight" style="background-image: url(layouts/tibiarl/images/content/box-frame-vertical.gif);"></span>      
+  <span class="CaptionBorderBottom" style="background-image: url(layouts/tibiarl/images/content/table-headline-border.gif);"></span>   
+  <span class="CaptionEdgeLeftBottom" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>   
+  <span class="CaptionEdgeRightBottom" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>     
+  </div>
+    </div>
+    <table class="Table1" cellpadding="0" cellspacing="0"> 
+   <tbody><tr>
+      <td>
+        <div class="InnerTableContainer">       
+  <table style="width: 100%;"><tbody><tr><td>
+Informamos aos jogadores e colaboradores que o '.$config['server']['serverName'].' Alternate Tibia Server não tem nenhum interesse financeiro. Toda a renda obtida é diretamente reaplicada para a manutenção do servidor - isto significa que ao fazer uma doação, você está garantindo a estabilidade e aumentando a qualidade do mesmo.</br></br>
+Os pontos que são repassados aos jogadores que efetuam as doações não representam nada mais além de nossa gratificação, isto é, você não está comprando pontos e sim recebendo uma gratificação simbólica (em formas de pontos) que te beneficie dentro do jogo; você poderá usar os seus pontos da maneira que desejar.</br></br>
+O espírito deste sistema é simples: com o intuito de nos aproximarmos dos jogadores e fazer com que vocês se sintam em casa, entendemos a sua doação como uma via de mão dupla no quesito credibilidade. Ao acreditar que vale a pena investir na manutenção do servidor, nós investimos em vocês creditando-os com pontos, que como já dito anteriormente, podem ser utilizados da maneira que mais os couber.</br></br>
+Confira as <a href="?subtopic=beneficiospremium">Vantagens Vips</a> e o <a href="?subtopic=shopsystem">'.$config['server']['serverName'].' Shop</a> e saiba como aproveitar os seus pontos da maneira mais proveitosa à sua situação.</br>
+
+<h3>Dúvidas Frequentes</h3></br>
+<b>Mas o que são Premium Points?</b>
+Premium Points faz parte do nosso sistema de doação, com eles você pode adquirir uma VIP ou algo mais que esteja disponível no Shopping Online.</br></br>
+
+<b>O que é uma VIP Account?</b>
+Uma VIP Account traz habilidades e vantagens adicionais dentro e fora do jogo por um determinado período de tempo. Para saber mais sobre os beneficios por favor visite a seção <a href="?subtopic=beneficiospremium">Vantagens Vips</a>.</br></br>
+
+<b>Como efetuar a doação?</b>
+<br>Clique no botão <b>"Continue"</b> e siga todos os procedimentos para realizar sua doação.
+
+  </td></tr>          </tbody></table>        </div>
+  </td></tr></tbody></table></div><br><center><table border="0" cellpadding="0" cellspacing="0">
+  <tbody><tr><td style="border: 0px none;">
+  <div class="BigButton" style="background-image: url(layouts/tibiarl/images/buttons/sbutton.gif);">
+  <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(layouts/tibiarl/images/buttons/sbutton_over.gif);"></div>
+  <a href="?subtopic=donate&action=rules"><input class="ButtonText" name="Continue" alt="Continue" onclick=location.href="index.php?subtopic=donate&action=rules" src="layouts/tibiarl/images/vips/_sbutton_continue.gif" type="image"></a></div></div></td></tr></tbody></table></center> 
+	 
 
 
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green-blue.gif">';
-						elseif($step == 5)
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-green.gif">';
-						else
-							$main_content .= ' 
-								<img class="Tube" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-tube-blue.gif">';
-						$main_content .= ' 
-							</div>
-							<div class="SingleStepContainer"> 
-								<img class="StepIcon" src="'.$layout_name.'/images/global/content/progressbar/progress-bar-icon-4-'.(($step >= 5) ? 'green' : 'blue').'.gif">
-								<div class="StepText" style="font-weight: '.(($step == 5) ? 'bold' : 'normal').';">Summary</div>
-							</div>
-						</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>';
-		
-		if($step == 1) {
-			# Step 1
-			# Rules to donate, and information
-			
-			$main_content .= '
-				<form method="post" action="?subtopic=accountmanagement&action=donate">
-				<div class="TableContainer">
-					<div class="CaptionContainer">
-						<div class="CaptionInnerContainer"> 
-							<span class="CaptionEdgeLeftTop" style="background-image: url('.$layout_name.'/images/global/content/box-frame-edge.gif);"></span> 
-							<span class="CaptionEdgeRightTop" style="background-image: url('.$layout_name.'/images/global/content/box-frame-edge.gif);"></span> 
-							<span class="CaptionBorderTop" style="background-image: url('.$layout_name.'/images/global/content/table-headline-border.gif);"></span> 
-							<span class="CaptionVerticalLeft" style="background-image: url('.$layout_name.'/images/global/content/box-frame-vertical.gif);"></span>
-							<div class="Text">Initial information for your donation</div>
-							<span class="CaptionVerticalRight" style="background-image: url('.$layout_name.'/images/global/content/box-frame-vertical.gif);"></span> 
-							<span class="CaptionBorderBottom" style="background-image: url('.$layout_name.'/images/global/content/table-headline-border.gif);"></span> 
-							<span class="CaptionEdgeLeftBottom" style="background-image: url('.$layout_name.'/images/global/content/box-frame-edge.gif);"></span> 
-							<span class="CaptionEdgeRightBottom" style="background-image: url('.$layout_name.'/images/global/content/box-frame-edge.gif);"></span> 
-						</div>
-					</div>
-					<table class="Table1" cellpadding="0" cellspacing="0">
-						<tbody>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width: 100%;">
-											<tbody>
-												<tr>
-													<td>We inform the players and staff that '.$config['server']['serverName'].' has no financial interest. All income is obtained directly reapplied for server maintenance - this means that to make a donation, you are ensuring the stability and increasing quality.</br>
-														</br>
-														The tibia coins that are given to the players that perform the donations represent nothing beyond our gratification, that is, you are not buying Tibia Coins but getting a symbolic gratification (in form of Tibia Coins) that will benefit you in the game; you can use your Tibia Coins any way you want.</br>
-														No refund amount of donations for all is applied to the monthly expenses.</br>
-														The spirit of this system is simple: in order to approach the players and make you feel at home, we understand your donations as a two-way street in the question credibility. To believe that it is worth investing in server maintenance, we focus on you by crediting them with Tibia Coins, which as stated previously, can be used in the way best fits them.</br>
-														</br>
-														Check out <a href="?subtopic=accountmanagement&action=manage#Products+Available">'.$config['server']['serverName'].' Shop</a> and see how you can make your Tibia Coins in the most profitable way to your situation.</br>
-														<h3>Frequently Asked question</h3>
-														<b>But what are tibia coins ?</b> Tibia coins is part of our donation system, with them you can purchase a VIP or something else that is available in the Shopping Online.</br>
-														</br>
-														If you accept our terms of donation and understand the purpose of it, click <strong>"Next"</strong>.</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>';
-				
-			$main_content .= '
-				<div class="SubmitButtonRow" >
-					<div class="LeftButton" >
-						<input type="hidden" name="step" value="2" >
-						<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-							<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-								<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-							</div>
-						</div>
-					</div>
-					</form>
-					<div class="RightButton" >
-						<form method="post" action="?subtopic=accountmanagement&action=manage" >
-							<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-								<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-									<input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/global/buttons/_sbutton_back.gif" >
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>';
+
+
+';
+	}
+elseif($action == 'rules')
+	{
+		if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
 		}
-		
-		if($step == 2) {
-			
-			$main_content .= '
-			
-			
-			
-			<script>
-				
-				var g_PaymentMethodCategories = {1:1};
-				
-				
-				function ChangeService(a_ServiceID, a_ServiceCategoryID) {
-					// handle payment methods
-					for (var i = 0; i < g_PaymentMethodCategories.length; i++) {
-						if (typeof g_Prices[a_ServiceID] !== \'undefined\') {
-							if (typeof g_Prices[a_ServiceID][g_PaymentMethodCategories[i]] === \'undefined\') {
-								// deactivate the payment method
-								// note: the radio button can not be disabled or we will receive the wrong error message
-								$(\'#PMCID_NotAllowed_\' + g_PaymentMethodCategories[i]).show();
-							} else {
-								// activate the payment method
-								$(\'#PMCID_NotAllowed_\' + g_PaymentMethodCategories[i]).hide();
-							}
-						}
-					}
-					// activate and mark the selected icon
-					$(\'.ServiceID_Icon_Selected\').css(\'background-image\', \'\');
-					$(\'#ServiceID_Icon_Selected_\' + a_ServiceID).css(\'background-image\', \'url(\' + JS_DIR_IMAGES + \'payment/serviceid_icon_selected.png)\');
-					return;
-				}
-				
-				function ChangePMC(a_PaymentMethodID) {
-					// set the PMCID for the change country form
-					$(\'#PMCID\').val(a_PaymentMethodID);
-					$(\'#PMCID\').attr(\'name\', \'InitialPMCID\');
-					// activate the radio button
-					$(\'#PMCID_\' + a_PaymentMethodID).attr(\'checked\', \'checked\');
-					$(\'.PMCID_Icon_Container\').css(\'background-color\', \'\');
-					// handle services
-					for (var i = 0; i < g_Services.length; i++) {
-						if (typeof g_Prices[g_Services[i]] !== \'undefined\') {
-							if (typeof g_Prices[g_Services[i]][a_PaymentMethodID] === \'undefined\') {
-								// deactivate the service
-								// note: the radio button can not be disabled or we will receive the wrong error message
-								$(\'#ServiceID_NotAllowed_\' + g_Services[i]).show();
-								// set the price
-								$(\'#PD_\' + g_Services[i]).html(\'---\');
-								$(\'#ServiceID_\' + g_Services[i]).val(\'0\');
-							} else {
-								// activate the service
-								// set the price
-								$(\'#PD_\' + g_Services[i]).html(g_Prices[g_Services[i]][a_PaymentMethodID] + \' Coins\');
-								$(\'#ServiceID_NotAllowed_\' + g_Services[i]).hide();
-							}
-						}
-					}
-					// activate and mark the selected icon
-					$(\'.PMCID_Icon_Selected\').css(\'background-image\', \'\');
-					$(\'#PMCID_Icon_Selected_\' + a_PaymentMethodID).css(\'background-image\', \'url(\' + JS_DIR_IMAGES + \'payment/pmcid_icon_selected.png)\');
-					return;
-				}
-				
-				// mouse over effect for payment methods
-				function MouseOverPMCID(a_PMCID) {
-					$(\'#PMCID_Icon_Over_\' + a_PMCID).css(\'background-image\', \'url(\' + JS_DIR_IMAGES + \'payment/pmcid_icon_over.png)\');
-				}
-				// mouse out effect for payment methods
-				
-				function MouseOutPMCID(a_PMCID) {
-					$(\'#PMCID_Icon_Over_\' + a_PMCID).css(\'background-image\', \'\');
-				}
-				
-			</script>
-			
-			
-			<form method="post" action="?subtopic=accountmanagement&action=donate"><div class="TableContainer" style="position:relative;">
-				<div class="CaptionContainer">
-				<div class="CaptionInnerContainer"> 
-					<span class="CaptionEdgeLeftTop" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-edge.gif);"></span> 
-					<span class="CaptionEdgeRightTop" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-edge.gif);"></span> 
-					<span class="CaptionBorderTop" style="background-image:url(./layouts/tibiarl/images/global/content/table-headline-border.gif);"></span> 
-					<span class="CaptionVerticalLeft" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-vertical.gif);"></span>
-					<div class="Text">Choose Donate Method</div>
-					<span class="CaptionVerticalRight" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-vertical.gif);"></span> 
-					<span class="CaptionBorderBottom" style="background-image:url(./layouts/tibiarl/images/global/content/table-headline-border.gif);"></span> 
-					<span class="CaptionEdgeLeftBottom" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-edge.gif);"></span> 
-					<span class="CaptionEdgeRightBottom" style="background-image:url(./layouts/tibiarl/images/global/content/box-frame-edge.gif);"></span> 
-				</div>
-			</div>
-   <table class="Table5" cellpadding="0" cellspacing="0">
-        <tbody>
-            <tr>
-                <td>
-                    <div class="InnerTableContainer">
-                        <table style="width:100%;">
-                            <tbody>
-                                <tr>
-                                    <td>
-									<div class="TableShadowContainerRightTop">
-										<div class="TableShadowRightTop" style="background-image:url(./layouts/tibiarl/images/global/content/table-shadow-rt.gif);"></div>
-									</div>
-                                       <div class="TableContentAndRightShadow" style="background-image:url(./layouts/tibiarl/images/global/content/table-shadow-rm.gif);">
-										<div class="TableContentContainer">
-											<table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                                                    <tbody>
-                                                        <tr>
-														<td style="text-align: center;" align="center" >';
-$main_content .= '													
-<div class="PMCID_Icon_Container" id="PMCID_Icon_Container_1" >
-<div class="PMCID_Icon" id="PMCID_Icon_1" style="background-image:url('.$layout_name.'/images/payment/pmcid_icon_normal.png);" onclick="ChangePMC(1);" onmouseover="MouseOverPMCID(1);" onmouseout="MouseOutPMCID(1);" >
-<div class="PermanentDeactivated PMCID_Deactivated_ByChoice" id="PMCID_NotAllowed_1" style="display: none;"" >
-<span class="HelperDivIndicator" onMouseOver="ActivateHelperDiv($(this), \'Payment Method Info:\', \'&lt;p&gt;The payment method is not allowed for the selected service!&lt;/p&gt;\', \'\');" onMouseOut="$(\'#HelperDivContainer\').hide();" >
-<div class="PMCID_Deactivated" style="background-image: url('.$layout_name.'/images/payment/pmcid_deactivated.png);" ></div>
-</span>
-</div>
-<div class="PMCID_Icon_Selected" id="PMCID_Icon_Selected_1" ></div>
-<div class="PMCID_Icon_Over" id="PMCID_Icon_Over_1" ></div>
-<span style="position: absolute; left:125px; top: 53px; z-index: 99;" >
-<span style="margin-left: 5px; position: absolute; margin-top: 2px;" >
-<span class="HelperDivIndicator" onMouseOver="ActivateHelperDiv($(this), \'Information:\', \'This method doesn t require confirmation. Tibia Coins are credited to your account automatically.\', \'\');" onMouseOut="$(\'#HelperDivContainer\').hide();" >
-<image style="border:0px;" src="'.$layout_name.'/images/global/content/info.gif" />
-</span>
-</span>
-</span>
-<img class="PMCID_CP_Icon" src="'.$layout_name.'/images/payment/common/paymentmethodcategory32.gif" />
-<div class="PMCID_CP_Label" >
-<input type="radio" id="PMCID_1" name="donateMethod" value="pagseguro" '.(($_REQUEST['donateMethod'] == "pagseguro") ? 'checked' : '').'>
-<label for="PMCID_1" >PagSeguro</label>
-</div>
-</div>
-</div>
-</div>
-';
-										
-										
-$main_content .= '
-<div class="PMCID_Icon_Container" id="PMCID_Icon_Container_2" >
-<div class="PMCID_Icon" id="PMCID_Icon_2" style="background-image:url('.$layout_name.'/images/payment/pmcid_icon_normal.png);" onclick="ChangePMC(2);" onmouseover="MouseOverPMCID(2);" onmouseout="MouseOutPMCID(2);" >
-<div class="PermanentDeactivated PMCID_Deactivated_ByChoice" id="PMCID_NotAllowed_2" style="display: none;"" >
-<span class="HelperDivIndicator" onMouseOver="ActivateHelperDiv($(this), \'Payment Method Info:\', \'&lt;p&gt;The payment method is not allowed for the selected service!&lt;/p&gt;\', \'\');" onMouseOut="$(\'#HelperDivContainer\').hide();" >
-<div class="PMCID_Deactivated" style="background-image: url('.$layout_name.'/images/payment/pmcid_deactivated.png);" ></div>
-</span>
-</div>
-<div class="PMCID_Icon_Selected" id="PMCID_Icon_Selected_2" ></div>
-<div class="PMCID_Icon_Over" id="PMCID_Icon_Over_2" ></div>
-<span style="position: absolute; left:125px; top: 53px; z-index: 99;" >
-</span>
-<img class="PMCID_CP_Icon" src="'.$layout_name.'/images/payment/common/paymentmethodcategory31.gif" />
-<div class="PMCID_CP_Label" >
-<input type="radio" id="PMCID_2" name="donateMethod" value="paypal" '.(($_REQUEST['donateMethod'] == "paypal") ? 'checked' : '').'>
-<label for="PMCID_2" >PayPal**</label>
-</div>
-</div>
-</div>
-</div>
-';
-										
-$main_content .= '												
-<div class="PMCID_Icon_Container" id="PMCID_Icon_Container_3" >
-<div class="PMCID_Icon" id="PMCID_Icon_3" style="background-image:url('.$layout_name.'/images/payment/pmcid_icon_normal.png);" onclick="ChangePMC(3);" onmouseover="MouseOverPMCID(3);" onmouseout="MouseOutPMCID(3);" >
-<div class="PermanentDeactivated PMCID_Deactivated_ByChoice" id="PMCID_NotAllowed_3" style="display: none;"" >
-<span class="HelperDivIndicator" onMouseOver="ActivateHelperDiv($(this), \'Payment Method Info:\', \'&lt;p&gt;The payment method is not allowed for the selected service!&lt;/p&gt;\', \'\');" onMouseOut="$(\'#HelperDivContainer\').hide();" >
-<div class="PMCID_Deactivated" style="background-image: url('.$layout_name.'/images/payment/pmcid_deactivated.png);" ></div>
-</span>
-</div>
-<div class="PMCID_Icon_Selected" id="PMCID_Icon_Selected_3" ></div>
-<div class="PMCID_Icon_Over" id="PMCID_Icon_Over_3" ></div>
-</span>
-<img class="PMCID_CP_Icon" src="'.$layout_name.'/images/payment/common/paymentmethodcategory22.gif" />
-<div class="PMCID_CP_Label" >
-<input type="radio" id="PMCID_3" name="donateMethod" value="banktransfer" '.(($_REQUEST['donateMethod'] == "banktransfer") ? 'checked' : '').'>
-<label for="PMCID_1" >Bank Transfer**</label>
-</div>
-</div>
-</div>
-</div>
-';
+		else
+		{
+  $main_content .='<div id="ProgressBar">  <div id="Headline">Regras & Informações</div>  <div id="MainContainer">    <div id="BackgroundContainer">      <img id="BackgroundContainerLeftEnd" src="layouts/tibiarl/images/vips/stonebar-left-end.gif">      <div id="BackgroundContainerCenter">        <div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiarl/images/content/stonebar-center.gif);"></div>      </div>      <img id="BackgroundContainerRightEnd" src="layouts/tibiarl/images/vips/stonebar-right-end.gif">    </div>    <img id="TubeLeftEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-left-green.gif">    <img id="TubeRightEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-right-blue.gif">    <div id="FirstStep" class="Steps">      <div class="SingleStepContainer">        <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-0-green.gif">        <div class="StepText" style="font-weight: bold;">Regras da Doação</div>      </div>    </div>    <div id="StepsContainer1">      <div id="StepsContainer2">        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-green-blue.gif">          </div>          <div class="SingleStepContainer">            <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-1-blue.gif">            <div class="StepText" style="font-weight: normal;">Metodo de Pagamento</div>          </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">            <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-2-blue.gif">            <div class="StepText" style="font-weight: normal;">Informações do Pedido</div>          </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">            <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-3-blue.gif">            <div class="StepText" style="font-weight: normal;">Confirmação</div>          </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">            <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">            <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-4-blue.gif">            <div class="StepText" style="font-weight: normal;">Pedido Realizado</div>          </div>        </div>      </div>    </div>  </div></div><div class="TableContainer">  <div class="CaptionContainer">      <div class="CaptionInnerContainer">        <span class="CaptionEdgeLeftTop" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightTop" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>        <span class="CaptionBorderTop" style="background-image: url(layouts/tibiarl/images/content/table-headline-border.gif);"></span>        <span class="CaptionVerticalLeft" style="background-image: url(layouts/tibiarl/images/content/box-frame-vertical.gif);"></span>        <div class="Text">Leia as Regras das Doações</div>        <span class="CaptionVerticalRight" style="background-image: url(layouts/tibiarl/images/content/box-frame-vertical.gif);"></span>        <span class="CaptionBorderBottom" style="background-image: url(layouts/tibiarl/images/content/table-headline-border.gif);"></span>        <span class="CaptionEdgeLeftBottom" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightBottom" style="background-image: url(layouts/tibiarl/images/content/box-frame-edge.gif);"></span>      </div>    </div>    <table class="Table1" cellpadding="0" cellspacing="0">    <tbody><tr>      <td>        <div class="InnerTableContainer">          <table style="width: 100%;"><tbody><tr><td valign="middle" width="25px;">
 
-$main_content .= '
-			 </tr>
-			 </td> 
-			 <td><br>** If you use this payment method, you will have to payment confirmation. Access your donation history and confirm this donation.</td>';
-			 
-$main_content .= '
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="TableShadowContainer">
-										<div class="TableBottomShadow" style="background-image:url(./layouts/tibiarl/images/global/content/table-shadow-bm.gif);">
-											<div class="TableBottomLeftShadow" style="background-image:url(./layouts/tibiarl/images/global/content/table-shadow-bl.gif);"></div>
-											<div class="TableBottomRightShadow" style="background-image:url(./layouts/tibiarl/images/global/content/table-shadow-br.gif);"></div>
-										</div>
-									</div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr> 
-			
-        </tbody>
-    </table>';
+<B>Antes de fazer uma doação, lembre-se de estar de acordo com as regras vigentes e ciente de todas as informações necessárias.</B><TEXTAREA ROWS="5" WRAP="physical" COLS="80" READONLY="true" style="float:right;">
+1. Gerais
+a) O '.$config['server']['serverName'].' é um servidor alternativo de Tibia planejado, construído e executado dentro das regras vigentes que possibilitam o funcionamento do mesmo sem infringir nenhuma lei (seja ela nacional ou não).
+b) Todo o dinheiro depositado e creditado no servidor é diretamente aplicado em sua própria manutenção, isto é, todo o capital girado em torno do mesmo é diretamente canalizado para o rumo de sua autossuficiência.
+c) O '.$config['server']['serverName'].' luta pela sua estabilidade, entretando, não podemos impedir que erros venham a acontecer.
+d) O histórico de doações está sendo salvado, ou seja, você nunca será esquecido.
+e) O nome designado à central de trocas de pontos - '.$config['server']['serverName'].'Shop - é fictício; o '.$config['server']['serverName'].' não vende nenhum tipo de produto.
+e) O '.$config['server']['serverName'].' é uma empresa sem fins lucrativos.
 
-$main_content .= '
-				</div>
-				
-				<div class="SubmitButtonRow" >
-					<div class="LeftButton" >
-						<input type="hidden" name="step" value="3">
-						<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-							<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-								<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-							</div>
-						</div>
-					</div>
-					</form>
-					<div class="RightButton" >
-						<form method="post" action="?subtopic=accountmanagement&action=donate">
-							<input type="hidden" name="step" value="1">
-							<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-								<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-									<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>';
+2. Perdas & Danos
+a) Guarde o seu comprovante de doação. É o único documento que comprova a sua ajuda para a manutenção do servidor.
+b) Em caso de resets, todas as doações que foram realizadas no prazo de dois meses (contando a partir do dia do reset) serão recreditadas integralmente nas contas dos jogadores. Lembrem-se que o histórico de doações está sendo salvo, porém você também precisa comprovar a sua participação nas doações.
+c) Em caso de quedas e(ou) problemas que façam com que o '.$config['server']['serverName'].' fique off-line, em modo de segurança ou de espera por três dias consecutivos ou mais, os jogadores que optaram por debitar seus pontos em tempo VIP serão recreditados, da mesma maneira, com os dias perdidos (contando a partir do terceiro dia).
+d) Em caso de paralização inesperada das atividades, não haverá reposição ou recreditação de capital investida no servidor, posto que toda doação é diretamente encaminhada à manutenção do mesmo. Neste caso, os jogadores serão comunicados pelos veículos de informação (site oficial ou fórum).
+e) Em caso de paralização pré-programada das atividades, os jogadores serão informados através de nossos veículos de informação e a partir da data referida o sistema de doações encontrar-se-á fora do ar.
+f) O '.$config['server']['serverName'].' oferece e investe na segurança básica para o servidor, cabe a você mantê-lo seguro; ou seja, não nos responsabilizamos pelos seus pertencens, personagens e contas.
+
+3. Denotação # Doação
+a) Ato ou efeito de doar. 
+b) Aquilo que se doa.
+c) Contrato, ou documento que assegura e legaliza a doação simples: a que é feita por exclusiva resolução do doador.
+</TEXTAREA>As regras e informações dispostas na caixa de diálogo acima podem ser modificadas sem aviso prévio.<br>
+Caso você não concorde com a contratação sobre a doação simples por favor não prossiga.
+
+
+       </tbody></table>        </div>  </td></tr></tbody></table></div><br><table width="100%"><tbody><tr align="center"><td><table border="0" cellpadding="0" cellspacing="0">
+	   <tbody><tr><td style="border: 0px none;">
+	   <a href="javascript:void();" onclick=location.href="?subtopic=donate&action=pag_form">
+	   <div class="BigButton" style="background-image: url(layouts/tibiarl/images/buttons/sbutton.gif);">
+	   <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(layouts/tibiarl/images/buttons/sbutton_over.gif);"></div>
+	   <input class="ButtonText" name="Continue" alt="Continue" src="layouts/tibiarl/images/vips/_sbutton_continue.gif" type="image">
+
+	   </div></div></a></td></tr><tr></tr></tbody></table></td><td><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td style="border: 0px none;">
+	   <a href="javascript:void();" onclick=location.href="?subtopic=donate"><div class="BigButton" style="background-image: url(layouts/tibiarl/images/buttons/sbutton.gif);">
+	   <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(layouts/tibiarl/images/buttons/sbutton_over.gif); visibility: hidden;"></div>
+	   <input class="ButtonText" name="Back" alt="Back" src="layouts/tibiarl/images/vips/_sbutton_back.gif" type="image">
+	   </table></td></tr></tbody></table>
+	   	   	   		 
+
+
+
+';
 		}
-		
-		if($step == 3) {
-			
-			$donateMethod = $_REQUEST['donateMethod'];
-			
-			if(!isset($donateMethod) || $donateMethod == "")
-				$donate_errors[] = "You need to select a method to make your donation.";
-			if(!empty($donate_errors)) {
-				$main_content .= '
-					<div class="TableContainer" >
-						<table class="Table1" cellpadding="0" cellspacing="0" >
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>							
-									<div class="Text" >Donate Errors</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer" >
-										<table style="width:100%;" >
-											<tr>
-												<td>';
-												foreach($donate_errors as $error)
-													$main_content .= $error . '<br>';
-											$main_content .= '
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div><BR>
-					<TABLE BORDER=0 WIDTH=100%>
-						<TR>
-							<TD ALIGN=center>
-								<table border="0" cellspacing="0" cellpadding="0" >
-									<form action="?subtopic=accountmanagement&action=donate" method="post">
-										<input type="hidden" name="step" value="2">
-										<tr>
-											<td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-													<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-														<input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/global/buttons/_sbutton_back.gif" >
-													</div>
-												</div>
-											</td>
-										</tr>
-									</form>
-								</table>
-							</TD>
-						</TR>
-					</TABLE>';
-			} else {
-				# Pagseguro Method
-				if($donateMethod == "pagseguro") {
-					$doubleStatus = $SQL->query("SELECT `value` FROM `server_config` WHERE `config` = 'double'")->fetch();
-                    $_POST['item_quant_1'];
-                    $_POST['account_namev'];
-                    $_POST['emailv'];
-                    $_POST['character_namev'];
+	}
+elseif($action == 'selectchar')
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+		}
+		else
+		{
+	
+		$main_content .= '
 
-                    $main_content .= '<form action="?subtopic=accountmanagement&action=donate" method="post" enctype="application/x-www-form-urlencoded"
-                          xmlns:https="http://www.w3.org/1999/xhtml">
-                        <div class="TableContainer">
-                            <div class="CaptionContainer">
-                                <div class="CaptionInnerContainer">
-                                    <span class="CaptionEdgeLeftTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionEdgeRightTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionBorderTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>
-                                    <span class="CaptionVerticalLeft"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>
-                                    <div class="Text">Account Information</div>
-                                    <span class="CaptionVerticalRight"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>
-                                    <span class="CaptionBorderBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>
-                                    <span class="CaptionEdgeLeftBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionEdgeRightBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                </div>
-                            </div>
-                            <table class="Table1" cellpadding="0" cellspacing="0">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="InnerTableContainer">
-                                            <table style="width: 100%;">
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <table>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Account Name:</b></td>
-                                                                <td><input type="hidden" value="' . $account_logged->getName() . '" name="account_namev"/>' . $account_logged->getCustomField("name") . '
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><b>Email:</b></td>
-                                                                <td><input type="hidden" value="' . $account_logged->getCustomField("email") . '" name="emailv"/>' . $account_logged->getCustomField("email") . '
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br/>
-                        <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css"/>
-						
-						<div style="position:relative;">
-						<style>
-							.ribbonShop-double {
-							background:url('.$layout_name.'/images/shop/ribbon-double.png) no-repeat;
-							width: 80px;
-							height: 80px;
-							position:absolute;
-							right: -5px;
-							top: -5px;
-							z-index:999;
-						}
-						</style>
-						'.(($doubleStatus['value'] == "active") ? '<div class="ribbonShop-double"></div>' : '').'
-						
-						
-                        <div class="TableContainer">
-                            <div class="CaptionContainer">
-                                <div class="CaptionInnerContainer">
-                                    <span class="CaptionEdgeLeftTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionEdgeRightTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionBorderTop"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>
-                                    <span class="CaptionVerticalLeft"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>
-                                    <div class="Text">Donation Package</div>
-                                    <span class="CaptionVerticalRight"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>
-                                    <span class="CaptionBorderBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>
-                                    <span class="CaptionEdgeLeftBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                    <span class="CaptionEdgeRightBottom"
-                                          style="background-image: url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>
-                                </div>
-                            </div>
-                            <table class="Table1" cellpadding="0" cellspacing="0">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="InnerTableContainer">
-                                            <table style="width: 100%;">
-                                                <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <script>
-                                                            // change the selected service
-                                                            function ChangeService(a_ServiceID) {
-                                                                // console.log("### ChangeService() ### a_ServiceID #" + a_ServiceID + "# a_ServiceCategoryID #" + a_ServiceCategoryID + "#");
-                                                                // set the ServiceID for the change country form
-                                                                var serviceID = $("#CC_ServiceID");
-                                                                serviceID.val(a_ServiceID);
-                                                                serviceID.attr("name", "InitialServiceID");
-                                                                // activate the radio button itself and set the price
-                                                                $("#ServiceID_" + a_ServiceID).attr("checked", "checked");
-                                                                $(".ServiceID_Icon_Container").css("background-color", "");
-                                                                                                            
-                                                                // activate and mark the selected icon
-                                                                $(".ServiceID_Icon_Selected").css("background-image", "");
-                                                                $("#ServiceID_Icon_Selected_" + a_ServiceID).css("background-image", "url(' . $layout_name . '/images/payment/serviceid_icon_selected.png)");
-                                                                return;
-                                                            }
-                                                        </script>';
+<h1>Selecione o player</h1><BR>
+			<form action="index.php?subtopic=donate&action=pag_form" method=POST> 
+			<table border="0" cellpadding="1" cellspacing="1" width="100%"> 
+			<tr bgcolor="#505050"><td colspan="2"><font color="#FFFFFF"><b>Select the character you want receive the donate.</b></font></td></tr> 
+			<tr bgcolor="#D4C0A1"><td width="110"><b>Nome:</b></td><td width="550"><select name="buy_name">';
+            $players_from_logged_acc = $account_logged->getPlayersList();
+            if(count($players_from_logged_acc) > 0)
+            {
+              $players_from_logged_acc->orderBy('name');
+              foreach($players_from_logged_acc as $player)
+              {
+                $main_content .= '<option>'.$player->getName().'</option>';
+              }
+            }
+            else
+            {
+              $main_content .= 'Voce não tem nenhum char nessa account.';
+            }
+		$main_content .= '</table> 
+		<br><center><input type="image" value="submit" src="layouts/tibiarl/images/buttons/sbutton_submit.gif"/> 
+		</form>';
+		}
+	
 
-                                        $countOffer=1;
+	}
+elseif($action == 'pag_form')
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+		}
+		else
+		{
+		$buy_name = stripslashes(urldecode($_POST['buy_name']));
+		$main_content .= '<div id="ProgressBar">  <div id="Headline">Método de Pagamento</div>  <div id="MainContainer">    <div id="BackgroundContainer">      
 
-                                        foreach ($config['pagseguro']['offers'] as $price => $coinCount){
-                                            $main_content .= '
-                                                            <div class="ServiceID_Icon_Container w3-card-4" id="ServiceID_Icon_Container_' . $price . '">
-                                                                <div class="ServiceID_Icon_Container_Background" id=""
-                                                                     style="background-image:url(' . $layout_name . '/images/payment/serviceid_icon_normal.png);">
-                                                                    <div class="ServiceID_Icon" id="ServiceID_Icon_' . $price . '" style=""
-                                                                         onclick="ChangeService('.$price.');">
-                                                                        <div class="ServiceID_Icon_New" id="ServiceID_Icon_New_' . $price . '"
-                                                                             style="background-image:url(' . $layout_name . '/images/payment/serviceid_' . $countOffer . '.png);">
-                                                                        </div>
-                                                                        <div class="ServiceID_Icon_Selected" id="ServiceID_Icon_Selected_' . $price . '">
-                                                                        </div>                                                
-                                                                        <label for="ServiceID_' . $price . '">
-                                                                            <div class="ServiceIDLabelContainer">
-                                                                                <div class="ServiceIDLabel">
-                                                                                    <input id="ServiceID_' . $price . '" name="ServiceID" value="' . $price . '"
-                                                                                       style="display: none;"
-                                                                                       type="radio">' . $coinCount . ' Coins
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="ServiceIDPriceContainer">
-                                                                                <span class="ServiceIDPrice" id="PD_133">R$ '.($price/100).',00</span> *
-                                                                            </div>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>';
-                                            $countOffer++;
-                                        };
-                                        unset($countOffer);
+<img id="BackgroundContainerLeftEnd" src="layouts/tibiarl/images/vips/stonebar-left-end.gif">      <div id="BackgroundContainerCenter">        
+<div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiarl/images/content/stonebar-center.gif);"></div>     
+ </div>      <img id="BackgroundContainerRightEnd" src="layouts/tibiarl/images/vips/stonebar-right-end.gif">    </div>    
+ <img id="TubeLeftEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-left-green.gif">    
+ <img id="TubeRightEnd" src="layouts/tibiarl/images/vips/progress-bar-tube-right-blue.gif">    <div id="FirstStep" class="Steps">     
+ <div class="SingleStepContainer">        <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-0-green.gif">       
+ <div class="StepText" style="font-weight: normal;">Regras da Doação</div>      </div>    </div>    <div id="StepsContainer1">      
+ <div id="StepsContainer2">        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">          
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-green.gif">          </div>          <div class="SingleStepContainer">        
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-1-green.gif">          <div class="StepText" style="font-weight: bold;">Metodo de Pagamento</div>    
+ </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">          
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-green-blue.gif">          </div>          <div class="SingleStepContainer">           
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-2-blue.gif">            <div class="StepText" style="font-weight: normal;">Informações do Pedido</div>     
+ </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">          
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">         
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-3-blue.gif">            <div class="StepText" style="font-weight: normal;">Confirmação</div>  
+ </div>        </div>        <div class="Steps" style="width: 25%;">          <div class="TubeContainer">         
+ <img class="Tube" src="layouts/tibiarl/images/vips/progress-bar-tube-blue.gif">          </div>          <div class="SingleStepContainer">      
+ <img class="StepIcon" src="layouts/tibiarl/images/vips/progress-bar-icon-4-blue.gif">            <div class="StepText" style="font-weight: normal;">Pedido Realizado</div>   
+ </div>        </div>      </div>    </div>  </div></div>Você está prestes a escolher um método de pagamento para fazer a sua doação!<br><br>
 
-                                        $main_content.= '<script>
-                                                            function selectDefault(){    
-                                                                
-                                                                ChangeService(' .current(array_keys($config['pagseguro']['offers'])) . ');                                            
-                                                            }
-                                                            
-                                                            $(document).ready(selectDefault())                                    
-                                                            
-                                                        </script>
-                    
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div></div>
-                        <br/>
-						
-					<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-                                 <div class="BigButton" style="background-image: url(' . $layout_name . '/images/global/buttons/sbutton_green.gif);">
-                                 <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(' . $layout_name . '/images/global/buttons/sbutton_green_over.gif);"></div>
-                                 <input type="hidden" name="step" value="4">
-                                 <input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-                                 <input class="ButtonText" name="Continue" alt="Continue" src="' . $layout_name . '/images/global/buttons/_sbutton_continue.gif" type="image">
-                                 </div>
-                                 </div>
-                                 </form>
-							</div>
-							
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="step" value="2">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" >
-											<div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
+
+<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%> 
+				<form action="index.php?subtopic=donate&action=tipo" method="POST"><input type="hidden" name="char_name" value=""> 
+				<TR BGCOLOR="#505050"> 
+					<TD CLASS=white COLSPAN=3><B>Escolha o Método de Pagamento</B></TD> 
+				</TR> 
+				<TR BGCOLOR=#D4C0A1> 
+                                <TD><input type="radio" name="method" value="1" checked="checked"> PagSeguro - Cartão de crédito/boleto</TD>
+				
+				</TR>
+
+                                <TR BGCOLOR="#505050"> 
+				<TR BGCOLOR=#D4C0A1>
+
+					<TD><input type="radio" name="method" value="2"> Paypal - Credit Cards/International Transactions</TD>
+				</TR>
+				
+
+                                <TD><input type="radio" name="method" value="3"> Banco do Brasil e Caixa Economica - Depositos/DOCS/Transferencias Bancarias</TD>
+				</TR>
+								<TR BGCOLOR="#505050"> 
+				<TR BGCOLOR=#D4C0A1>
+ 
+												
 								
-							
-							</div>
-							
-					</div>				
-											
-											
-                                        
-                    ';
+				
+			</TABLE>
+       </tbody></table>        <br><table width="100%"><tbody><tr align="center"><td><table border="0" cellpadding="0" cellspacing="0">
+	   <tbody><tr><td style="border: 0px none;">
+	   <a href="javascript:void();" onclick=location.href="?subtopic=donate&action=pag_form">
+	   <div class="BigButton" style="background-image: url(layouts/tibiarl/images/buttons/sbutton.gif);">
+	   <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(layouts/tibiarl/images/buttons/sbutton_over.gif);"></div>
+	   <input class="ButtonText" name="Continue" alt="Continue" src="layouts/tibiarl/images/vips/_sbutton_continue.gif" type="image">
 
-				}
-
-
-
-				################################################################################################################################################################
-				##############################################################################################################################
-				#####################################################################################################################################################################
-				# Paypal Method
-				if($donateMethod == "paypal") {
-					$doubleStatus = $SQL->query("SELECT `value` FROM `server_config` WHERE `config` = 'double'")->fetch();
-					$main_content .= '
-						<div class="TableContainer" style="position:relative;">
-						<style>
-							.ribbonShop-double {
-							background:url('.$layout_name.'/images/shop/ribbon-double.png) no-repeat;
-							width: 80px;
-							height: 80px;
-							position:absolute;
-							right: -5px;
-							top: -5px;
-							z-index:999;
-						}
-						</style>
-						'.(($doubleStatus['value'] == "active") ? '<div class="ribbonShop-double"></div>' : '').'
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Points Package</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td class="LabelV">Donation Price</td>
-																	<td class="LabelV">Amount Tibia Coins</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 5,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>5 Tibia Coins</strike> = <font color="green">10 Tibia Coins</font>' : '5 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td>R$ 10,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>10 Tibia Coins</strike> = <font color="green">20 Tibia Coins</font>' : '10 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 20,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>20 Tibia Coins</strike> = <font color="green">40 Tibia Coins</font>' : '20 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td>R$ 40,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>40 Tibia Coins</strike> = <font color="green">80 Tibia Coins</font>' : '40 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 60,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>60 Tibia Coins</strike> = <font color="green">120 Tibia Coins</font>' : '60 Tibia Coins').'</td>
-																</tr>														
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div><br>';
-					$main_content .= '
-						<form method="post" action="?subtopic=accountmanagement&action=donate">
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Choose Tibia Coins Package</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV">Tibia Coins Package</td>
-																	<td>
-																		<select name="pointsPackage">
-																			<option value="5" '.(($_REQUEST['pointsPackage'] == 5) ? 'selected' : '').'>5 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="10" '.(($_REQUEST['pointsPackage'] == 10) ? 'selected' : '').'>10 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="15" '.(($_REQUEST['pointsPackage'] == 15) ? 'selected' : '').'>15 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="20" '.(($_REQUEST['pointsPackage'] == 20) ? 'selected' : '').'>20 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="25" '.(($_REQUEST['pointsPackage'] == 25) ? 'selected' : '').'>25 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="30" '.(($_REQUEST['pointsPackage'] == 30) ? 'selected' : '').'>30 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="35" '.(($_REQUEST['pointsPackage'] == 35) ? 'selected' : '').'>35 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="40" '.(($_REQUEST['pointsPackage'] == 40) ? 'selected' : '').'>40 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="45" '.(($_REQUEST['pointsPackage'] == 45) ? 'selected' : '').'>45 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="50" '.(($_REQUEST['pointsPackage'] == 50) ? 'selected' : '').'>50 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="60" '.(($_REQUEST['pointsPackage'] == 50) ? 'selected' : '').'>60 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="70" '.(($_REQUEST['pointsPackage'] == 50) ? 'selected' : '').'>70 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="80" '.(($_REQUEST['pointsPackage'] == 50) ? 'selected' : '').'>80 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="90" '.(($_REQUEST['pointsPackage'] == 50) ? 'selected' : '').'>90 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="100" '.(($_REQUEST['pointsPackage'] == 100) ? 'selected' : '').'>100 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="150" '.(($_REQUEST['pointsPackage'] == 150) ? 'selected' : '').'>150 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="200" '.(($_REQUEST['pointsPackage'] == 200) ? 'selected' : '').'>200 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="250" '.(($_REQUEST['pointsPackage'] == 250) ? 'selected' : '').'>250 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="300" '.(($_REQUEST['pointsPackage'] == 300) ? 'selected' : '').'>300 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																		</select>
-																	</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>';
-					$main_content .= '
-						<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-								<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-								<input type="hidden" name="step" value="4">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-									</div>
-								</div>
-							</div>
-							</form>
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="step" value="2">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>';
-				}
-				# Paypal Method
-				if($donateMethod == "banktransfer") {
-					$doubleStatus = $SQL->query("SELECT `value` FROM `server_config` WHERE `config` = 'double'")->fetch();
-					$main_content .= '
-						<div class="TableContainer" style="position:relative;">
-						<style>
-							.ribbonShop-double {
-							background:url('.$layout_name.'/images/shop/ribbon-double.png) no-repeat;
-							width: 80px;
-							height: 80px;
-							position:absolute;
-							right: -5px;
-							top: -5px;
-							z-index:999;
-						}
-						</style>
-						'.(($doubleStatus['value'] == "active") ? '<div class="ribbonShop-double"></div>' : '').'
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Tibia Coins Package</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td class="LabelV">Donation Price</td>
-																	<td class="LabelV">Amount Tibia Coins</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 5,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>75 Tibia Coins</strike> = <font color="green">75 Tibia Coins</font>' : '75 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td>R$ 8,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>125 Tibia Coins</strike> = <font color="green">125 Tibia Coins</font>' : '125 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 15,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>250 Tibia Coins</strike> = <font color="green">250 Tibia Coins</font>' : '250 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td>R$ 28,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>500 Tibia Coins</strike> = <font color="green">500 Tibia Coins</font>' : '500 Tibia Coins').'</td>
-																</tr>
-																<tr bgcolor="'.$config['site']['lightborder'].'">
-																	<td>R$ 49,00</td>
-																	<td>'.(($doubleStatus['value'] == "active") ? '<strike>1000 Tibia Coins</strike> = <font color="green">1000 Tibia Coins</font>' : '1000 Tibia Coins').'</td>
-																</tr>														
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div><br>';
-					$main_content .= '
-						<form method="post" action="?subtopic=accountmanagement&action=donate">
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Choose the Bank</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr bgcolor="'.$config['site']['darkborder'].'">
-																	<td><input type="radio" name="bankname" value="Caixa Economica"></td>
-																	<td align="center" width="20%">
-																		<img src="'.$layout_name.'/images/payment/caixa.png" width="150px"><br>
-																		</td>
-																	<td>
-																		FaÃ§a o depÃ³sito nas agÃªncias da <b>Caixa EconÃ´mica Federal</b> ou <b>TransferÃªncia Online</b> e nas lotÃ©ricas.<br><br>
-																		<b>Caixa EconÃ´mica</b><br>																
-																		<strong>Favorecido</strong>: Igor Dias Delecrode<br>
-																		<strong>AgÃªncia:</strong> 1580<br>
-																		<strong>Conta:</strong> 00125713-0<br>
-																		<strong>OperaÃ§Ã£o:</strong> 013<br>
-																		<strong>(<em>Conta PoupanÃ§a </em>)</strong><br>
-																	</td>
-																</tr>																													
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div><br>
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Choose Tibia Coins Package</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV">Tibia Coins Package</td>
-																	<td>
-																		<select name="pointsPackage">
-																			<option value="75" '.(($_REQUEST['pointsPackage'] == 75) ? 'selected' : '').'>75 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="125" '.(($_REQUEST['pointsPackage'] == 125) ? 'selected' : '').'>125 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="250" '.(($_REQUEST['pointsPackage'] == 250) ? 'selected' : '').'>250 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="500" '.(($_REQUEST['pointsPackage'] == 500) ? 'selected' : '').'>500 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																			<option value="1000" '.(($_REQUEST['pointsPackage'] == 1000) ? 'selected' : '').'>1000 Tibia Coins '.(($doubleStatus['value'] == "active") ? '(2x)' : '').'</option>
-																		</select>
-																	</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>';					
-					$main_content .= '
-						<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-								<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-								<input type="hidden" name="step" value="4">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-									</div>
-								</div>
-							</div>
-							</form>
-							
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="step" value="2">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>';
-				}
-			}
+	   </table></td></tr></tbody></table>';
+		}$_SESSION["nome"] = stripslashes(urldecode($_POST['method']));
+	}
+elseif($action == 'tipo')
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
 		}
-		
-		if($step == 4) {
+		else
+		{
+		$buy_tipo = stripslashes(urldecode($_POST['method']));
+		if($buy_tipo == 1) {		
+        $main_content .= '
+<table><tr><td> 
+<form method="post" target="_new" action="https://pagseguro.uol.com.br/security/webpagamentos/webpagto.aspx" name="LOGIN" class="formulario">
+<input type="hidden" name="ref_transacao" value="'.$account_logged->getName().'" />
+<input type="hidden" name="email_cobranca" value="claytonguths@hotmail.com">
+<input type="hidden" name="tipo" value="CP">
+<input type="hidden" name="moeda" value="BRL">
+<input type="hidden" name="item_id_1" value="2000050">
+<table><tbody><tr><td><strong>Nome do Seu Character (Sem erro):</strong></td></tr></tbody></table>
+<table><tbody><tr><td><input type="text" name="item_descr_1"></td></tr></tbody></table><br> 
 
-			$donateValue = $_REQUEST['pointsPackage'];
-			$donateMethod = $_REQUEST['donateMethod'];
-			$donateBank = $_REQUEST['bankname'];
-			
-			if($donateMethod == "pagseguro") {
-				$main_content .= '
-					<!-- <form method="post" action="?subtopic=accountmanagement&action=donate"> -->
-					    <form target="pagseguro" method="post" action="dntpagseguro.php">
-					    <input type="hidden" name="accname" value="'.$account_logged->getName().'">
-					    <input type="hidden" name="pid" value="'.$_POST['ServiceID'].'">					    
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Donation Details</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Order</td>
-																	<td>'.$config['pagseguro']['offers'][$_POST['ServiceID']].' Tibia Coins</td>
-																</tr>
-																<tr>
-																	<td class="LabelV" width="30%">Donation Amount</td>
-																	<td>R$ '.($_POST['ServiceID'] / 100).',00</td>
-																</tr>
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Donation Method</td>
-																	<td>PagSeguro</td>
-																</tr>
-																<tr>
-																	<td class="LabelV">Account Name</td>
-																	<td><input type="hidden" value="' . $account_logged->getName() . '" name="account_namev"/>'.$account_logged->getName().'</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>';
-				$main_content .= '
-						<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-								<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-								<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-								<input type="hidden" name="step" value="5">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-									</div>
-								</div>
-							</div>
-							</form>
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-									<input type="hidden" name="step" value="3">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>';
-			}
-			if($donateMethod == "paypal") {
-				$main_content .= '
-					<form method="post" action="?subtopic=accountmanagement&action=donate">
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Confirm your order</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Order</td>
-																	<td>'.$donateValue.' Tibia Coins</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Donate Method</td>
-																	<td>PayPal</td>
-																</tr>
-																<tr>
-																	<td class="LabelV">Account Name</td>
-																	<td>'.$account_logged->getName().'</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>';
-				$main_content .= '
-						<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-								<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-								<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-								<input type="hidden" name="step" value="5">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-									</div>
-								</div>
-							</div>
-							</form>
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-									<input type="hidden" name="step" value="3">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>';
-			}
-			if($donateMethod == "banktransfer") {
-				if(!isset($donateBank) || $donateBank == "")
-					$donate_errors[] = "You need to select a bank to complete your donation.";
-				if(!empty($donate_errors)) {
-					$main_content .= '
-					<div class="TableContainer" >
-						<table class="Table1" cellpadding="0" cellspacing="0" >
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>							
-									<div class="Text" >Donate Errors</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer" >
-										<table style="width:100%;" >
-											<tr>
-												<td>';
-												foreach($donate_errors as $error)
-													$main_content .= $error . '<br>';
-											$main_content .= '
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div><BR>
-					<TABLE BORDER=0 WIDTH=100%>
-						<TR>
-							<TD ALIGN=center>
-								<table border="0" cellspacing="0" cellpadding="0" >
-									<form action="?subtopic=accountmanagement&action=donate" method="post">
-										<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-										<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-										<input type="hidden" name="step" value="3">
-										<tr>
-											<td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-													<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-														<input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/global/buttons/_sbutton_back.gif" >
-													</div>
-												</div>
-											</td>
-										</tr>
-									</form>
-								</table>
-							</TD>
-						</TR>
-					</TABLE>';
-				} else {
-					$main_content .= '
-					<form method="post" action="?subtopic=accountmanagement&action=donate">
-						<div class="TableContainer" >
-							<table class="Table5" cellpadding="0" cellspacing="0">
-							<div class="CaptionContainer" >
-								<div class="CaptionInnerContainer" > 
-									<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-									<div class="Text" >Confirm your order</div>
-									<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span> 
-									<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-									<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-									<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span> 
-								</div>
-							</div>
-							<tr>
-								<td>
-									<div class="InnerTableContainer">
-										<table style="width:100%;" >
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Order</td>
-																	<td>'.$donateValue.' Tibia Coins</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="TableShadowContainerRightTop" >
-														<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rt.gif);" ></div>
-													</div>
-													<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-rm.gif);" >
-														<div class="TableContentContainer" >
-															<table class="TableContent" width="100%"  style="border:1px solid #faf0d7;" >
-																<tr>
-																	<td class="LabelV" width="30%">Donate Method</td>
-																	<td>Bank Transfer</td>
-																</tr>
-																<tr>
-																	<td class="LabelV">Account Name</td>
-																	<td>'.$account_logged->getName().'</td>
-																</tr>										
-															</table>
-														</div>
-													</div>											
-													<div class="TableShadowContainer" >
-														<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bm.gif);" >
-															<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-bl.gif);" ></div>
-															<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/global/content/table-shadow-br.gif);" ></div>
-														</div>
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>';
-				$main_content .= '
-						<div class="SubmitButtonRow" >
-							<div class="LeftButton" >
-								<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-								<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-								<input type="hidden" name="donateBank" value="'.$donateBank.'">
-								<input type="hidden" name="step" value="5">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Next" alt="Next" src="'.$layout_name.'/images/global/buttons/_sbutton_next.gif" >
-									</div>
-								</div>
-							</div>
-							</form>
-							<div class="RightButton" >
-								<form method="post" action="?subtopic=accountmanagement&action=donate">
-									<input type="hidden" name="donateMethod" value="'.$donateMethod.'">
-									<input type="hidden" name="pointsPackage" value="'.$donateValue.'">
-									<input type="hidden" name="step" value="3">
-									<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-										<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-											<input class="ButtonText" type="image" name="Previous" alt="Previous" src="'.$layout_name.'/images/global/buttons/_sbutton_previous.gif" >
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>';
-				}
-			}
-		}
-		
-		if($step == 5) {
-			$donateValue = $_REQUEST['pointsPackage'];
-			$donateMethod = $_REQUEST['donateMethod'];
-			$donateBank = $_REQUEST['donateBank'];
-			$donatePrice = $_REQUEST['pointsPackage'] . '.00';
-			//$donateRef = randString(6);
-			$donateDate = time();
-			$donateAccount = $account_logged->getName();
-			
-			if ($doubleStatus['value'] == "active")
-				$donateCoins = (2 * $donateValue);
-			else
-				$donateCoins = $donateValue;
-			
-			$transRef = $donateRef . '-' . $donateBank;
-			
-			if( $_SERVER['REQUEST_METHOD']=='POST' ) {
-				$hash = md5( implode( $_POST ) );			
-				if( isset( $_SESSION['hash'] ) && $_SESSION['hash'] == $hash ) {		
-					// Refresh! NÃ£o faz nada ou re-exibe o formulÃ¡rio preenchido			
-				} else {			
-					$_SESSION['hash']  = $request;
-					if($donateMethod == "pagseguro")						
-						$add_order = $SQL->query("INSERT INTO `z_shop_donates` (`date`,`reference`,`account_name`,`method`,`price`,`coins`,`status`) VALUES ('$donateDate','$donateRef','$donateAccount','$donateMethod','$donatePrice','$donateCoins','waiting')");
-					elseif($donateMethod == "paypal")
-						$add_order = $SQL->query("INSERT INTO `z_shop_donates` (`date`,`reference`,`account_name`,`method`,`price`,`coins`,`status`) VALUES ('$donateDate','$donateRef','$donateAccount','$donateMethod','$donatePrice','$donateCoins','confirm')");
-					else
-						$add_order = $SQL->query("INSERT INTO `z_shop_donates` (`date`,`reference`,`account_name`,`method`,`price`,`coins`,`status`) VALUES ('$donateDate','$transRef','$donateAccount','$donateMethod','$donatePrice','$donateCoins','confirm')");
-				}
-			}
-			
-			if($donateMethod == "pagseguro") {			
+<input type="hidden" name="item_quant_1" value="1"> 
+<table><tbody><tr>
+<td width="153"><span class="style11 style4">
+<strong>Valor do pagamento:</strong>
+</span>
+</td>
+</tr>
+</tbody></table> 
 
-				$main_content .= '
-						<div class="TableContainer" >
-							<table class="Table1" cellpadding="0" cellspacing="0" >
-								<div class="CaptionContainer" >
-									<div class="CaptionInnerContainer" > 
-										<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>							
-										<div class="Text" >Summary</div>
-										<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-										<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									</div>
-								</div>
-								<tr>
-									<td>
-										<div class="InnerTableContainer" >
-											<table style="width:100%;" >
-												<tr>
-													<td>Your donation is already in our system, to realize your purchase click on "Buy Now" and you will be redirected to the PagSeguro site where you can complete your purchase. Thanks You.</td>
-												</tr>
-											</table>
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>';
-				$main_content .= '
-					<form method="post" action="https://'.(($config['pagseguro']['testing'] === true) ? 'sandbox.' : '').'pagseguro.uol.com.br/v2/checkout/payment.html">
-					<div class="SubmitButtonRow" >
-						<div class="LeftButton" >
-							<input type="hidden" name="receiverEmail" value="'. $config['pagseguro']['email']. '">
-							<input type="hidden" name="currency" value="BRL">
-							<input type="hidden" name="itemId1" value="1">
-							<input type="hidden" name="itemDescription1" value="'.$donateCoins.' Pontos na account de nome: '.$donateAccount.'">
-							<input type="hidden" name="itemWeight1" value="0">
-							<input type="hidden" name="reference" value="'.$donateRef.'-'.$donateAccount.'">
-							<input name="itemAmount1" type="hidden" value="'.$donatePrice.'" size="5" maxlength="5">
-							<input name="itemQuantity1" type="hidden" value="1" size="1" maxlength="1">
-							<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-								<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-									<input class="ButtonText" type="image" name="Buy Now" alt="Buy Now" src="'.$layout_name.'/images/global/buttons/_sbutton_buynow.gif" >
-								</div>
-							</div>
-						</div>
-						</form>
-						<div class="RightButton" >
-							<form method="post" action="?subtopic=accountmanagement&action=manage">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_red.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_red_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Cancel" alt="Cancel" src="'.$layout_name.'/images/global/buttons/_sbutton_cancel.gif" >
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>';
-			} elseif($donateMethod == "paypal") {
-				$main_content .= '
-						<div class="TableContainer" >
-							<table class="Table1" cellpadding="0" cellspacing="0" >
-								<div class="CaptionContainer" >
-									<div class="CaptionInnerContainer" > 
-										<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>							
-										<div class="Text" >Summary</div>
-										<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-										<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									</div>
-								</div>
-								<tr>
-									<td>
-										<div class="InnerTableContainer" >
-											<table style="width:100%;" >
-												<tr>
-													<td>Your donation is already in our system, to realize your purchase click on "Buy Now" and you will be redirected to the Paypal site where you can complete your purchase. Thanks You. Remember that this type of donation requires confirmation.</td>
-												</tr>
-											</table>
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>';
-				$main_content .= '
-					<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-					<div class="SubmitButtonRow" >
-						<div class="LeftButton" >
-							<input type="hidden" name="cmd" value="_xclick">
-							<input type="hidden" name="business" value="'. $config['paypal']['email']. '">
-							<input type="hidden" name="item_name" value="' . $donateCoins . ' Tibia Coins">
-							<input type="hidden" name="custom" value="'.$refString.'-'.$account_logged->getName().'">
-							<input type="hidden" name="amount" value="'.$donatePrice.'">
-							<input type="hidden" name="currency_code" value="BRL">
-							<input type="hidden" name="no_note" value="0">
-							<input type="hidden" name="no_shipping" value="1">
-							<input type="hidden" name="rm" value="0">
-							<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green.gif)" >
-								<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_green_over.gif);" ></div>
-									<input class="ButtonText" type="image" name="Buy Now" alt="Buy Now" src="'.$layout_name.'/images/global/buttons/_sbutton_buynow.gif" >
-								</div>
-							</div>
-						</div>
-						</form>
-						<div class="RightButton" >
-							<form method="post" action="?subtopic=accountmanagement&action=manage">
-								<div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_red.gif)" >
-									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_red_over.gif);" ></div>
-										<input class="ButtonText" type="image" name="Cancel" alt="Cancel" src="'.$layout_name.'/images/global/buttons/_sbutton_cancel.gif" >
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>';
-			} else {
-				$main_content .= '
-						<div class="TableContainer" >
-							<table class="Table1" cellpadding="0" cellspacing="0" >
-								<div class="CaptionContainer" >
-									<div class="CaptionInnerContainer" > 
-										<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>							
-										<div class="Text" >Summary</div>
-										<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
-										<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
-										<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-										<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
-									</div>
-								</div>
-								<tr>
-									<td>
-										<div class="InnerTableContainer" >
-											<table style="width:100%;" >
-												<tr>
-													<td>Your donation is already in our system, thanks You. Remember that this type of donation requires confirmation.</td>
-												</tr>
-											</table>
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>';
-				$main_content .= '
-					<TABLE BORDER=0 WIDTH=100%>
-						<TR>
-							<TD ALIGN=center>
-								<table border="0" cellspacing="0" cellpadding="0" >
-									<form action="?subtopic=accountmanagement&action=manage" method="post">
-										<tr>
-											<td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton.gif)" >
-													<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/global/buttons/sbutton_over.gif);" ></div>
-														<input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/global/buttons/_sbutton_back.gif" >
-													</div>
-												</div>
-											</td>
-										</tr>
-									</form>
-								</table>
-							</TD>
-						</TR>
-					</TABLE>';
+<table border="0"><tbody><tr>
+
+  <td width="96"><label>
+
+    <select name="item_valor_1" id="item_valor_1" tabindex="2">
+
+      <option selected>Selecione</option>
+
+      
+     <option value="5,00">R$5,00</option>
+
+      <option value="10,00">R$10,00</option>
+
+      <option value="15,00">R$15,00</option>
+
+      <option value="20,00">R$20,00</option>
+ 
+      <option value="25,00">R$25,00</option>
+
+      <option value="30,00">R$30,00</option>
+ 
+      <option value="35,00">R$35,00</option>
+     
+      <option value="40,00">R$40,00</option>
+
+      <option value="45,00">R$45,00</option>
+
+      <option value="50,00">R$50,00</option>
+
+      <option value="55,00">R$55,00</option>
+ 
+      <option value="60,00">R$60,00</option>
+
+      <option value="65,00">R$65,00</option>       
+
+      <option value="70,00">R$70,00</option>
+      
+      <option value="75,00">R$75,00</option>
+
+      <option value="80,00">R$80,00</option>
+   
+      <option value="85,00">R$85,00</option>
+
+
+      <option value="90,00">R$90,00</option>
+
+      <option value="100,00">R$100,00</option>
+
+      <option value="110,00">R$110,00</option>
+
+      <option value="120,00">R$120,00</option>
+
+      <option value="130,00">R$130,00</option>
+
+      <option value="140,00">R$140,00</option>
+
+      <option value="150,00">R$150,00</option>
+
+      <option value="160,00">R$160,00</option>
+
+      <option value="170,00">R$170,00</option>
+ 
+      <option value="180,00">R$180,00</option>
+
+      <option value="190,00">R$190,00</option>
+ 
+      <option value="200,00">R$200,00</option>
+	
+      <option value="250,00">R$250,00</option>
+	
+      <option value="300,00">R$300,00</option>
+	
+      <option value="350,00">R$350,00</option>
+	
+      <option value="400,00">R$400,00</option>
+	
+	<option value="500,00">R$500,00</option>
+
+
+                                </select>
+
+  </label></td>
+
+</tr></tbody></table>
+
+
+</td>
+</tr>
+<br> 
+
+<br> 
+
+<input type="hidden" name="item_frete_1" value="000">  
+
+<table><tbody><tr><td><input type="submit" value="Finalizar Compra"></td></tr></tbody></table> 
+';
 			}
-		}
+				if($buy_tipo == 3) {		
+        $main_content .= '
+<table border="0" cellspacing="1" cellpadding="4" width="100%">
+        <tr bgcolor="#505050"><td colspan="1" class="white"><center><b>Informa&ccedil;&otilde;es da Conta</b></center></td></tr>
+
+
+        <tr bgcolor="#D4C0A1"><td>Nome: Clayton Andrey Guths<br>
+Banco: Caixa Economica<br>
+Ag&ecirc;ncia: 1544<br>
+Conta Poupança: 39542-3<br>
+
+<p><img src=http://autoblogg.com/wp-content/uploads/2014/03/caixloter.jpg>
+
+
+
+
+
+
+
+</td></tr>
+        
+
+<table border="0" cellspacing="1" cellpadding="4" width="100%">
+        <tr bgcolor="#505050"><td colspan="1" class="white"><center><b>Informa&ccedil;&otilde;es da Conta</b></center></td></tr>
+        <tr bgcolor="#D4C0A1"><td>Nome: Clayton Andrey Guths<br>
+Banco: Banco do Brasil<br>
+Ag&ecirc;ncia: 3126-7<br>
+Conta Corrente: 85544-8<br>
+
+<p><img src=http://images.all-free-download.com/images/graphicthumb/banco_do_brasil_1_132882.jpg>
+
+<p>Procedimento para compras com depósitos bancários:
+Após efetuar o depósito pedimos que mande um email com o comprovante de confirmação da doação para <font color=green> claytonguths@hotmail.com</font> com foto para anexo e
+com o seguinte conteúdo:
+#Nome do char
+#Valor do depósito
+
+Pedimos que aguarde a confirmação!
+Prazo para entrega dos points é 24 horas.
+
+
+
+</td></tr>
+        </table><br/>';
+
 }
+				elseif($buy_tipo == 4) {		
+        $main_content .= '
+	<center><h1>Onebip - Sistema de Pagamento pelo celuar via SMS</center></h1>
+	';
+	
+	$main_content .= '<center>
+	<table border="0" cellspacing=1 cellpadding=4 width="80%">
+	<tr bgcolor="'.$config['site']['vdarkborder'].'">
+	<center><th width="100%"><font class=black><b>Planos disponíveis</b></font></th>
+	</tr>
+	</table>
+	<table border="0" cellspacing=1 cellpadding=4 width="80%">
+	<tr>
+	<center><td bgcolor="'.$config['site']['darkborder'].'" witdh="2%"><center><b>Doação - 5R$</center></b></td>
+	<td bgcolor="'.$config['site']['darkborder'].'" witdh="2%"><center><b>Doação - 10R$</center></b></td>
+	<td bgcolor="'.$config['site']['darkborder'].'" witdh="2%"><center><b>Doação - 20R$</center></b></td>
+	<td bgcolor="'.$config['site']['darkborder'].'" witdh="2%"><center><b>Doação - 30R$</center></b></td>
+	<td bgcolor="'.$config['site']['darkborder'].'" witdh="2%"><center><b>Doação - 50R$</center></b></td>
+	</tr>
+	<tr>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b><a href="LINKDOSEUBOTAO" title="Mobile payment: send and receive money with your mobile phone">
+<img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
+</a></center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b><a href="LINKDOSEUBOTAO" title="Mobile payment: send and receive money with your mobile phone">
+<img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
+</a></center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b><a href="LINKDOSEUBOTAO" title="Mobile payment: send and receive money with your mobile phone">
+<img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
+</a></center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b><a href="LINKDOSEUBOTAO" title="Mobile payment: send and receive money with your mobile phone">
+<img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
+</a></center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b><a href="LINKDOSEUBOTAO" title="Mobile payment: send and receive money with your mobile phone">
+<img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
+</a></center></b></td>
+	</tr>
+	<tr>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+	<td bgcolor="'.$config['site']['lightborder'].'" witdh="2%"><center><b>Faça sua Doação</center></b></td></center>
+	</tr>
+	</table>
+	<table border="0" cellspacing=1 cellpadding=4 width="80%">
+	<tr bgcolor="'.$config['site']['vdarkborder'].'">
+	<td width="100%"></td>
+	</tr>
+	</table>
+	<br>
+	';
+	
+	$main_content.='
+	<table border="0" cellspacing=1 cellpadding=4 width="100%">
+	<tr bgcolor="'.$config['site']['vdarkborder'].'">
+	<th width="100%"><font class=black>Observa&ccedil;&otilde;es</b></th>
+	</tr>
+	</table>
+	<table border="0" cellspacing=1 cellpadding=4 width="100%">
+	<tr bgcolor="'.$config['site']['darkborder'].'">
+	<td width="100%"><ul><li>Para efetuar com sucesso sua doação utilizando o sistema <b>Onebip</b> é necessário de atenção: Ao enviar a mensagem você recebera os créditos em sua conta Onebip e depois transferir para a conta do servidor, caso não seja feito isso seus pontos não vão chegar.</li></ul></td>
+	</tr>
+	<tr bgcolor="'.$config['site']['darkborder'].'">
+	<td width="100%"><ul><li>Todas as doações efetuadas no sistema <b>Onebip</b> precisam ser <a href="http://baiakfusion.com/index.php?subtopic=confirmacao">Confirmadas</a> para serem creditas em sua account, caso contrário seus pontos não serão creditados</li></ul></td>
+	</tr>
+	</table>';
+
+}			
+			if($buy_tipo == 2)
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+		}
+		else
+		{
+		$main_content .= '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center> 
+			<br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%> 
+			<tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Pedido</b></font></td></tr> 
+			<tr bgcolor="#D4C0A1"><td width="100"><b>M&eacute;todo de pagamento:</b></td><td width="550" colspan="2">PayPal</TD></tr>	
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">'.$account_logged->getName().'</td></tr>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2"><select name="amount">
+  <option value="10.00">10 R$</option>
+  <option value="20.00">20 R$</option>
+  <option value="30.00">30 R$</option>
+  <option value="40.00">40 R$</option>
+  <option value="50.00">50 R$</option>
+</select></td></tr>		
+			</TABLE><BR> 
+<input type="hidden" name="cmd" value="_donations">
+<input type="hidden" name="business" value="">
+<input type="hidden" name="lc" value="BR">
+<input type="hidden" name="item_name" value="Pontos na account de nome: '.$account_logged->getCustomField("name").'">
+<input type="hidden" name="custom" value="'.$account_logged->getCustomField("name").'">
+<input type="hidden" name="item_number" value="1">
+<input type="hidden" name="currency_code" value="BRL">
+<input type="hidden" name="no_note" value="0">
+<input type="hidden" name="no_shipping" value="0">
+<input type="hidden" name="notify_url" value="http://start-global.net/ipn.php">
+<input type="hidden" name="return" value="http://start-global.net">
+<input type="hidden" name="rm" value="0">
+<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG_global.gif:NonHosted">
+
+<BR> 
+			<table style="width:100%;" ><tr align="center" ><td>
+			<a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiarl/images/buttons/sbutton_back.gif"></a> </TD>  
+			<td><input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."></TR> 
+			</TABLE></form>';
+		}
+	}
+		}
+	}
+elseif($action == 'finalps')
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+		}
+		else
+		{
+		$buy_quant = stripslashes(urldecode($_POST['quant']));
+		$main_content .= '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PagSeguro, onde você deverá preencher os dados e concluir a doação.</center> 
+			<br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%> 
+			<form target="pagseguro" action="https://pagseguro.uol.com.br/security/webpagamentos/webpagto.aspx" method="post"><input type="hidden" name="char_name" value=""> 
+			<tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Confirme seus dados</b></font></td></tr> 
+			<tr bgcolor="#D4C0A1"><td width="100"><b>M&eacute;todo de pagamento:</b></td><td width="550" colspan="2">PagSeguro</TD></tr>	
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">'.$account_logged->getName().'</td></tr>	
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2">'.$buy_quant.'</td></tr>
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Valor:</b></td><td width="550" colspan="2">'.$buy_quant.',00</td></tr>		
+			</TABLE><BR> 
+	 		<center> 
+<!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
+<form target="pagseguro" action="https://pagseguro.uol.com.br/checkout/checkout.jhtml" method="post">
+<input type="hidden" name="email_cobranca" value="claytonguths@hotmail.com" />
+<input type="hidden" name="tipo" value="CP" />
+<input type="hidden" name="moeda" value="BRL" />
+<input type="hidden" name="item_id_1" value="'.$buy_quant.'" />
+<input type="hidden" name="item_descr_1" value="Pontos" />
+<input type="hidden" name="item_quant_1" value="'.$buy_quant.'" />
+<input type="hidden" name="item_valor_1" value="100" />
+<input type="hidden" name="item_peso_1" value="0" />
+<input type="hidden" name="ref_transacao" value="'.$account_logged->getName().'" />
+
+<!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
+<BR> 
+			<table style="width:100%;" ><tr align="center" ><td>
+			<a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiarl/images/buttons/sbutton_back.gif"></a> </TD>  
+			<td><input type="image" src="layouts/tibiarl/images/buttons/sbutton_submit.gif" name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!" /></TR> 
+			</TABLE></form>';
+		}
+	}
+elseif($action == 'finalpp')
+	{
+	    if(!$logged) {
+		$main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+		}
+		else
+		{
+		$main_content .= '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center> 
+			<br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%> 
+			<tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Pedido</b></font></td></tr> 
+			<tr bgcolor="#D4C0A1"><td width="100"><b>M&eacute;todo de pagamento:</b></td><td width="550" colspan="2">PayPal</TD></tr>	
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">'.$account_logged->getName().'</td></tr>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2"><select name="amount">
+  <option value="10.00">10 R$</option>
+  <option value="20.00">20 R$</option>
+  <option value="30.00">30 R$</option>
+  <option value="40.00">40 R$</option>
+  <option value="50.00">50 R$</option>
+</select></td></tr>		
+			</TABLE><BR> 
+<input type="hidden" name="cmd" value="_donations">
+<input type="hidden" name="business" value="">
+<input type="hidden" name="lc" value="BR">
+<input type="hidden" name="item_name" value="Pontos na account de nome: '.$account_logged->getCustomField("name").'">
+<input type="hidden" name="custom" value="'.$account_logged->getCustomField("name").'">
+<input type="hidden" name="item_number" value="1">
+<input type="hidden" name="currency_code" value="BRL">
+<input type="hidden" name="no_note" value="0">
+<input type="hidden" name="no_shipping" value="0">
+<input type="hidden" name="notify_url" value="http://start-global.net/ipn/ipn.php">
+<input type="hidden" name="return" value="http://start-global.net">
+<input type="hidden" name="rm" value="0">
+<input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG_global.gif:NonHosted">
+
+<BR> 
+			<table style="width:100%;" ><tr align="center" ><td>
+			<a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiarl/images/buttons/sbutton_back.gif"></a> </TD>  
+			<td><input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."></TR> 
+			</TABLE></form>';
+		}
+	}
+?>
+

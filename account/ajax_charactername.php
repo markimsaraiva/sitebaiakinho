@@ -1,7 +1,4 @@
-<?php
-if(!defined('INITIALIZED'))
-    exit;
-
+<?PHP
 date_default_timezone_set('America/Sao_Paulo');
 $t=time();
 ob_start('ob_gzhandler');
@@ -12,16 +9,7 @@ if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'
 header('X-Ajax-Cip-Response-Type: Container');
 
 function f($e) {
-	die('{"AjaxObjects": 
-	[{"DataType": "Attributes",
-	"Data": "style=background-image:url(account/nok.gif)",
-	"Target": "#charactername_indicator"},
-	{"DataType": "HTML",
-	"Data": "'.$e.'",
-	"Target": "#charactername_errormessage"},
-	{"DataType": "Attributes",
-	"Data": "class=red",
-	"Target": "#charactername_label"}]}');
+	die('{"AjaxObjects": [{"DataType": "Attributes","Data": "style=background-image:url(account/nok.gif)","Target": "#charactername_indicator"},{"DataType": "HTML","Data": "'.$e.'","Target": "#charactername_errormessage"},{"DataType": "Attributes","Data": "class=red","Target": "#charactername_label"}]}');
 }
 
 $s = isset($_POST['a_CharacterName']) ? $_POST['a_CharacterName'] : '';
@@ -77,7 +65,7 @@ foreach(explode(' ', $s) as $k => $v) {
 $s = strtolower($s);
 for($i = 0; $i < strlen($s); $i++)
 	if($s[$i] == $s[($i+1)] && $s[$i] == $s[($i+2)])
-		f('This character name have more than 3 letters repeated together. Please select another one!');
+		f('This character name is already used. Please select another one!');
 foreach(array('aa ', 'ee', 'ii', 'oo', 'uu', 'gm','cm', 'aff ', 'god ', 'abc', 'tutor', 'game', 'admin', 'the ') as $v)
 	if($v == substr($s, 0, strlen($v)))
 		f('This character name is already used. Please select another one!');
@@ -85,22 +73,14 @@ foreach(array('game', 'customer', 'support', 'fuck', 'haha', 'sux', ' abc', 'suc
 	if(strpos($s, $v) !== false)
 		f('This character name is already used. Please select another one!');
 
-$char_name = trim(stripslashes($s));
+$c = parse_ini_file('../config/config.ini');
+$c = parse_ini_file($c['server_path'].'config.lua');
 
-$check_name = $SQL->query("SELECT `id` FROM `players` WHERE `name` = '$char_name' LIMIT 1")->fetch();
+$conn = mysql_pconnect('localhost', 'root', 'senha') or die();
+mysql_select_db($c['sqlDatabase']);
 
-if(count($check_name) > 0)
+if(mysql_num_rows(mysql_query('SELECT id FROM players WHERE name=\''.mysql_escape_string($s).'\' LIMIT 1')) != 0)
 	f('This character name is already used. Please select another one!');
 
-echo '{"AjaxObjects":
- [{"DataType": "Attributes",
- "Data": "style=background-image:url(account/ok.gif);",
- "Target": "#charactername_indicator"},
- {"DataType": "HTML",
- "Data": "","Target": "#charactername_errormessage"},
- {"DataType": "Attributes",
- "Data": "class=",
- "Target": "#charactername_label"}]}';
-ob_end_flush();
-
+echo '{"AjaxObjects": [{"DataType": "Attributes","Data": "style=background-image:url(account/ok.gif);","Target": "#charactername_indicator"},{"DataType": "HTML","Data": "","Target": "#charactername_errormessage"},{"DataType": "Attributes","Data": "class=","Target": "#charactername_label"}]}';
 ?>

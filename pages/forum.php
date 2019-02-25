@@ -3,9 +3,9 @@ if(!defined('INITIALIZED'))
 	exit;
 	
 // CONFIG
-$level_limit = 8; // minimum 1 character with 30 lvl on account to post
+$level_limit = 30; // minimum 1 character with 30 lvl on account to post
 $post_interval = 20; // 20 seconds between posts
-$group_not_blocked = $config['site']['access_admin_panel']; // group id of player that can always post, remove post, remove threads
+$group_not_blocked = $config['site']['access_admin_painel']; // group id of player that can always post, remove post, remove threads
 $posts_per_page = 20;
 $threads_per_page = 20;
 
@@ -16,11 +16,11 @@ $threads_per_page = 20;
 						tinyMCE.init({
 							// General options
 							mode : "textareas",
-							theme : "advanced",
+							theme : "simple",
 							plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave,visualblocks",
 					
 							// Theme options
-							theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+							theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
 							theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,image,cleanup,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
 							theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,ltr,rtl",
 							theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft,visualblocks",
@@ -74,7 +74,6 @@ $sections_desc = array(
 					6 => 'This board is all about events. Here you can advertise your events server-wide to find more participants or exchange ideas on how to organise events best.', 
 					7 => 'Everything about your private interests which has nothing to do with Tibia.');
 // END
-# Check if player can post
 function canPost($account)
 {
     if($account->isLoaded())
@@ -88,7 +87,6 @@ function canPost($account)
     return false;
 }
 
-# Replace codes for smiles
 function replaceSmile($text, $smile)
 {
     $smileys = array(
@@ -108,7 +106,7 @@ function replaceSmile($text, $smile)
     else
     {
         foreach($smileys as $search => $replace)
-            $text = str_replace($search, '<img src="./images/forum/smile/'.$replace.'.gif" />', $text);
+            $text = str_replace($search, '<img src="layouts/tibiarl/images/forum/smile/'.$replace.'.gif" />', $text);
         return $text;
     }
 }
@@ -140,15 +138,15 @@ function replaceAll($text, $smile)
         $player = substr($text, stripos($text, '[player]')+8, stripos($text, '[/player]') - stripos($text, '[player]') - 8);
         $text = str_ireplace('[player]'.$player.'[/player]', '<a href="?subtopic=characters&name='.urlencode($player).'">'.$player.'</a>', $text);
     }
+	while(stripos($text, '[letter]') !== false && stripos($text, '[/letter]') !== false )
+    {
+        $letter = substr($text, stripos($text, '[letter]')+8, stripos($text, '[/letter]') - stripos($text, '[letter]') - 8);
+        $text = str_ireplace('[letter]'.$letter.'[/letter]', '<img src="images/letters/letter_martel_'.$letter.'.gif">', $text);
+    }
     while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false )
     {
         $img = substr($text, stripos($text, '[img]')+5, stripos($text, '[/img]') - stripos($text, '[img]') - 5);
         $text = str_ireplace('[img]'.$img.'[/img]', '<img src="'.$img.'">', $text);
-    }
-	while(stripos($text, '[letter]') !== false && stripos($text, '[/letter]') !== false )
-    {
-        $letter = substr($text, stripos($text, '[letter]')+8, stripos($text, '[/letter]') - stripos($text, '[letter]') - 8);
-        $text = str_ireplace('[letter]'.$letter.'[/letter]', '<img src="./images/forum/letters/letter_martel_'.$letter.'.gif">', $text);
     }
     while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false )
     {
@@ -220,7 +218,7 @@ function codeLower($text)
 
 function showPost($topic, $text, $smile)
 {
-    $text = "<br><br>".$text;
+    $text = "<br><br>".nl2br($text);
     $post = '';
     if(!empty($topic))
         $post .= '<b>'.replaceSmile($topic, $smile).'</b>';
@@ -230,7 +228,7 @@ function showPost($topic, $text, $smile)
 
 function showPreview($topic, $text, $smile)
 {
-	$text = $_POST['text'];
+	$text = nl2br($_POST['text']);
     $post = '';
     if(!empty($topic))
         $post .= '<b>'.replaceSmile($topic, $smile).'</b>';
@@ -255,7 +253,7 @@ if($action == '')
     $main_content .= '
 		<table border=0 cellpadding=3 cellspacing=1 width=100%>
 			<tr>
-				<td  bgcolor="#505050" class="ff_white" colspan=1 align="center" width=32 height="16" ><b><img src="'.$layout_name.'/images/global/general/blank.gif" width=32 height=16 border=0></b></td>
+				<td  bgcolor="#505050" class="ff_white" colspan=1 align="center" width=32 height="16" ><b><img src="'.$layout_name.'/images/general/blank.gif" width=32 height=16 border=0></b></td>
 				<td  bgcolor="#505050" class="ff_white" colspan=1 ><b>Board</b></td>
 				<td  bgcolor="#505050" class="ff_white" colspan=1 align="center" ><b>Posts</b></td>
 				<td  bgcolor="#505050" class="ff_white" colspan=1 align="center" ><b>Threads</b></td>
@@ -316,9 +314,9 @@ if($action == 'show_board')
     $main_content .= '
 	<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
 		<TR>
-			<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+			<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 			<TD WIDTH=100% ALIGN=right><a href="?subtopic=forum" >Community Boards</a> | <b>'.$sections[$section_id].'</b></TD>
-			<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+			<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 		</TR>
 	</TABLE>';
 	
@@ -337,7 +335,7 @@ if($action == 'show_board')
 		</tr>
 	</table>';
 	
-    $last_threads = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('signature') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('replies') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('views') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('icon_id') . " FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . " = ".(int) $section_id." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " ORDER BY " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_post') . " DESC LIMIT ".$threads_per_page." OFFSET ".($page * $threads_per_page))->fetchAll();
+    $last_threads = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('signature') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('replies') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('views') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_icon_id') . " FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . " = ".(int) $section_id." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " ORDER BY " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_post') . " DESC LIMIT ".$threads_per_page." OFFSET ".($page * $threads_per_page))->fetchAll();
 	
     if(isset($last_threads[0]))
     {
@@ -349,16 +347,16 @@ if($action == 'show_board')
         $main_content .= '
 				<tr>
 					<td  bgcolor="'.$config['site']['vdarkborder'].'" class="ff_white" colspan=1 align="center" width=22 >
-						<b><img src="'.$layout_name.'/images/global/general/blank.gif" width=16 height=16 border=0></b>
+						<b><img src="'.$layout_name.'/images/general/blank.gif" width=16 height=16 border=0></b>
 					</td>
 					<td  bgcolor="'.$config['site']['vdarkborder'].'" class="ff_white" colspan=1 align="center" width=22 >
-						<b><img src="'.$layout_name.'/images/global/general/blank.gif" width=16 height=16 border=0></b>
+						<b><img src="'.$layout_name.'/images/general/blank.gif" width=16 height=16 border=0></b>
 					</td>
 					<td bgcolor="'.$config['site']['vdarkborder'].'" class="ff_white" colspan=1 align="center">
 						<b>Thread</b>
 					</td>
 					<td bgcolor="'.$config['site']['vdarkborder'].'" class="ff_white" colspan=1 align="center">
-						<b>	</b>
+						<b>Thread Starter</b>
 					</td>
 					<td bgcolor="'.$config['site']['vdarkborder'].'" class="ff_white" colspan=1 align="center">
 						<b>Replies</b>
@@ -380,17 +378,21 @@ if($action == 'show_board')
 						<div class="HNCContainer" >
 							<img src="';
 							if((int)$thread['replies'] >= 2)
-							$main_content .= $layout_name.'/images/global/forum/logo_hot.gif"';
+							$main_content .= '
+								'.$layout_name.'/images/forum/logo_hot.gif"
+							';
 							else
-							$main_content .= $layout_name.'/images/global/general/blank.gif"';							
+							$main_content .= '							
+								'.$layout_name.'/images/general/blank.gif"
+							';							
 						$main_content .= '	
 							 width=22 height=22 border=0>
 						</div>
 					</td>
 					<td  bgcolor="#F1E0C6" class="ff_std" colspan=1 align="center" >';
-					if($thread['icon_id'] >= 1)
+					if($thread['post_icon_id'] >= 1)
 					$main_content .= '
-						<img src="'.$layout_name.'/images/global/forum/icons/'.$thread['icon_id'].'.gif" border=0 width=15 height=15 alt="Eek">';
+						<img src="'.$layout_name.'/images/forum/icons/'.$thread['post_icon_id'].'.gif" border=0 width=15 height=15 alt="Eek">';
 					$main_content .= '
 					</td>
 					<td bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left">';
@@ -432,7 +434,7 @@ if($action == 'show_board')
 				<tr>
 					<td  colspan=1 align="left" valign="top" >
 						<a href="?subtopic=forum&action=new_topic&section_id='.$section_id.'" >
-							<img src="'.$layout_name.'/images/global/forum/button_newtopic_off.gif" name="" width="85" height="20" border="0" >
+							<img src="'.$layout_name.'/images/forum/button_newtopic_off.gif" name="" width="85" height="20" border="0" >
 						</a>
 					</td>
 				</tr>					
@@ -446,15 +448,15 @@ if($action == 'show_board')
 	<center>
 		<table border=0 cellpadding=3 cellspacing=0>
 			<tr>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/forum/logo_new.gif" border=0 width=22 height=22></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/forum/logo_new.gif" border=0 width=22 height=22></td>
 				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><b>New Posts</b></td>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/general/blank.gif" width=12 height=1 border=0></td>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/forum/logo_hot.gif" border=0 width=22 height=22><img src="'.$layout_name.'/images/global/forum/logo_hotnew.gif" border=0 width=22 height=22></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/general/blank.gif" width=12 height=1 border=0></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="/images/forum/logo_hotnew.gif" border=0 width=22 height=22></td>
 				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><b>More Than 16 Replies</b></td>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/general/blank.gif" width=12 height=1 border=0></td>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/forum/logo_closed.gif" border=0 width=22 height=22></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/general/blank.gif" width=12 height=1 border=0></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/forum/logo_closed.gif" border=0 width=22 height=22></td>
 				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><b>Closed Thread</b></td>
-				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/global/forum/logo_sticky.gif" border=0 width=22 height=22></td>
+				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><img src="'.$layout_name.'/images/forum/logo_sticky.gif" border=0 width=22 height=22></td>
 				<td  class="ff_info" colspan=1 align="center" valign="middle" NOWRAP ><b>Sticky Thread</b></td>
 			</tr>
 		</table>
@@ -485,56 +487,19 @@ if($action == 'show_thread')
             else
                 $links_to_pages .= '<b>'.($i + 1).' </b>';
         }
-		
-        $threads = $SQL->query("SELECT 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('group_id') . ", 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('town_id') . ", 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . ",  
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('vocation') . ", 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('level') . ", 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('signature') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ",
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('icon_id') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_edit_aid') . ", 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('edit_date') . " 
-						FROM 
-									" . $SQL->tableName('players') . ", 
-									" . $SQL->tableName('z_forum') . " 
-						WHERE 
-									" . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " 
-						= 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " 
-						AND 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " 
-						= 
-									".(int) $thread_id." 
-						ORDER BY 
-									" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " 
-						LIMIT 
-									".$posts_per_page." 
-						OFFSET 
-									".($page * $posts_per_page))->fetchAll();
+        $threads = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('group_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('town_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('rank_id') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('vocation') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('level') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('signature') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . "," . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_icon_id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('last_edit_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('edit_date') . " FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread_id." ORDER BY " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " LIMIT ".$posts_per_page." OFFSET ".($page * $posts_per_page))->fetchAll();
         if(isset($threads[0]['name']))
             $SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('views') . "=" . $SQL->fieldName('views') . "+1 WHERE " . $SQL->fieldName('id') . " = ".(int) $thread_id);
 		
 		$main_content .= '
 			<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
 				<TR>
-					<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+					<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 					<TD WIDTH=100% ALIGN=right>
 						<a href="?subtopic=forum" >Community Boards</a> | 
 						<a href="?subtopic=forum&action=show_board&id='.$threads[0]['section'].'">'.$sections[$threads[0]['section']].'</a> | <b>'.htmlspecialchars($thread_name['post_topic']).'</b>
 					</TD>
-					<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+					<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 				</TR>
 			</TABLE>
 			<br />';
@@ -589,16 +554,16 @@ if($action == 'show_thread')
 					$main_content .= '
 						<div class="CipBorderTop" >
 							<div class="CipBorder" >
-								<div class="CipBorderCornerL" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_lu.jpg)" ></div>
-								<div class="CipBorderH" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_h.jpg)" ></div>
-								<div class="CipBorderCornerR" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_ru.jpg)" ></div>
+								<div class="CipBorderCornerL" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_lu.jpg)" ></div>
+								<div class="CipBorderH" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_h.jpg)" ></div>
+								<div class="CipBorderCornerR" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_ru.jpg)" ></div>
 							</div>
 						</div>
 						<div class="CipBorderLeft" >
-							<div class="CipBorderV" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_v.jpg)" ></div>
+							<div class="CipBorderV" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_v.jpg)" ></div>
 						</div>
 						<div class="CipBorderRight" >
-							<div class="CipBorderV" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_v.jpg)" ></div>
+							<div class="CipBorderV" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_v.jpg)" ></div>
 						</div>';
 					$main_content .= '
 						<div class="PostSeparatorV" ></div>
@@ -611,7 +576,7 @@ if($action == 'show_thread')
 								
 								if($thread['group_id'] >= 3)
 								$main_content .= '
-									<img class="CipPostIcon" src="'.$layout_name.'/images/global/forum/cip_post_icon.gif" /><br>';
+									<img class="CipPostIcon" src="'.$layout_name.'/images/forum/cip_post_icon.gif" /><br>';
 								
 							$main_content .= '
 								</font><br>
@@ -625,7 +590,7 @@ if($action == 'show_thread')
                 $guild = $rank->getGuild();
                 if($guild->isLoaded())
                     $main_content .= '
-						<font class="ff_smallinfo">'.htmlspecialchars($rank->getName()).' of the <a href="?subtopic=guilds&action=show&guild='.$guild->getId().'" >'.htmlspecialchars($guild->getName()).'</a> (Larissa)</font><br>';
+						<font class="ff_smallinfo">'.htmlspecialchars($rank->getName()).' of the <a href="?subtopic=guilds&action=show&guild='.$guild->getId().'" >'.htmlspecialchars($guild->getName()).'</a> (MegaTibia)</font><br>';
             }
 			
             $posts = $SQL->query("SELECT COUNT(" . $SQL->fieldName('id') . ") AS 'posts' FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->fieldName('author_aid') . "=".(int) $thread['account_id'])->fetch();
@@ -633,12 +598,12 @@ if($action == 'show_thread')
             $main_content .= '
 				<br />Posts: '.(int) $posts['posts'].'<br /></font></div>
 				<div class="PostText" >';
-				if($thread['icon_id'] != 0)
+				if($thread['post_icon_id'] != 0)
 				$main_content .= '
-					<img src="'.$layout_name.'/images/global/forum/icons/'.$thread['icon_id'].'.gif">
+					<img src="'.$layout_name.'/images/forum/icons/'.$thread['post_icon_id'].'.gif">
 				';
 			$main_content .= '
-				'.showPost(htmlspecialchars($thread['post_topic']), $thread['post_text'], $thread['post_smile']);
+				'.showPost(htmlspecialchars($thread['post_topic']), nl2br($thread['post_text']), $thread['post_smile']);
 				
 			if(!empty($thread['signature'])){
 			$main_content .= '
@@ -651,7 +616,7 @@ if($action == 'show_thread')
 				</div>				
 				<div class="PostLower" >
 					<div class="PostDetailsHelper" >
-						<div class="PostDetails" ><img src="'.$layout_name.'/images/global/forum/logo_oldpost.gif" border=0 width=14 height=11>'.date('d.m.y H:i:s', $thread['post_date']);
+						<div class="PostDetails" ><img src="'.$layout_name.'/images/forum/logo_oldpost.gif" border=0 width=14 height=11>'.date('d.m.y H:i:s', $thread['post_date']);
 			
             if($thread['edit_date'] > 0)
             {
@@ -694,9 +659,9 @@ if($action == 'show_thread')
 			$main_content .= '
 				<div class="CipBorderBottom">
 				<div class="CipBorder">
-					<div class="CipBorderCornerL" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_ll.jpg)" ></div>
-					<div class="CipBorderH" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_h.jpg)" ></div>
-					<div class="CipBorderCornerR" style="background-image: url('.$layout_name.'/images/global/forum/cip_post_border_rl.jpg)" ></div>
+					<div class="CipBorderCornerL" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_ll.jpg)" ></div>
+					<div class="CipBorderH" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_h.jpg)" ></div>
+					<div class="CipBorderCornerR" style="background-image: url('.$layout_name.'/images/forum/cip_post_border_rl.jpg)" ></div>
 				</div>
 			</div>';
 			else
@@ -775,18 +740,18 @@ if($action == 'new_post')
         {
             $players_from_account = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " FROM " . $SQL->tableName('players') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . " = ".(int) $account_logged->getId())->fetchAll();
             $thread_id = (int) $_REQUEST['thread_id'];
-            $thread = $SQL->query("SELECT " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('icon_id') . " FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " = ".(int) $thread_id." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread_id." LIMIT 1")->fetch();
+            $thread = $SQL->query("SELECT " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_icon_id') . " FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " = ".(int) $thread_id." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread_id." LIMIT 1")->fetch();
 			
 			$main_content .= '
 				<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
 					<TR>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 						<TD WIDTH=100% ALIGN=right>
 							<a href="?subtopic=forum" >Community Boards</a> | 
 							<a href="?subtopic=forum&action=show_board&id='.$thread['section'].'">'.$sections[$thread['section']].'</a> | 
 							<a href="?subtopic=forum&action=show_thread&id='.$thread_id.'">'.htmlspecialchars($thread['post_topic']).'</a> | 
 							<b>Post New Reply</b></TD>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 					</TR>
 				</TABLE>
 				<br>
@@ -801,7 +766,7 @@ if($action == 'new_post')
 						<tr>
 							<td style="position:relative; height:100%;background-color:#D4C0A1;" align="top" >
 								<div style="position:relative; min-height:18px; width:100%; overflow-x:auto; overflow-y:visible; width:734px; word-wrap:break-word;">
-								'.showPreview(htmlspecialchars($thread['post_topic']), $_POST['text'], $thread['post_smile']).'
+								'.showPreview(htmlspecialchars($thread['post_topic']), nl2br($_POST['text']), $thread['post_smile']).'
 								</div>
 							</td>
 						</tr>
@@ -823,7 +788,7 @@ if($action == 'new_post')
                     if(isset($quoted_post[0]['name']))
                         $text = '[i]Originally posted by '.$quoted_post[0]['name'].' on '.date('d.m.y H:i:s', $quoted_post[0]['post_date']).':[/i][quote]'.$quoted_post[0]['post_text'].'[/quote]';
                 }
-                if(isset($_POST['save_post']) && $_POST['save'] == "save")
+                elseif(isset($_POST['submit']) && $_POST['submit'] == "save_post")
                 {
                     $lenght = 0;
                     for($i = 0; $i <= strlen($text); $i++)
@@ -855,45 +820,9 @@ if($action == 'new_post')
                         $saved = true;
                         $account_logged->set('last_post', time());
 						$account_logged->save();
-                        $insert_post = $SQL->query("INSERT INTO " . $SQL->tableName('z_forum') . " (
-											" . $SQL->fieldName('first_post') . ",
-											" . $SQL->fieldName('last_post') . ",
-											" . $SQL->fieldName('section') . ",
-											" . $SQL->fieldName('replies') . ",
-											" . $SQL->fieldName('views') . ",
-											" . $SQL->fieldName('author_aid') . ",
-											" . $SQL->fieldName('author_guid') . ",
-											" . $SQL->fieldName('post_text') . ",
-											" . $SQL->fieldName('post_topic') . ",
-											" . $SQL->fieldName('post_smile') . ",
-											" . $SQL->fieldName('post_date') . ",
-											" . $SQL->fieldName('last_edit_aid') . ",
-											" . $SQL->fieldName('edit_date') . ", 
-											" . $SQL->fieldName('post_ip') . ", 
-											" . $SQL->fieldName('icon_id') . "
-									) VALUES (
-											'".$thread['id']."', 
-											'0', 
-											'".$thread['section']."', 
-											'0', 
-											'0', 
-											'".$account_logged->getId()."', 
-											'".(int) $char_id."', 
-											".$SQL->quote($text).", 
-											".$SQL->quote($post_topic).", 
-											'".(int) $smile."', 
-											'".time()."', 
-											'0', 
-											'0', 
-											'".$_SERVER['REMOTE_ADDR']."', 
-											'".(int) $forum_iconid."'
-									)
-							");
-						
+                        $SQL->query("INSERT INTO " . $SQL->tableName('z_forum') . " (" . $SQL->fieldName('first_post') . " ," . $SQL->fieldName('last_post') . " ," . $SQL->fieldName('section') . " ," . $SQL->fieldName('replies') . " ," . $SQL->fieldName('views') . " ," . $SQL->fieldName('author_aid') . " ," . $SQL->fieldName('author_guid') . " ," . $SQL->fieldName('post_text') . " ," . $SQL->fieldName('post_topic') . " ," . $SQL->fieldName('post_smile') . " ," . $SQL->fieldName('post_date') . " ," . $SQL->fieldName('last_edit_aid') . " ," . $SQL->fieldName('edit_date') . ", " . $SQL->fieldName('post_ip') . ", " . $SQL->fieldName('post_icon_id') . ") VALUES ('".$thread['id']."', '0', '".$thread['section']."', '0', '0', '".$account_logged->getId()."', '".(int) $char_id."', ".$SQL->quote($text).", ".$SQL->quote($post_topic).", '".(int) $smile."', '".time()."', '0', '0', '".$_SERVER['REMOTE_ADDR']."', '".(int) $forum_iconid."')");
                         $SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('replies') . "=" . $SQL->fieldName('replies') . "+1, " . $SQL->fieldName('last_post') . "=".time()." WHERE " . $SQL->fieldName('id') . " = ".(int) $thread_id);
-						
                         $post_page = $SQL->query("SELECT COUNT(" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ") AS posts_count FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " <= ".time()." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread['id'])->fetch();
-						
                         $page = (int) ceil($post_page['posts_count'] / $threads_per_page) - 1;
                         header('Location: ?subtopic=forum&action=show_thread&id='.$thread_id.'&page='.$page);
                         $main_content .= '<br />Thank you for posting.<br /><a href="?subtopic=forum&action=show_thread&id='.$thread_id.'">GO BACK TO LAST THREAD</a>';
@@ -945,39 +874,39 @@ if($action == 'new_post')
 									<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" valign="top" ><b>Post Icon:</b></td>
 									<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" >
 										<input type=radio name="forum_iconid" value="11">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="12">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="13">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="14">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="15">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="16">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="17">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
 										<input type=radio name="forum_iconid" value="18">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="19">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="20">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="21">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="22">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="23">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="24">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
 										<input type=radio name="forum_iconid" value="25">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="26">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
 										<input type=radio name="forum_iconid" value="27">
-										&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
+										&nbsp;<img src="'.$layout_name.'/images/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
 										<input type=radio name="forum_iconid" value="0" checked>
 										&nbsp;No Icon</td>
 								</tr>
@@ -988,44 +917,43 @@ if($action == 'new_post')
 										How to use smileys:<br>
 										<table border=0 cellpadding=2 cellspacing=0 width=100%>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
 												<td  colspan=1 align="left" >:p</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
 												<td  colspan=1 align="left" >:eek:</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
 												<td  colspan=1 align="left" >:rolleyes:</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
 												<td  colspan=1 align="left" >;)</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
 												<td  colspan=1 align="left" >:o</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
 												<td  colspan=1 align="left" >:D</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
 												<td  colspan=1 align="left" >:(</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
 												<td  colspan=1 align="left" >:mad:</td>
 											</tr>
 											<tr>
-
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
 												<td  colspan=1 align="left" >:)</td>
 											</tr>
 											<tr>
-												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
+												<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
 												<td  colspan=1 align="left" >:cool:</td>
 											</tr>
 										</table>
@@ -1045,7 +973,7 @@ if($action == 'new_post')
 						<td class="ff_std" colspan=2 align="center"><br>
 							<input type=submit name="preview_new_post" value="Preview Reply">
 							&nbsp;
-							<input type="submit" name="save_post" value="Submit Message">
+							<button type="submit" name="submit" value="save_post">Submit Message</button>
 							&nbsp;
 							<input type=reset name="reset" value="Reset Fields">
 						</td>
@@ -1066,7 +994,7 @@ if($action == 'new_post')
 							<tr>
 								<td  bgcolor="'.$bgcolor.'" class="ff_pagetext" colspan=1 align="left" valign="top" width=175 ><a href="#">'.$thread['name'].'</a></td>
 								<td style="position:relative; height:100%;background-color:'.$bgcolor.';" align="top" >
-									<div style="position:relative; min-height:18px; width:100%; overflow-x:auto; overflow-y:visible; width:538px; word-wrap:break-word;" >'.showPost(htmlspecialchars($thread['post_topic']), $thread['post_text'], $thread['post_smile']).'</div></td>
+									<div style="position:relative; min-height:18px; width:100%; overflow-x:auto; overflow-y:visible; width:538px; word-wrap:break-word;" >'.showPost(htmlspecialchars($thread['post_topic']), nl2br($thread['post_text']), $thread['post_smile']).'</div></td>
 							</tr>';
                     }
                     
@@ -1089,7 +1017,7 @@ if($action == 'edit_post')
         if(canPost($account_logged) || $group_id_of_acc_logged >= $group_not_blocked)
         {
             $post_id = (int) $_REQUEST['id'];
-            $thread = $SQL->query("SELECT " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . " FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " = ".(int) $post_id." LIMIT 1")->fetch();
+            $thread = $SQL->query("SELECT " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_icon_id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . " FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " = ".(int) $post_id." LIMIT 1")->fetch();
             if(isset($thread['id']))
             {
                 $first_post = $SQL->query("SELECT " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_aid') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_topic') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_text') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_smile') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ", " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('section') . " FROM " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . " = ".(int) $thread['first_post']." LIMIT 1")->fetch();
@@ -1097,14 +1025,14 @@ if($action == 'edit_post')
 				$main_content .= '
 					<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
 					<TR>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 						<TD WIDTH=100% ALIGN=right>
 							<a href="?subtopic=forum" >Community Boards</a> | 
 							<a href="?subtopic=forum&action=show_board&id='.$thread['section'].'">'.$sections[$thread['section']].'</a> | 
 							<a href="?subtopic=forum&action=show_thread&id='.$thread['first_post'].'">'.htmlspecialchars($first_post['post_topic']).'</a> | 
 							<b><a href="http://forum.tibia.com/forum/?action=thread&amp;postid=35335511#post35335511" >Post</a></b> | 
 							<b>Edit Post</b></TD>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 					</TR>
 				</TABLE>
 				<br>
@@ -1119,7 +1047,7 @@ if($action == 'edit_post')
 						<tr>
 							<td style="position:relative; height:100%;background-color:#D4C0A1;" align="top" >
 								<div style="position:relative; min-height:18px; width:100%; overflow-x:auto; overflow-y:visible; width:734px; word-wrap:break-word;">
-								'.showPreview(htmlspecialchars($thread['post_topic']), $_POST['text'], $thread['post_smile']).'
+								'.showPreview(htmlspecialchars($thread['post_topic']), nl2br($_POST['text']), $thread['post_smile']).'
 								</div>
 							</td>
 						</tr>
@@ -1130,7 +1058,7 @@ if($action == 'edit_post')
                 {
                     $players_from_account = $SQL->query("SELECT " . $SQL->tableName('players') . "." . $SQL->fieldName('name') . ", " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " FROM " . $SQL->tableName('players') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('account_id') . " = ".(int) $account_logged->getId())->fetchAll();
                     $saved = false;
-                    if(isset($_POST['edit_post']) && $_POST['save'] == "save")
+                    if(isset($_POST['submit']) && $_POST['submit'] == "edit_post")
                     {
                         $text = trim(codeLower($_REQUEST['text']));
                         $char_id = (int) $_REQUEST['char_id'];
@@ -1171,7 +1099,7 @@ if($action == 'edit_post')
                             $saved = true;
                             if($account_logged->getId() != $thread['author_aid'])
                                 $char_id = $thread['author_guid'];
-                            $SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('author_guid') . " = ".(int) $char_id.", " . $SQL->fieldName('post_text') . " = ".$SQL->quote($text).", " . $SQL->fieldName('post_topic') . " = ".$SQL->quote($post_topic).", " . $SQL->fieldName('post_smile') . " = ".(int) $smile.", " . $SQL->fieldName('last_edit_aid') . " = ".(int) $account_logged->getId()."," . $SQL->fieldName('edit_date') . " = ".time().", " . $SQL->fieldName('icon_id')." = " .(int) $forum_iconid. " WHERE " . $SQL->fieldName('id') . " = ".(int) $thread['id']);
+                            $SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('author_guid') . " = ".(int) $char_id.", " . $SQL->fieldName('post_text') . " = ".$SQL->quote($text).", " . $SQL->fieldName('post_topic') . " = ".$SQL->quote($post_topic).", " . $SQL->fieldName('post_smile') . " = ".(int) $smile.", " . $SQL->fieldName('last_edit_aid') . " = ".(int) $account_logged->getId()."," . $SQL->fieldName('edit_date') . " = ".time().", " . $SQL->fieldName('post_icon_id')." = " .(int) $forum_iconid. " WHERE " . $SQL->fieldName('id') . " = ".(int) $thread['id']);
                             $post_page = $SQL->query("SELECT COUNT(" . $SQL->tableName('z_forum') . "." . $SQL->fieldName('id') . ") AS posts_count FROM " . $SQL->tableName('players') . ", " . $SQL->tableName('z_forum') . " WHERE " . $SQL->tableName('players') . "." . $SQL->fieldName('id') . " = " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('author_guid') . " AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('post_date') . " <= ".$thread['post_date']." AND " . $SQL->tableName('z_forum') . "." . $SQL->fieldName('first_post') . " = ".(int) $thread['first_post'])->fetch();
                             $page = (int) ceil($post_page['posts_count'] / $threads_per_page) - 1;
                             header('Location: ?subtopic=forum&action=show_thread&id='.$thread['first_post'].'&page='.$page);
@@ -1228,41 +1156,42 @@ if($action == 'edit_post')
 						</tr>
 						<tr>
 							<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" valign="top" ><b>Post Icon:</b></td>
-							<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" ><input type=radio name="forum_iconid" value="11">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="12">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="13">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="14">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="15">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="16">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="17">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
-								<input type=radio name="forum_iconid" value="18">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="19">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="20">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="21">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="22">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="23">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="24">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
-								<input type=radio name="forum_iconid" value="25">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="26">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
-								<input type=radio name="forum_iconid" value="27">
-								&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
-								<input type=radio name="forum_iconid" value="0" checked>
+							<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" >
+								<input type=radio name="forum_iconid" value="11"'; if($thread['post_icon_id'] == "11"){$main_content .= 'checked';} $main_content .= ' >
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="12"'; if($thread['post_icon_id'] == "12"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="13"'; if($thread['post_icon_id'] == "13"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="14"'; if($thread['post_icon_id'] == "14"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="15"'; if($thread['post_icon_id'] == "15"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="16"'; if($thread['post_icon_id'] == "16"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="17"'; if($thread['post_icon_id'] == "17"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
+								<input type=radio name="forum_iconid" value="18"'; if($thread['post_icon_id'] == "18"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="19"'; if($thread['post_icon_id'] == "19"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="20"'; if($thread['post_icon_id'] == "20"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="21"'; if($thread['post_icon_id'] == "21"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="22"'; if($thread['post_icon_id'] == "22"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="23"'; if($thread['post_icon_id'] == "23"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="24"'; if($thread['post_icon_id'] == "24"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
+								<input type=radio name="forum_iconid" value="25"'; if($thread['post_icon_id'] == "25"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="26"'; if($thread['post_icon_id'] == "26"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
+								<input type=radio name="forum_iconid" value="27"'; if($thread['post_icon_id'] == "27"){$main_content .= 'checked';} $main_content .= '>
+								&nbsp;<img src="'.$layout_name.'/images/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
+								<input type=radio name="forum_iconid" value="0"'; if($thread['post_icon_id'] == "0"){$main_content .= 'checked';} $main_content .= '>
 								&nbsp;No Icon</td>
 						</tr>
                         <tr>
@@ -1272,43 +1201,43 @@ if($action == 'edit_post')
 							How to use smileys:<br>
 							<table border=0 cellpadding=2 cellspacing=0 width=100%>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
 								<td  colspan=1 align="left" >:p</td>
 							</tr>
 							<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
 							<td  colspan=1 align="left" >:eek:</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
 								<td  colspan=1 align="left" >:rolleyes:</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
 								<td  colspan=1 align="left" >;)</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
 								<td  colspan=1 align="left" >:o</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
 								<td  colspan=1 align="left" >:D</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
 								<td  colspan=1 align="left" >:(</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
 								<td  colspan=1 align="left" >:mad:</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
 								<td  colspan=1 align="left" >:)</td>
 							</tr>
 							<tr>
-								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
+								<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
 								<td  colspan=1 align="left" >:cool:</td>
 							</tr>
 						</table>
@@ -1328,7 +1257,7 @@ if($action == 'edit_post')
 						<td  class="ff_std" colspan=2 align="center" ><br>
 							<input type=submit name="preview_edit_post" value="Preview Changes"  >
 							&nbsp;
-							<input type="submit" name="edit_post" value="Submit Message">
+							<button type="submit" name="submit" value="edit_post">Submit Message</button>
 							&nbsp;
 							<input type=reset name="reset" value="Reset Fields">
 						</td>
@@ -1363,12 +1292,12 @@ if($action == 'new_topic')
 			$main_content .= '
 				<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
 					<TR>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 						<TD WIDTH=100% ALIGN=right>
 							<a href="?subtopic=forum" >Community Boards</a> | 
 							<a href="?subtopic=forum&action=show_board&id='.$section_id.'">'.$sections[$section_id].'</a> | 
 							<b>Post New Thread</b></TD>
-						<TD><IMG SRC="'.$layout_name.'/images/global/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+						<TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 					</TR>
 				</TABLE>
 				<br>
@@ -1383,7 +1312,7 @@ if($action == 'new_topic')
 						<tr>
 							<td style="position:relative; height:100%;background-color:#D4C0A1;" align="top" >
 								<div style="position:relative; min-height:18px; width:100%; overflow-x:auto; overflow-y:visible; width:734px; word-wrap:break-word;">
-								'.showPreview(htmlspecialchars($thread['post_topic']), $_POST['text'], $thread['post_smile']).'
+								'.showPreview(htmlspecialchars($thread['post_topic']), nl2br($_POST['text']), $thread['post_smile']).'
 								</div>
 							</td>
 						</tr>
@@ -1402,7 +1331,7 @@ if($action == 'new_topic')
                 $smile = (int) $_REQUEST['smile'];
                 $saved = false;
 				
-                if(isset($_POST['save_topic']) && $_POST['save'] == "save")
+                if(isset($_POST['submit']) && $_REQUEST['save'])
                 {
                     $lenght = 0;
                     for($i = 0; $i <= strlen($post_topic); $i++)
@@ -1438,53 +1367,13 @@ if($action == 'new_topic')
                             $errors[] = 'You can post one time per '.$post_interval.' seconds. Next post after '.($last_post+$post_interval-time()).' second(s).';
                     }
 
-					if(isset($_POST['save_topic'])){
+					if(isset($_POST['submit'])){
 						if(count($errors) == 0)
 						{
 							$saved = true;
 							$account_logged->set('last_post', time());
 							$account_logged->save();
-							
-							$insert_topic = $SQL->query("INSERT INTO " . $SQL->tableName('z_forum') . " (
-													" . $SQL->fieldName('first_post') . " ,
-													" . $SQL->fieldName('last_post') . " ,
-													" . $SQL->fieldName('section') . " ,
-													" . $SQL->fieldName('replies') . " ,
-													" . $SQL->fieldName('views') . " ,
-													" . $SQL->fieldName('author_aid') . " ,
-													" . $SQL->fieldName('author_guid') . " ,
-													" . $SQL->fieldName('post_text') . " ,
-													" . $SQL->fieldName('post_topic') . " ,
-													" . $SQL->fieldName('post_smile') . " ,
-													" . $SQL->fieldName('post_date') . " ,
-													" . $SQL->fieldName('last_edit_aid') . " ,
-													" . $SQL->fieldName('edit_date') . ", 
-													" . $SQL->fieldName('post_ip') . ", 
-													" . $SQL->fieldName('icon_id') . ",
-													" . $SQL->fieldName('news_icon') . "
-										) VALUES (
-													'0', 
-													'".time()."', 
-													'".(int) $section_id."', 
-													'0', 
-													'0', 
-													'".$account_logged->getId()."', 
-													'".(int) $char_id."', 
-													".$SQL->quote($text).", 
-													".$SQL->quote($post_topic).", 
-													'".(int) $smile."', 
-													'".time()."', 
-													'0', 
-													'0', 
-													'".$_SERVER['REMOTE_ADDR']."', 
-													'".(int )$forum_iconid."',
-													".$SQL->quote($_POST['news_icon'])."
-										)"
-								);
-								
-							if(!$insert_topic)
-								$main_content .= mysql_error();
-								
+							$SQL->query("INSERT INTO " . $SQL->tableName('z_forum') . " (" . $SQL->fieldName('first_post') . " ," . $SQL->fieldName('last_post') . " ," . $SQL->fieldName('section') . " ," . $SQL->fieldName('replies') . " ," . $SQL->fieldName('views') . " ," . $SQL->fieldName('author_aid') . " ," . $SQL->fieldName('author_guid') . " ," . $SQL->fieldName('post_text') . " ," . $SQL->fieldName('post_topic') . " ," . $SQL->fieldName('post_smile') . " ," . $SQL->fieldName('post_date') . " ," . $SQL->fieldName('last_edit_aid') . " ," . $SQL->fieldName('edit_date') . ", " . $SQL->fieldName('post_ip') . ", " . $SQL->fieldName('post_icon_id') . ") VALUES ('0', '".time()."', '".(int) $section_id."', '0', '0', '".$account_logged->getId()."', '".(int) $char_id."', ".$SQL->quote($text).", ".$SQL->quote($post_topic).", '".(int) $smile."', '".time()."', '0', '0', '".$_SERVER['REMOTE_ADDR']."', '".(int )$forum_iconid."')");
 							$thread_id = $SQL->lastInsertId();
 							$SQL->query("UPDATE " . $SQL->tableName('z_forum') . " SET " . $SQL->fieldName('first_post') . "=".(int) $thread_id." WHERE " . $SQL->fieldName('id') . " = ".(int) $thread_id);
 							header('Location: ?subtopic=forum&action=show_thread&id='.$thread_id);
@@ -1504,7 +1393,7 @@ if($action == 'new_topic')
 					
                     $main_content .= '
 					<table border=0 cellpadding=4 cellspacing=1 width="100%">
-						<form action="" method="POST">
+						<form action="/?subtopic=forum" method="POST">
 							<input type="hidden" name="action" value="new_topic" />
 							<input type="hidden" name="section_id" value="'.$section_id.'" />
 							<input type="hidden" name="subtopic" value="forum" />
@@ -1536,56 +1425,42 @@ if($action == 'new_topic')
 				</tr>
                 <tr>
 					<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" valign="top" ><b>Thread Icon:</b></td>
-					<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" >
-						<input type=radio name="forum_iconid" value="11">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
+					<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" ><input type=radio name="forum_iconid" value="11">
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/11.gif" border=0 width=15 height=15 alt="Stuck Tongue Out">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="12">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/12.gif" border=0 width=15 height=15 alt="Eek">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="13">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/13.gif" border=0 width=15 height=15 alt="Roll Eyes">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="14">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/14.gif" border=0 width=15 height=15 alt="Thumbs up">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="15">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/15.gif" border=0 width=15 height=15 alt="Thumbs down">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="16">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/16.gif" border=0 width=15 height=15 alt="Wink">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="17">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/17.gif" border=0 width=15 height=15 alt="Red face">&nbsp;&nbsp;&nbsp;<br>
 						<input type=radio name="forum_iconid" value="18">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/18.gif" border=0 width=15 height=15 alt="Talking">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="19">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/19.gif" border=0 width=15 height=15 alt="Unhappy">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="20">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/20.gif" border=0 width=15 height=15 alt="Angry">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="21">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/21.gif" border=0 width=15 height=15 alt="Smile">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="22">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/22.gif" border=0 width=15 height=15 alt="Cool">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="23">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/23.gif" border=0 width=15 height=15 alt="Question">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="24">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/24.gif" border=0 width=15 height=15 alt="Exclamation">&nbsp;&nbsp;&nbsp;<br>
 						<input type=radio name="forum_iconid" value="25">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/25.gif" border=0 width=15 height=15 alt="Lightbulb">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="26">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/26.gif" border=0 width=15 height=15 alt="Arrow">&nbsp;&nbsp;&nbsp;
 						<input type=radio name="forum_iconid" value="27">
-						&nbsp;<img src="'.$layout_name.'/images/global/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
+						&nbsp;<img src="'.$layout_name.'/images/forum/icons/27.gif" border=0 width=15 height=15 alt="Post">&nbsp;&nbsp;&nbsp;<br>
 						<input type=radio name="forum_iconid" value="0" checked>
 						&nbsp;No Icon</td>
-				</tr>';
-			if($section_id == 1 && $group_id_of_acc_logged >= $group_not_blocked)
-				$main_content .= '
-					<tr>
-						<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" valign="top" ><b>News Icon:</b></td>
-						<td  bgcolor="#D4C0A1" class="ff_std" colspan=1 align="left" >
-							<select name="news_icon">
-								<option value="newsicon_community_big">Community</option>
-								<option value="newsicon_development_big">Development</option>
-								<option value="newsicon_technical_big">Technical</option>
-							</select>
-						</td>';
-			$main_content .= '
 				</tr>
 					<tr>
 						<td  bgcolor="#F1E0C6" class="ff_std" colspan=1 align="left" valign="top" ><b>Message:</b><br>
@@ -1594,43 +1469,43 @@ if($action == 'new_topic')
 						How to use smileys:<br>
 						<table border=0 cellpadding=2 cellspacing=0 width=100%>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/1.gif" border=0 width=15 height=15 alt="Stuck Tongue Out"></td>
 							<td  colspan=1 align="left" >:p</td>
 						</tr>
 						<tr>
-						<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
+						<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/2.gif" border=0 width=15 height=15 alt="Eek"></td>
 						<td  colspan=1 align="left" >:eek:</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/3.gif" border=0 width=15 height=15 alt="Roll Eyes"></td>
 							<td  colspan=1 align="left" >:rolleyes:</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/4.gif" border=0 width=15 height=15 alt="Wink"></td>
 							<td  colspan=1 align="left" >;)</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/5.gif" border=0 width=15 height=15 alt="Red face"></td>
 							<td  colspan=1 align="left" >:o</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/6.gif" border=0 width=15 height=15 alt="Talking"></td>
 							<td  colspan=1 align="left" >:D</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/7.gif" border=0 width=15 height=15 alt="Unhappy"></td>
 							<td  colspan=1 align="left" >:(</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/8.gif" border=0 width=15 height=15 alt="Angry"></td>
 							<td  colspan=1 align="left" >:mad:</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/9.gif" border=0 width=15 height=15 alt="Smile"></td>
 							<td  colspan=1 align="left" >:)</td>
 						</tr>
 						<tr>
-							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/global/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
+							<td  colspan=1 align="left" ><img src="'.$layout_name.'/images/forum/smile/10.gif" border=0 width=15 height=15 alt="Cool"></td>
 							<td  colspan=1 align="left" >:cool:</td>
 						</tr>
 					</table>
@@ -1651,7 +1526,7 @@ if($action == 'new_topic')
 					<td class="ff_std" colspan=2 align="center"><br>
 						<input type=submit name="preview_new_topic" value="Preview Message">
 						&nbsp;
-						<input type="submit" name="save_topic" value="Submit Message">
+						<button type="submit" name="submit" value="save_topic">Submit Message</button>
 						&nbsp;
 						<input type=reset name="reset" value="Reset Fields">
 					</td>

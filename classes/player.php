@@ -8,15 +8,14 @@ class Player extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_ACCOUNT_ID = 'account_id';
 	public static $table = 'players';
-	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'lastlogout' => null, 'blessings' => null, 'deletion' => null, 'deleted' => null, 'balance' => null, 'stamina' => null, 'skill_fist' => null, 'skill_fist_tries' => null, 'skill_club' => null, 'skill_club_tries' => null, 'skill_sword' => null, 'skill_sword_tries' => null, 'skill_axe' => null, 'skill_axe_tries' => null, 'skill_dist' => null, 'skill_dist_tries' => null, 'skill_shielding' => null, 'skill_shielding_tries' => null, 'skill_fishing' => null, 'skill_fishing_tries' => null , 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null, 'signature' => null, 'marriage_status' => null, 'marriage_spouse' => null, 'loyalty_ranking' => null);
-	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'lastlogout', 'blessings', 'deletion', 'deleted', 'balance', 'stamina', 'skill_fist', 'skill_fist_tries', 'skill_club', 'skill_club_tries', 'skill_sword', 'skill_sword_tries', 'skill_axe', 'skill_axe_tries', 'skill_dist', 'skill_dist_tries', 'skill_shielding', 'skill_shielding_tries', 'skill_fishing', 'skill_fishing_tries', 'create_ip', 'create_date', 'comment', 'hide_char', 'signature', 'marriage_status', 'marriage_spouse', 'loyalty_ranking');
-	public static $skillNames = array('fist', 'club', 'sword', 'axe', 'dist', 'shielding', 'fishing');
+	public $data = array('name' => null, 'world_id' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'rank_id' => null, 'guildnick' => null, 'lastlogout' => null, 'blessings' => null, 'balance' => null, 'stamina' => null, 'direction' => null, 'loss_experience' => null, 'loss_mana' => null, 'loss_skills' => null, 'loss_containers' => null, 'loss_items' => null, 'premend' => null, 'online' => null, 'marriage' => null, 'promotion' => null, 'deleted' => null, 'description' => null, 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null, 'signature' => null);
+	public static $fields = array('id', 'name', 'world_id', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'rank_id', 'guildnick', 'lastlogout', 'blessings', 'balance', 'stamina', 'direction', 'loss_experience', 'loss_mana', 'loss_skills', 'loss_containers', 'loss_items', 'premend', 'online', 'marriage', 'promotion', 'deleted', 'description', 'create_ip', 'create_date', 'comment', 'hide_char', 'signature');
+	public static $skillFields = array('player_id', 'skillid', 'value',	'count');
 	public $items;
 	public $storages;
+	public $skills;
 	public $account;
 	public $rank;
-	public $guildNick;
-	public static $onlineList;
 
     public function __construct($search_text = null, $search_by = self::LOADTYPE_ID)
     {
@@ -161,32 +160,85 @@ class Player extends ObjectData
 			unset($this->storages[$key]);
 	}
 
-	public function getSkill($id)
+	public function loadSkills()
 	{
-		if(isset(self::$skillNames[$id]))
-			return $this->data['skill_' . self::$skillNames[$id]];
+		$fieldsArray = array();
+		foreach(self::$skillFields as $fieldName)
+			$fieldsArray[] = $this->getDatabaseHandler()->fieldName($fieldName);
+
+		$skills = $this->getDatabaseHandler()->query('SELECT ' . implode(', ', $fieldsArray) . ' FROM ' . $this->getDatabaseHandler()->fieldName('player_skills') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('player_id') . ' = ' . $this->getDatabaseHandler()->quote($this->getID()))->fetchAll();
+		$this->skills = array();
+		foreach($skills as $skill)
+			$this->skills[$skill['skillid']] = $skill;
+	}
+
+	public function getSkills($forceReload = false)
+	{
+		if(!isset($this->skills) || $forceReload)
+			$this->loadSkills();
+
+		return $this->skills;
+	}
+
+	public function getSkill($id, $forceReload = false)
+	{
+		if(!isset($this->skills) || $forceReload)
+			$this->loadSkills();
+
+		if(isset($this->skills[$id]))
+			return $this->skills[$id]['value'];
 		else
 			new Error_Critic('', 'Player::getSkill() - Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkill($id, $value)
 	{
-		if(isset(self::$skillNames[$id]))
-			$this->data['skill_' . self::$skillNames[$id]] = $value;
+		$this->skills[$id]['value'] = $value;
 	}
 
-	public function getSkillCount($id)
+	public function getSkillCount($id, $forceReload = false)
 	{
-		if(isset(self::$skillNames[$id]))
-			return $this->data['skill_' . self::$skillNames[$id] . '_tries'];
+		if(!isset($this->skills) || $forceReload)
+			$this->loadSkills();
+
+		if(isset($this->skills[$id]))
+			return $this->skills[$id]['count'];
 		else
 			new Error_Critic('', 'Player::getSkillCount() - Skill ' . htmlspecialchars($id) . ' does not exist');
 	}
 
 	public function setSkillCount($id, $count)
 	{
-		if(isset(self::$skillNames[$id]))
-			$this->data['skill_' . self::$skillNames[$id] . '_tries'] = $value;
+		$this->skills[$id]['count'] = $count;
+	}
+
+	public function saveSkills()
+	{
+		if(isset($this->skills))
+		{
+			$this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName('player_skills') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('player_id') . ' = ' . $this->getDatabaseHandler()->quote($this->getID()));
+
+			if(count($this->skills) > 0)
+			{
+				$keys = array();
+				foreach(self::$skillFields as $key)
+					$keys[] = $this->getDatabaseHandler()->fieldName($key);
+
+				$query = 'INSERT INTO ' . $this->getDatabaseHandler()->tableName('player_skills') . ' (' . implode(', ', $keys) . ') VALUES ';
+				foreach($this->skills as $skill)
+				{
+					$fieldValues = array();
+					foreach(self::$skillFields as $key)
+						if($key != 'player_id')
+							$fieldValues[] = $this->getDatabaseHandler()->quote($skill[$key]);
+						else
+							$fieldValues[] = $this->getDatabaseHandler()->quote($this->getID());
+					$this->getDatabaseHandler()->query($query . '(' . implode(', ', $fieldValues) . ')');
+				}
+			}
+		}
+		else
+			new Error_Critic('', 'Player::saveSkills() - skills not loaded, cannot save');
 	}
 
 	public function loadAccount()
@@ -210,54 +262,39 @@ class Player extends ObjectData
 
 	public function loadRank()
 	{
-		$ranks = $this->getDatabaseHandler()->query('SELECT ' . $this->getDatabaseHandler()->fieldName('rank_id') . ', ' . $this->getDatabaseHandler()->fieldName('nick') . ' FROM ' . $this->getDatabaseHandler()->tableName('guild_membership') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('player_id') . ' = ' . $this->getDatabaseHandler()->quote($this->getID()))->fetch();
-		if($ranks)
-		{
-			$this->rank = new GuildRank($ranks['rank_id']);
-			$this->guildNick = $ranks['nick'];
-		}
-		else
-		{
-			$this->rank = null;
-			$this->guildNick = '';
-		}
+		$this->rank = new GuildRank($this->getRankID());
 	}
 
 	public function getRank($forceReload = false)
 	{
-		if(!isset($this->guildNick) || !isset($this->rank) || $forceReload)
+		if(!isset($this->rank) || $forceReload)
 			$this->loadRank();
+
+        if($this->data['rank_id'] == 0)
+        {
+            return null;
+        }
 
 		return $this->rank;
 	}
 
 	public function setRank($rank = null)
 	{
-		$this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName('guild_membership') . ' WHERE ' . $this->getDatabaseHandler()->fieldName('player_id') . ' = ' . $this->getDatabaseHandler()->quote($this->getID()));
-		if($rank !== null)
+		if(isset($rank))
 		{
-			$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName('guild_membership') . ' (' . $this->getDatabaseHandler()->fieldName('player_id') . ', ' . $this->getDatabaseHandler()->fieldName('guild_id') . ', ' . $this->getDatabaseHandler()->fieldName('rank_id') . ', ' . $this->getDatabaseHandler()->fieldName('nick') . ') VALUES (' . $this->getDatabaseHandler()->quote($this->getID()) . ', ' . $this->getDatabaseHandler()->quote($rank->getGuildID()) . ', ' . $this->getDatabaseHandler()->quote($rank->getID()) . ', ' . $this->getDatabaseHandler()->quote('') . ')');
+			$this->rank = $rank;
+			$this->setRankID($rank->getID());
 		}
-		$this->rank = $rank;
+		else
+		{
+			$this->rank = new GuildRank();
+			$this->setRankID(0);
+		}
 	}
 
 	public function hasGuild()
 	{
-		return $this->getRank() != null && $this->getRank()->isLoaded();
-	}
-
-	public function setGuildNick($value)
-	{
-		$this->guildNick = $value;
-		$this->getDatabaseHandler()->query('UPDATE ' . $this->getDatabaseHandler()->tableName('guild_membership') . ' SET ' . $this->getDatabaseHandler()->fieldName('nick') . ' = ' . $this->getDatabaseHandler()->quote($this->guildNick) . ' WHERE ' . $this->getDatabaseHandler()->fieldName('player_id') . ' = ' . $this->getDatabaseHandler()->quote($this->getID()));
-	}
-
-	public function getGuildNick()
-	{
-		if(!isset($this->guildNick) || !isset($this->rank))
-			$this->loadRank();
-
-		return $this->guildNick;
+		return $this->getRank()->isLoaded();
 	}
 
 	public function removeGuildInvitations()
@@ -267,17 +304,52 @@ class Player extends ObjectData
 
 	public function unban()
 	{
-		$this->getAccount()->unban();
+		$bans = new DatabaseList('Ban');
+		$filterType = new SQL_Filter(new SQL_Field('type'), SQL_Filter::EQUAL, Ban::TYPE_PLAYER);
+		$filterValue = new SQL_Filter(new SQL_Field('value'), SQL_Filter::EQUAL, $this->data['id']);
+		$filterActive = new SQL_Filter(new SQL_Field('active'), SQL_Filter::EQUAL, 1);
+		$filter = new SQL_Filter($filterType, SQL_Filter::CRITERIUM_AND, $filterValue);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterActive);
+		$bans->setFilter($filter);
+		foreach($bans as $ban)
+		{
+			$ban->setActive(0);
+			$ban->save();
+		}
 	}
 
 	public function isBanned()
 	{
-		return $this->getAccount()->isBanned();
+		$bans = new DatabaseList('Ban');
+		$filterType = new SQL_Filter(new SQL_Field('type'), SQL_Filter::EQUAL, Ban::TYPE_PLAYER);
+		$filterParam = new SQL_Filter(new SQL_Field('param'), SQL_Filter::EQUAL, Ban::PLAYERBAN_BANISHMENT);
+		$filterValue = new SQL_Filter(new SQL_Field('value'), SQL_Filter::EQUAL, $this->data['id']);
+		$filterActive = new SQL_Filter(new SQL_Field('active'), SQL_Filter::EQUAL, 1);
+		$filter = new SQL_Filter($filterType, SQL_Filter::CRITERIUM_AND, $filterValue);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterActive);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterParam);
+		$bans->setFilter($filter);
+		$isBanned = false;
+		foreach($bans as $ban)
+		{
+			if($ban->getExpires() <= 0 || $ban->isExpires() > time())
+				$isBanned = true;
+		}
+		return $isBanned;
 	}
 
 	public function isNamelocked()
 	{
-		return false;
+		$bans = new DatabaseList('Ban');
+		$filterType = new SQL_Filter(new SQL_Field('type'), SQL_Filter::EQUAL, Ban::TYPE_PLAYER);
+		$filterParam = new SQL_Filter(new SQL_Field('param'), SQL_Filter::EQUAL, Ban::PLAYERBAN_LOCK);
+		$filterValue = new SQL_Filter(new SQL_Field('value'), SQL_Filter::EQUAL, $this->data['id']);
+		$filterActive = new SQL_Filter(new SQL_Field('active'), SQL_Filter::EQUAL, 1);
+		$filter = new SQL_Filter($filterType, SQL_Filter::CRITERIUM_AND, $filterValue);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterActive);
+		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterParam);
+		$bans->setFilter($filter);
+		return (count($bans) > 0);
 	}
 
 	public function delete()
@@ -293,14 +365,16 @@ class Player extends ObjectData
 	public function getID(){return $this->data['id'];}
 	public function setAccountID($value){$this->data['account_id'] = $value;}
 	public function getAccountID(){return $this->data['account_id'];}
+	public function setWorldID($value){$this->data['world_id'] = $value;}
+	public function getWorldID(){return $this->data['world_id'];}
 	public function setName($value){$this->data['name'] = $value;}
 	public function getName(){return $this->data['name'];}
-	public function getMarriageStatus(){return $this->data['marriage_status'];}
-	public function getMarriage(){return $this->data['marriage_spouse'];}
 	public function setGroupID($value){$this->data['group_id'] = $value;}
 	public function getGroupID(){return $this->data['group_id'];}
 	public function setVocation($value){$this->data['vocation'] = $value;}
 	public function getVocation(){return $this->data['vocation'];}
+	public function setPromotion($value){$this->data['promotion'] = $value;}
+	public function getPromotion(){return $this->data['promotion'];}
 	public function setLevel($value){$this->data['level'] = $value;}
 	public function getLevel(){return $this->data['level'];}
 	public function setExperience($value){$this->data['experience'] = $value;}
@@ -343,6 +417,10 @@ class Player extends ObjectData
 	public function getSkull(){return $this->data['skull'];}
 	public function setSkullTime($value){$this->data['skulltime'] = $value;}
 	public function getSkullTime(){return $this->data['skulltime'];}
+	public function setRankID($value){$this->data['rank_id'] = $value;}
+	public function getRankID(){return $this->data['rank_id'];}
+	public function setGuildNick($value){$this->data['guildnick'] = $value;}
+	public function getGuildNick(){return $this->data['guildnick'];}
 	public function setSave($value = 1){$this->data['save'] = (int) $value;}
 	public function getSave(){return $this->data['save'];}
 	public function setBlessings($value){$this->data['blessings'] = $value;}
@@ -351,12 +429,26 @@ class Player extends ObjectData
 	public function getBalance(){return $this->data['balance'];}
 	public function setStamina($value){$this->data['stamina'] = $value;}
 	public function getStamina(){return $this->data['stamina'];}
+	public function setDirection($value){$this->data['direction'] = $value;}
+	public function getDirection(){return $this->data['direction'];}
+	public function setLossExperience($value){$this->data['loss_experience'] = $value;}
+	public function getLossExperience(){return $this->data['loss_experience'];}
+	public function setLossMana($value){$this->data['loss_mana'] = $value;}
+	public function getLossMana(){return $this->data['loss_mana'];}
+	public function setLossSkills($value){$this->data['loss_skills'] = $value;}
+	public function getLossSkills(){return $this->data['loss_skills'];}
+	public function setLossContainers($value){$this->data['loss_containers'] = $value;}
+	public function getLossContainers(){return $this->data['loss_containers'];}
+	public function setLossItems($value){$this->data['loss_items'] = $value;}
+	public function getLossItems(){return $this->data['loss_items'];}
+	public function setOnline($value){$this->data['online'] = (int) $value;}
+	public function getOnline(){return (bool) $this->data['online'];}
+	public function setMarriage($value){$this->data['marriage'] = $value;}
+	public function getMarriage(){return $this->data['marriage'];}
 	public function setDeleted($value){$this->data['deleted'] = (int) $value;}
 	public function isDeleted(){return (bool) $this->data['deleted'];}
-	public function setLoyaltyRanking($value){$this->data['loyalty_ranking'] = (int) $value;}
-	public function isLoyaltyRanking(){return (bool) $this->data['loyalty_ranking'];}
-	public function setDeletion($value){$this->data['deletion'] = (int) $value;}
-	public function getDeletion(){return $this->data['deletion'];}
+	public function setDescription($value){$this->data['description'] = $value;}
+	public function getDescription(){return $this->data['description'];}
 	public function setLookBody($value){$this->data['lookbody'] = $value;}
 	public function getLookBody(){return $this->data['lookbody'];}
 	public function setLookFeet($value){$this->data['lookfeet'] = $value;}
@@ -382,15 +474,16 @@ class Player extends ObjectData
 	public function getCreateDate(){return $this->data['create_date'];}
 	public function setHidden($value){$this->data['hide_char'] = (int) $value;}
 	public function isHidden(){return (bool) $this->data['hide_char'];}
-	public function setComment($value){$this->data['comment'] = htmlspecialchars(trim($value));}
+	public function setComment($value){$this->data['comment'] = $value;}
 	public function getComment(){return $this->data['comment'];}
-	public function setSignature($value){$this->data['signature'] = htmlspecialchars(trim($value));}
-	public function getSignature(){return $this->data['signature'];}
 /*
  * for compability with old scripts
 */
 	public function setGroup($value){$this->setGroupID($value);}
 	public function getGroup(){return $this->getGroupID();}
+	public function setWorld($value){$this->setWorldID($value);}
+	public function getWorld(){return $this->getWorldID();}
+	public function isOnline(){return $this->getOnline() == 1;}
 	public function getCreated(){return $this->getCreateDate();}
 	public function setCreated($value){$this->setCreateDate($value);}
 	public function setCap($value){$this->setCapacity($value);}
@@ -400,29 +493,4 @@ class Player extends ObjectData
 	public function getTownId(){return $this->getTown();}
 	public function getHideChar(){return $this->isHidden();}
 	public function find($name){$this->loadByName($name);}
-
-	public static function isPlayerOnline($playerID)
-	{
-		if(!isset(self::$onlineList))
-		{
-			self::$onlineList = array();
-			$onlines = Website::getDBHandle()->query('SELECT ' . Website::getDBHandle()->fieldName('player_id') . ' FROM ' . Website::getDBHandle()->tableName('players_online'))->fetchAll();
-			foreach($onlines as $online)
-			{
-				self::$onlineList[$online['player_id']] = $online['player_id'];
-			}
-		}
-
-		return isset(self::$onlineList[$playerID]);
-	}
-
-	public function isOnline()
-	{
-		return self::isPlayerOnline($this->getID());
-	}
-
-	public function getOnline()
-	{
-		return self::isPlayerOnline($this->getID());
-	}
 }

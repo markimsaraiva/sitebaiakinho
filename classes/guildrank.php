@@ -60,7 +60,7 @@ class GuildRank extends ObjectData
 		{
 			foreach($this->getMembers(true) as $member)
 			{
-				$member->setRank();
+				$member->setRankID(0);
 				$member->save();
 			}
 			$this->getDatabaseHandler()->query('DELETE FROM ' . $this->getDatabaseHandler()->tableName(self::$table) . ' WHERE ' . $this->getDatabaseHandler()->fieldName('id') . ' = ' . $this->getDatabaseHandler()->quote($this->data['id']));
@@ -79,34 +79,11 @@ class GuildRank extends ObjectData
 		if(!isset($this->members) || $forceReload)
 		{
 			$members = new DatabaseList('Player');
-			$filterGuild = new SQL_Filter(new SQL_Field('rank_id', 'guild_membership'), SQL_Filter::EQUAL, $this->getID());
-			$filterPlayer = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'guild_membership'));
-			$filterOnline = new SQL_Filter(new SQL_Field('online', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'players_online'));
-			$members->setFilter(new SQL_Filter($filterGuild, SQL_Filter::CRITERIUM_AND, $filterPlayer));
-			$members->addOrder(new SQL_Order(new SQL_Field('name', 'players')));
+			$members->setFilter(new SQL_Filter(new SQL_Field('rank_id'), SQL_Filter::EQUAL, $this->getID()));
+			$members->addOrder(new SQL_Order(new SQL_Field('name')));
 			$this->members = $members;
 		}
 		return $this->members;
-
-	}
-
-	public function getMembersOnline($forceReload = false)
-	{
-		if(!isset($this->members) || $forceReload)
-	  	{
-	   		$members = new DatabaseList('Player');
-	   		$filterGuild = new SQL_Filter(new SQL_Field('rank_id', 'guild_membership'), SQL_Filter::EQUAL, $this->getID());
-	   		$filterPlayer = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'guild_membership'));
-	   		$filterOnline = new SQL_Filter(new SQL_Field('id', 'players'), SQL_Filter::EQUAL, new SQL_Field('player_id', 'players_online'));
-	   		$filter = new SQL_Filter($filterGuild, SQL_Filter::CRITERIUM_AND, $filterPlayer);
-	   		$filter = new SQL_Filter($filter, SQL_Filter::CRITERIUM_AND, $filterOnline);
-	   		$members->setFilter($filter);
-	   		$members->addOrder(new SQL_Order(new SQL_Field('name', 'players')));
-	   		$this->members = $members;
-	  	}
-		
-	  	return $this->members;
-		
 	}
 
 	public function getGuild($forceReload = false)
@@ -136,5 +113,4 @@ class GuildRank extends ObjectData
 */
 	public function getPlayers(){return $this->getMembers();}
 	public function getPlayersList(){return $this->getMembers();}
-	public function getOnlinePlayersList(){return $this->getMembersOnline();}
 }

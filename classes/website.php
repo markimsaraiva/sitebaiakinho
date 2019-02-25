@@ -118,21 +118,12 @@ class Website extends WebsiteErrors
 		return file_exists($path);
 	}
 
-	public static function updatePasswordEncryption()
+	public static function setPasswordsEncryption($encryption)
 	{
-		$encryptionTypeLowerd = strtolower(self::getServerConfig()->getValue('passwordType'));
-		if (empty($encryptionTypeLowerd)) { // TFS 1.1+
-			$encryptionTypeLowerd = $config['site']['encryptionType'];
-			if (empty($encryptionTypeLowerd)) {
-				$encryptionTypeLowerd = 'sha1';
-			}
-		}
-
-		if (isset(self::$passwordsEncryptions[$encryptionTypeLowerd])) {
-			self::$passwordsEncryption = $encryptionTypeLowerd;
-		} else {
+		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
+			self::$passwordsEncryption = strtolower($encryption);
+		else
 			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
-		}
 	}
 	
 	public static function getPasswordsEncryption()
@@ -174,12 +165,12 @@ class Website extends WebsiteErrors
 		return self::$vocations;
 	}
 
-	public static function getVocationName($id)
+	public static function getVocationName($id, $promotion)
 	{
 		if(!isset(self::$vocations))
 			self::loadVocations();
 
-		return self::$vocations->getVocationName($id);
+		return self::$vocations->getVocationName($id, $promotion);
 	}
 
 	public static function loadGroups()
@@ -235,31 +226,5 @@ class Website extends WebsiteErrors
 			$lastCountryCode = $countryCode;
 		}
 		return $lastCountryCode;
-	}
-	
-	public static function newSessionKey() {
-		srand(time());
-		$lenght = 0;
-		$sessionKey = "";
-		while ($lenght < 30) {
-			$char = substr("0123456789abcdfghjkmnpqrstvwxyzABCDEFGHIJKLMNOPQRESTUVWXYZ", rand(0, strlen("0123456789abcdfghjkmnpqrstvwxyzABCDEFGHIJKLMNOPQRESTUVWXYZ") - 1), 1);
-			if (!strstr($sessionKey, $char)) {
-				$sessionKey .= $char;
-				$lenght++;
-			}
-		}
-		return $sessionKey;
-	}
-	
-	public static function generateSessionKey() {
-		global $SQL;
-		while (true) {
-			$sessionKey = Website::newSessionKey();
-			$result = $SQL->query('SELECT `id` FROM `accounts` WHERE `authToken` LIKE "' . $sessionKey . '"')->fetch();
-			if(empty($result)) {
-				break;
-			}
-		}
-		return $sessionKey;
 	}
 }
