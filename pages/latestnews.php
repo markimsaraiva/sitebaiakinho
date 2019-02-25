@@ -121,58 +121,58 @@ $news_content .= '
     		<div class="Border_2">
       			<div class="Border_3">
         			<div class="BoxContent" style="background-image: url('.$layout_name.'/images/content/scroll.gif);">';
-					//##################### ADD NEW TICKER #####################
-					if($action == "newticker") {
-						if($group_id_of_acc_logged >= $config['site']['access_tickers']) {
-							$ticker_text = stripslashes(trim($_POST['new_ticker']));
-							$ticker_icon = (int) $_POST['icon_id'];
-							if(empty($ticker_text)) {
-								$news_content .= 'You can\'t add empty ticker.';
-							}
-							else
-							{
-							if(empty($ticker_icon)) {
-								$news_icon = 0;
-							}
-					$SQL->query('INSERT INTO '.$SQL->tableName('z_news_tickers').' (date, author, image_id, text, hide_ticker) VALUES ('.$SQL->quote($time).', '.$account_logged->getId().', '.$ticker_icon.', '.$SQL->quote($ticker_text).', 0)');
-					$news_content .= '
-						<center>
-							<h2>
-								<font color="red">Added new ticker:</font>
-							</h2>
-						</center>
-						<hr/>
-						<div id="newsticker" class="Box">
-							<div id="TickerEntry-1" class="Row" onclick=\'TickerAction("TickerEntry-1")\'>
-  								<div class="Odd">
-    								<div class="NewsTickerIcon" style="background-image: url('.$layout_name.'/images/news/icon_'.$ticker['image_id'].'.gif);"></div>
-    								<div id="TickerEntry-1-Button" class="NewsTickerExtend" style="background-image: url('.$layout_name.'/images/general/plus.gif);"></div>
-    								<div class="NewsTickerText">
-      										<span class="NewsTickerDate">'.date("d/m/Y", $time).' -</span> 
-      										<div id="TickerEntry-1-ShortText" class="NewsTickerShortText">';
-					$news_content .= '
-						<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'">
-							<img src="'.$layout_name.'/images/news/delete.png" border="0">
-						</a>';
-					$news_content .= short_text($ticker_text, 60).'</div>
-      					<div id="TickerEntry-1-FullText" class="NewsTickerFullText">';
-					$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
-					$news_content .= $ticker_text.'
-						</div>
-    				</div>
-  				</div>
-			</div>
-		</div>
-	<hr/>';
-	}
-}
-else
-{
-	$news_content .= 'You don\'t have admin rights. You can\'t add new ticker.';
-}
-	$news_content .= '<form action="?subtopic=latestnews" METHOD=post><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></form>';
-}
-//#################### DELETE (HIDE only!) TICKER ############################
+// 					//##################### ADD NEW TICKER #####################
+// 					if($action == "newticker") {
+// 						if($group_id_of_acc_logged >= $config['site']['access_tickers']) {
+// 							$ticker_text = stripslashes(trim($_POST['new_ticker']));
+// 							$ticker_icon = (int) $_POST['icon_id'];
+// 							if(empty($ticker_text)) {
+// 								$news_content .= 'You can\'t add empty ticker.';
+// 							}
+// 							else
+// 							{
+// 							if(empty($ticker_icon)) {
+// 								$news_icon = 0;
+// 							}
+// 					$SQL->query('INSERT INTO '.$SQL->tableName('z_news_tickers').' (date, author, image_id, text, hide_ticker) VALUES ('.$SQL->quote($time).', '.$account_logged->getId().', '.$ticker_icon.', '.$SQL->quote($ticker_text).', 0)');
+// 					$news_content .= '
+// 						<center>
+// 							<h2>
+// 								<font color="red">Added new ticker:</font>
+// 							</h2>
+// 						</center>
+// 						<hr/>
+// 						<div id="newsticker" class="Box">
+// 							<div id="TickerEntry-1" class="Row" onclick=\'TickerAction("TickerEntry-1")\'>
+//   								<div class="Odd">
+//     								<div class="NewsTickerIcon" style="background-image: url('.$layout_name.'/images/news/icon_'.$ticker['image_id'].'.gif);"></div>
+//     								<div id="TickerEntry-1-Button" class="NewsTickerExtend" style="background-image: url('.$layout_name.'/images/general/plus.gif);"></div>
+//     								<div class="NewsTickerText">
+//       										<span class="NewsTickerDate">'.date("d/m/Y", $time).' -</span> 
+//       										<div id="TickerEntry-1-ShortText" class="NewsTickerShortText">';
+// 					$news_content .= '
+// 						<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'">
+// 							<img src="'.$layout_name.'/images/news/delete.png" border="0">
+// 						</a>';
+// 					$news_content .= short_text($ticker_text, 60).'</div>
+//       					<div id="TickerEntry-1-FullText" class="NewsTickerFullText">';
+// 					$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
+// 					$news_content .= $ticker_text.'
+// 						</div>
+//     				</div>
+//   				</div>
+// 			</div>
+// 		</div>
+// 	<hr/>';
+// 	}
+// }
+// else
+// {
+// 	$news_content .= 'You don\'t have admin rights. You can\'t add new ticker.';
+// }
+// 	$news_content .= '<form action="?subtopic=latestnews" METHOD=post><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></form>';
+// }
+// //#################### DELETE (HIDE only!) TICKER ############################
 if($action == "deleteticker") {
 if($group_id_of_acc_logged >= $config['site']['access_tickers']) {
 header("Location: ");
