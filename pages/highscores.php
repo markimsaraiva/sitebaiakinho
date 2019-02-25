@@ -1,566 +1,372 @@
 <?php
-if(!defined('INITIALIZED'))
-	exit;
 
-$list = 'experience';
-if(isset($_REQUEST['list']))
-	$list = $_REQUEST['list'];
+$list = 5;
+if (isset($_REQUEST['list'])) {
+    $list = $_REQUEST['list'];
+} elseif (isset($_POST['list'])) {
+    $list = $_POST['list'];
+}
 
 $page = 0;
-if(isset($_REQUEST['page']))
-	$page = min(50, $_REQUEST['page']);
-
-$vocation = '';
-if(isset($_REQUEST['vocation']))
-	$vocation = $_REQUEST['vocation'];
-
-switch($list)
-{
-	case "fist":
-		$id=Highscores::SKILL_FIST;
-		$list_name='Fist Fighting';
-		break;
-	case "club":
-		$id=Highscores::SKILL_CLUB;
-		$list_name='Club Fighting';
-		break;
-	case "sword":
-		$id=Highscores::SKILL_SWORD;
-		$list_name='Sword Fighting';
-		break;
-	case "axe":
-		$id=Highscores::SKILL_AXE;
-		$list_name='Axe Fighting';
-		break;
-	case "distance":
-		$id=Highscores::SKILL_DISTANCE;
-		$list_name='Distance Fighting';
-		break;
-	case "shield":
-		$id=Highscores::SKILL_SHIELD;
-		$list_name='Shielding';
-		break;
-	case "fishing":
-		$id=Highscores::SKILL_FISHING;
-		$list_name='Fishing';
-		break;
-	case "magic":
-		$id=Highscores::SKILL__MAGLEVEL;
-		$list_name='Magic';
-		break;
-	case "rich":
-		$id=Highscores::BALANCE;
-		$list_name='Balance';
-		break;
-	default:
-		$id=Highscores::SKILL__LEVEL;
-		$list_name='Experience';
-		break;
+if (isset($_REQUEST['page'])) {
+    $page = min(50, $_REQUEST['page']);
+}elseif (isset($_POST['page'])){
+    $page = $_POST['page'];
 }
-$world_name = $config['server']['serverName'];
-
-$offset = $page * 100;
-$skills = new Highscores($id, 100, $page, $vocation);
-$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>';
-
-$main_content .= '<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></TABLE><div class="TableContainer" style="width:100%;">
-                <div class="CaptionContainer">
-                <div class="CaptionInnerContainer">
-                <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
-                <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
-                <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
-                <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
-                <div class="Text" style="font-size:12pt;">Ranking for '.htmlspecialchars($list_name).' on '.htmlspecialchars($world_name).'.</div>
-<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
-<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
-<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
-<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
-</div>
-</div><table class="Table2" cellpadding="0" cellspacing="0">
-                
-<tbody><tr>
-<td>
-<div class="InnerTableContainer">
-<table width="100%">
-<tbody><tr class="LabelH"><td style="text-align:right;width:1%;">#
-</td>
-
-<td style="text-align:center;width:5%">Outfit</td>
-<td style="text-align:left;width:50%">Name
-</td>
-
-<td style="text-align:center;width:10%;">';
-	if($list == "rich")
-		$main_content .= 'Balance';
-	elseif($list == "online")
-		$main_content .= 'This Week';
-	elseif($list == "quest")
-		$main_content .= 'Quests';
-	else
-		$main_content .= 'Level';
-	
-$main_content .= '</td>';
-
-if($list == "experience")
-	$main_content .= '<td style="text-align:left;width:10%">Experience</td>';
-//$main_content .= '</TR><TR>';
-$main_content .= '</TR>';
-$number_of_rows = 0;
-foreach($skills as $skill)
-{
-	if($list == "magic")
-		$value = $skill->getMagLevel();
-	elseif($list == "experience")
-		$value = $skill->getLevel();
-	elseif($list == "rich")
-		$value = number_format($skill->getBalance(), 0, '.', '.');
-	else
-		$value = $skill->getScore();
-	$bgcolor = (($number_of_rows++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
-	$main_content .= '<tr bgcolor="'.$bgcolor.'"><td style="text-align:right">'.($offset + $number_of_rows).'.</td><TD><div style="position: relative; width: 32px; height: 32px;"><div style="background-image: url(\'' . $config['site']['outfit_images_url'] . '?id=' . $skill->getLookType() . '&addons=' . $skill->getLookAddons() . '&head=' . $skill->getLookHead() . '&body=' . $skill->getLookBody() . '&legs=' . $skill->getLookLegs() . '&feet=' . $skill->getLookFeet() . '\'); position: absolute; width: 64px; height: 80px; background-position: bottom right; background-repeat: no-repeat; right: -10px; bottom: 0px;"></div></div></TD><td><a href="?subtopic=characters&name='.urlencode($skill->getName()).'">'.($skill->getOnline()>0 ? "<font color=\"green\">".htmlspecialchars($skill->getName())."</font>" : "<font color=\"red\">".htmlspecialchars($skill->getName())."</font>").'</a><br><small>'.$skill->getLevel().' '.htmlspecialchars(Website::getVocationName($skill->getVocation())).'</small></td><td><center>'.$value.'</center></td>';
-	if($list == "experience")
-		$main_content .= '<td style="width:10%">'.$skill->getExperience().'</td>';
-	$main_content .= '</tr>';
+$vocations = [
+    10 => "(all)",
+    15 => "No Vocation",
+    2 => "Druids",
+    4 => "Knights",
+    3 => "Paladins",
+    1 => "Sorcerers"
+];
+$vocations_equival = '';
+$vocation = 10;
+if (isset($_REQUEST['vocation'])) {
+    $vocation = $_REQUEST['vocation'];
+} elseif (isset($_POST['profession'])) {
+    $vocation = $_POST['profession'];
 }
-if($number_of_rows == 0)
-{
-$main_content .= '<tr><td></td><td></td><td>*There is no players in this vocation with that skill.</td></tr>';
+
+$lists = [
+//    1 => "Achievements",
+    2 => "Axe Fighting",
+    3 => "Club Fighting",
+    4 => "Distance Fighting",
+    5 => "Experience Points",
+    6 => "Fishing",
+    7 => "First Fighting",
+//    8 => "Loyalty Points",
+    9 => "Magic Level",
+    10 => "Shielding",
+    11 => "Sword Fighting"
+];
+//$list_order = '';
+switch ($list) {
+    case 1:
+        $list = 5;
+//        $list_order = '';
+        break;
+    case 2:
+        $list_order = 'skill_axe';
+        break;
+    case 3:
+        $list_order = 'skill_club';
+        break;
+    case 4:
+        $list_order = 'skill_dist';
+        break;
+    case 5:
+        $list_order = 'experience';
+        break;
+    case 6:
+        $list_order = 'skill_fishing';
+        break;
+    case 7:
+        $list_order = 'skill_fist';
+        break;
+    case 8:
+        $list = 5;
+//        $list_order = '';
+        break;
+    case 9:
+        $list_order = 'maglevel';
+        break;
+    case 10:
+        $list_order = 'skill_shielding';
+        break;
+    case 11:
+        $list_order = 'skill_sword';
+        break;
+    default:
+        $list_order = 'experience';
+        $list = 5;
+        break;
 }
-$main_content .= '</tbody></table>
-</div>
-</td></tr></tbody></table>
-</div><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></br>';
-if($page > 0)
-	$main_content .= '<TD WIDTH=100% ALIGN=left VALIGN=bottom><A HREF="?subtopic=highscores&list='.urlencode($list).'&page='.($page - 1).'" CLASS="size_xxs"><nobr>Previous Page</nobr></A></TD>';
-if($number_of_rows > 99)
-	$main_content .= '<TD WIDTH=100% ALIGN=right VALIGN=bottom><A HREF="?subtopic=highscores&list='.urlencode($list).'&page='.($page + 1).'" CLASS="size_xxs"><nobr>Next Page</nobr></A></TD>';
-$main_content .= '</TABLE></TD><TD WIDTH=5%></TD><TD WIDTH=15% VALIGN=top ALIGN=right><div class="TableContainer" style="width:117px;">
-				<div class="CaptionContainer">
-						<div class="CaptionInnerContainer"> 
-							<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>				
-							<div class="Text" style="padding-left:7px;font-size:9pt;">Choose a Skill</div>
-							<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>
-							<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-						</div>
-					</div><table class="Table3" cellpadding="0" cellspacing="0">
-					
-					<tbody><tr>		
-						<td>		
-							<div class="InnerTableContainer">
-								<table>
-									<tbody><tr>
-										<td>
-											<div class="TableShadowContainerRightTop">
-												<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
-											</div>
-											<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-rm.gif);">
-												<div class="TableContentContainer">
-													<table class="TableContent" width="100%">
-														<tbody>';
-														
-														if($vocation >= 0)
-														{
-														
-														if($list == "experience")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV" width="83px">Experi... <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV" width="83px"><A HREF="?subtopic=highscores&list=experience&vocation='.$vocation.'">Experience</a></td>
-															
-														</tr>';
-														if($list == "magic")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Magic <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=magic&vocation='.$vocation.'">Magic</a></td>
-															
-														</tr>';
-														if($list == "shield")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Shield... <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=shield&vocation='.$vocation.'">Shielding</a></td>
-															
-														</tr>';
-														if($list == "distance")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Distance <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=distance&vocation='.$vocation.'">Distance</a></td>
-															
-														</tr>';
-														if($list == "club")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Club <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=club&vocation='.$vocation.'">Club</a></td>
-															
-														</tr>';
-														if($list == "sword")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Sword <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=sword&vocation='.$vocation.'">Sword</a></td>
-															
-														</tr>';
-														if($list == "axe")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Axe <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=axe&vocation='.$vocation.'">Axe</a></td>
-															
-														</tr>';
-														if($list == "fist")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Fist <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=fist&vocation='.$vocation.'">Fist</a></td>
-															
-														</tr>';
-														if($list == "fishing")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Fishing <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=fishing&vocation='.$vocation.'">Fishing</a></td>
-															
-														</tr>';
-														
-														}
-														else
-														{
-														
-														if($list == "experience")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Experi... <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=experience">Experience</a></td>
-															
-														</tr>';
-														if($list == "magic")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Magic <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=magic">Magic</a></td>
-															
-														</tr>';
-														if($list == "shield")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Shield... <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=shield">Shielding</a></td>
-															
-														</tr>';
-														if($list == "distance")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Distance <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=distance">Distance</a></td>
-															
-														</tr>';
-														if($list == "club")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Club <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=club">Club</a></td>
-															
-														</tr>';
-														if($list == "sword")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Sword <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=sword">Sword</a></td>
-															
-														</tr>';
-														if($list == "axe")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Axe <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=axe">Axe</a></td>
-															
-														</tr>';
-														if($list == "fist")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV">Fist <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=fist">Fist</a></td>
-															
-														</tr>';
-														if($list == "fishing")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV">Fishing <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=fishing">Fishing</a></td>
-															
-														</tr>';
-														
-														}
-														$main_content .= '
-													</tbody></table>
-												</div>
-											</div>
-											<div class="TableShadowContainer">
-												<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bm.gif);">
-													<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
-													<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
-												</div>
-											</div>
-										</td>
-									</tr>
-									
-								</tbody></table>
-							</div></td></tr></tbody></table>
-					</div></br>';
-							$main_content .= '<div class="TableContainer" style="width:117px;">
-				<div class="CaptionContainer">
-						<div class="CaptionInnerContainer"> 
-							<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>				
-							<div class="Text" style="padding-left:2px;padding-right:0px;font-size:8pt;">Filter by Vocation</div>
-							<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>
-							<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-						</div>
-					</div><table class="Table3" cellpadding="0" cellspacing="0">
-					
-					<tbody><tr>		
-						<td>		
-							<div class="InnerTableContainer">
-								<table>
-									<tbody><tr>
-										<td>
-											<div class="TableShadowContainerRightTop">
-												<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
-											</div>
-											<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-rm.gif);">
-												<div class="TableContentContainer">
-													<table class="TableContent" width="100%">
-														<tbody>
-<SCRIPT LANGUAGE="JavaScript">
-function selecturl(s) {
-	var gourl = s.options[s.selectedIndex].value;	window.top.location.href = gourl;
+
+switch ($vocation) {
+    case 15:
+        $vocation = 0;
+        break;
+    case 1:
+        $vocations_equival = 5;
+        break;
+    case 2:
+        $vocations_equival = 6;
+        break;
+    case 3:
+        $vocations_equival = 7;
+        break;
+    case 4:
+        $vocations_equival = 8;
+        break;
+    default:
+        $vocations_equival = '';
+        break;
 }
-</SCRIPT>';
 
-if($vocation > 0)
-{
-$main_content .= '<FORM>
 
-<SELECT class="textbox" name="urljump" OnChange="selecturl(this)" style="width:95px;">
-<OPTION value="">'.htmlspecialchars($vocation_name[$vocation]).'s</OPTION>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=1">Sorcerer</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=2">Druid</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=3">Paladin</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=4">Knight</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=5">Master Sorcerer</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=6">Elder Druid</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=7">Royal Paladin</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=8">Elite Knight</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'">*ALL VOCATIONS</option>
-</SELECT>
-</FORM>';
+$limit = 25;  //limite players por de pagina
+$offset = 0 * $limit;
+$limitOffsetAll = 300; //Limita a quantidade maxima de players no rank
+$grupacc = "1,2,3,6"; //Seleciona os grupos de class que irão aparecer no rank
+if ($_REQUEST['page'] && $_REQUEST['page'] > 0) {
+    $offset = (intval($_REQUEST['page']) - 1) * $limit;
 }
-else
-{
-$main_content .= '<FORM>
-
-<SELECT class="textbox" name="urljump" OnChange="selecturl(this)" style="width:95px;">
-<OPTION value="">*ALL</OPTION>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=1">Sorcerer</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=2">Druid</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=3">Paladin</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=4">Knight</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=5">Master Sorcerer</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=6">Elder Druid</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=7">Royal Paladin</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'&vocation=8">Elite Knight</option>
-<option value="?subtopic=highscores&list='.urlencode($list).'">*ALL VOCATIONS</option>
-</SELECT>
-</FORM>';
+if ($list_order) {
+    if ($vocation == 0) {
+        $allquery = $SQL->query("SELECT * FROM `players` WHERE `vocation` = 0 AND `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
+        $tr = count($allquery);
+        $tp = $tr / $limit;
+        if ($offset > $tr) {
+            $offset = ($tp * $limit) - 1;
+            //var_dump($offset);
+        }
+        $skills = $SQL->query("SELECT * FROM `players` WHERE `vocation` = 0 AND `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
+    } elseif ($vocations_equival) {
+        $allquery = $SQL->query("SELECT * FROM `players` WHERE `vocation` IN ({$vocation},{$vocations_equival}) and `account_id`!= 1 AND `deleted` = 0 AND `group_id` IN ({$grupacc}) ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
+        $tr = count($allquery);
+        $tp = $tr / $limit;
+        if ($offset > $tr) {
+            $offset = ($tp * $limit) - 1;
+            //var_dump($offset);
+        }
+        $skills = $SQL->query("SELECT * FROM `players` WHERE `vocation` IN ({$vocation},{$vocations_equival}) and `account_id`!= 1 AND `deleted` = 0 AND `group_id` IN ({$grupacc}) ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
+    } else {
+        $allquery = $SQL->query("SELECT * FROM `players` WHERE `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limitOffsetAll}")->fetchAll();
+        $tr = count($allquery);
+        $tp = $tr / $limit;
+        if ($offset > $tr) {
+            $offset = ($tp * $limit) - 1;
+            //var_dump($offset);
+        }
+        $skills = $SQL->query("SELECT * FROM `players` WHERE `group_id` IN ({$grupacc}) and `account_id`!= 1 AND `deleted` = 0 ORDER BY `{$list_order}` DESC LIMIT {$limit} OFFSET {$offset}")->fetchAll();
+    }
 }
-$main_content .= '</tbody></table>
-												</div>
-											</div>
-											<div class="TableShadowContainer">
-												<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bm.gif);">
-													<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
-													<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
-												</div>
-											</div>
-										</td>
-									</tr>
-<tr>
-										<td>
-											<div class="TableShadowContainerRightTop">
-												<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
-											</div>
-											<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-rm.gif);">
-												<div class="TableContentContainer">
-													<table class="TableContent" width="100%">
-														<tbody>';
-														if($vocation == "0")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';" width="30px">
-															<td class="LabelV" align="center">Rooker <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV" align="center"><A HREF="?subtopic=highscores&list='.urlencode($list).'&vocation=0">Rooker</a></td>
-															
-														</tr>';
+$main_content = '
+   <form action="./?subtopic=highscores" method="POST">
+      <div class="TableContainer">
+         <div class="CaptionContainer">
+            <div class="CaptionInnerContainer">
+               <span class="CaptionEdgeLeftTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionBorderTop" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionVerticalLeft" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        
+               <div class="Text">Highscores Filter</div>
+               <span class="CaptionVerticalRight" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        <span class="CaptionBorderBottom" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>      
+            </div>
+         </div>
+         <table class="Table1" cellpadding="0" cellspacing="0">
+            <tbody>
+               <tr>
+                  <td>
+                     <div class="InnerTableContainer">
+                        <table style="width:100%;">
+                           <tbody>
+                              <tr>
+                                 <td>World:</td>
+                                 <td>
+                                    <select size="1" name="world" style="width:165px;">
+                                       <option value="' . $config["server"]["serverName"] . '" selected="selected">' . $config["server"]["serverName"] . '</option>
+                                    </select>
+                                 </td>
+                                 <td rowspan="3">
+                                    <div class="BigButton" style="background-image:url(' . $layout_name . '/images/global/buttons/sbutton.gif)">
+                                       <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
+                                          <div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/global/buttons/sbutton_over.gif);"></div>
+                                          <input class="ButtonText" type="image" name="Submit" alt="Submit" src="' . $layout_name . '/images/global/buttons/_sbutton_submit.gif">
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td>Vocation:</td>
+                                 <td>
+                                    <select name="profession">';
+foreach ($vocations as $key => $vocations) {
+    if ($vocation == 0) {
+        $vocation = 15;
+    }
+    $main_content .= "
+                                       <option value=" . ($key ? $key : '') . " " . ($key == $vocation ? 'selected=selected' : '') . ">{$vocations}</option>
+    ";
+}
 
-													$main_content .= '</tbody></table>
-												</div>
-											</div>
-											<div class="TableShadowContainer">
-												<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bm.gif);">
-													<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
-													<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
-												</div>
-											</div>
-										</td>
-									</tr>
-									
-								</tbody></table>
-							</div></td></tr></tbody></table>
-					</div>';
-					
-					$main_content .= '</br>';
-					
-					
-					$main_content .= '<div class="TableContainer" style="width:117px;">
-				<div class="CaptionContainer">
-						<div class="CaptionInnerContainer"> 
-							<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>				
-							<div class="Text" style="font-size:8pt;" align="center">Others Filters</div>
-							<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);"></span>
-							<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);"></span> 
-							<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-							<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);"></span>
-						</div>
-					</div><table class="Table3" cellpadding="0" cellspacing="0">
-					
-					<tbody><tr>		
-						<td>		
-							<div class="InnerTableContainer">
-								<table>
-									<tbody><tr>
-										<td>
-											<div class="TableShadowContainerRightTop">
-												<div class="TableShadowRightTop" style="background-image:url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
-											</div>
-											<div class="TableContentAndRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-rm.gif);">
-												<div class="TableContentContainer">
-													<table class="TableContent" width="100%">
-														<tbody>';
-														if($list == "rich")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';" width="30px">
-															<td class="LabelV" width="83px">Richest <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV" width="83px"><A HREF="?subtopic=highscores&list=rich&vocation='.$vocation.'">Richest</a></td>
-															
-														</tr>';
-														if($list == "online")
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';" width="30px">
-															<td class="LabelV">Online <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['darkborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=online&vocation='.$vocation.'">Online</a></td>
-															
-														</tr>';
-														if($list == "quest")
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';" width="30px">
-															<td class="LabelV">Quest <img src="images/tick.png" width="12" height="12"></td>
-															
-														</tr>';
-														else
-														$main_content .= '<tr style="background-color:'.$config['site']['lightborder'].';">
-															<td class="LabelV"><A HREF="?subtopic=highscores&list=quest&vocation='.$vocation.'">Quest</a></td>
-															
-														</tr>';
 
-													$main_content .= '</tbody></table>
-												</div>
-											</div>
-											<div class="TableShadowContainer">
-												<div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bm.gif);">
-													<div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
-													<div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
-												</div>
-											</div>
-										</td>
-									</tr>
-									
-								</tbody></table>
-							</div></td></tr></tbody></table>
-					</div>';
-							$main_content .= '</TD><TD></TD></TR></TABLE>';
+$main_content .= '
+                                    </select>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td>Category:</td>
+                                 <td>
+                                    <select name="list">';
+foreach ($lists as $key => $lista) {
+    $main_content .= '<option value="' . $key . '" ' . ($key == $list ? "selected=selected" : "") . '>' . $lista . '</option>';
+}
+$main_content .= '
+                                    </select>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </form>
+   <p><i>Skills displayed in the Highscores do not include any bonuses (loyalty, equipment etc.).</i></p>
+   <div class="TableContainer">
+      <div class="CaptionContainer">
+         <div class="CaptionInnerContainer">
+            <span class="CaptionEdgeLeftTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionBorderTop" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionVerticalLeft" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        
+            <div class="Text">Highscores</div>
+            <span class="CaptionVerticalRight" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-vertical.gif);"></span>        <span class="CaptionBorderBottom" style="background-image:url(' . $layout_name . '/images/global/content/table-headline-border.gif);"></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' . $layout_name . '/images/global/content/box-frame-edge.gif);"></span>      
+         </div>
+      </div>
+      <table class="Table3" cellpadding="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td>
+                  <div class="InnerTableContainer">
+                     <table style="width:100%;">
+                        <tbody>
+                           <tr>
+                              <td>
+                                 <div class="TableShadowContainerRightTop">
+                                    <div class="TableShadowRightTop" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-rt.gif);"></div>
+                                 </div>
+                                 <div class="TableContentAndRightShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-rm.gif);">
+                                    <div class="TableContentContainer">
+                                       <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                                          <tbody>';
+if ($list == 5) {
+    $main_content .= '                        <tr class="LabelH">
+                                                <td style="width: 5%;">Rank</td>
+                                                <td style="width: 45%;">Name</td>
+                                                <td style="width: 20%;">Vocation</td>
+                                                <td style="width: 10%; text-align: right;">Level</td>
+                                                <td style="width: 20%; text-align: right;">Points</td>
+                                             </tr>';
+} else {
+    $main_content .= '                        <tr class="LabelH">
+                                                <td style="width: 5%;">Rank</td>
+                                                <td style="width: 45%;">Name</td>
+                                                <td style="width: 20%;">Vocation</td>
+                                                <td style="width: 10%; text-align: right;">Level</td>
+                                                <!--<td style="width: 20%; text-align: right;">Points</td>-->
+                                             </tr>';
+}
+
+if(count($skills) != 0){
+
+    foreach ($skills as $skill) {
+        $voc = $skill['vocation'];
+        switch ($voc) {
+            case 0:
+                $voc = "No Vocation";
+                break;
+            case 1:
+                $voc = "Sorcerer";
+                break;
+            case 2:
+                $voc = "Druid";
+                break;
+            case 3:
+                $voc = "Paladin";
+                break;
+            case 4:
+                $voc = "Knight";
+                break;
+            case 5:
+                $voc = "Master Sorcerer";
+                break;
+            case 6:
+                $voc = "Elder Druid";
+                break;
+            case 7:
+                $voc = "Royal Paladin";
+                break;
+            case 8:
+                $voc = "Elite Knight";
+                break;
+            default:
+                break;
+        }
+        $bgcolor = (($number_of_rows++ % 2 == 1) ? $config['site']['darkborder'] : $config['site']['lightborder']);
+        if ($list == 5) {
+            $main_content .= '
+                                            <tr style="background-color: ' . $bgcolor . ';">
+                                                <td>' . ($offset + $number_of_rows) . '</td>
+                                                <td><a href="./?subtopic=characters&name=' . urlencode($skill["name"]) . '">' . htmlspecialchars($skill["name"]) . '</a></td>
+                                                <td>' . $voc . '</td>
+                                                <td style="text-align: right;">' . $skill["level"] . '</td>
+                                                <td style="text-align: right;">' . $skill["experience"] . '</td>
+                                             </tr>
+    ';
+        } else {
+
+            $main_content .= '
+                                            <tr style="background-color: ' . $bgcolor . ';">
+                                                <td>' . ($offset + $number_of_rows) . '</td>
+                                                <td><a href="./?subtopic=characters&name=' . urlencode($skill["name"]) . '">' . htmlspecialchars($skill["name"]) . '</a></td>
+                                                <td>' . $voc . '</td>
+                                                <td style="text-align: right;">' . $skill[$list_order] . '</td>
+                                                <!--<td style="text-align: right;">' . $skill["experience"] . '</td>-->
+                                             </tr>
+    ';
+        }
+
+    }
+
+}else{
+    $bgcolor = $config['site']['lightborder'];
+    $main_content .= '
+                                            <tr style="background-color: ' . $bgcolor . ';">
+                                                <td colspan="5" style="text-align: center">Nenhum personagem encontrado.</td>
+                                             </tr>
+     ';
+}
+
+$main_content .= '
+                                             <tr>
+                                                <td style="padding-right: 10px;" colspan="5">
+                                                   <small>
+                                                      <div style="float:left;"><b>» Pages:</b>';
+if(!isset($_REQUEST["page"])){
+    $_REQUEST["page"] = 1;
+}
+for ($i = 0; $i < $tp; $i++) {
+    if((int)$_REQUEST["page"]-1 != $i){
+        $main_content .= '<a style="margin-left:4px;" href="./?subtopic=highscores&world=' . $config["server"]["serverName"] . '&vocation=' . $vocation . '&page=' . ($i + 1) . '">' . ($i + 1) . '</a>';
+    }else{
+        $main_content .= "<b style='margin-left:4px;'>".($i + 1)."</b>";
+    }
+}
+$main_content .= '
+                                                      </div>
+                                                      <div style="float:right;"><b>» Results: ' . $tr . '</b></div>
+                                                   </small>
+                                                </td>
+                                             </tr>
+                                          </tbody>
+                                       </table>
+                                    </div>
+                                 </div>
+                                 <div class="TableShadowContainer">
+                                    <div class="TableBottomShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-bm.gif);">
+                                       <div class="TableBottomLeftShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-bl.gif);"></div>
+                                       <div class="TableBottomRightShadow" style="background-image:url(' . $layout_name . '/images/global/content/table-shadow-br.gif);"></div>
+                                    </div>
+                                 </div>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+';

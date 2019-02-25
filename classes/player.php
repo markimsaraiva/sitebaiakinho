@@ -8,8 +8,8 @@ class Player extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_ACCOUNT_ID = 'account_id';
 	public static $table = 'players';
-	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'lastlogout' => null, 'blessings' => null, 'balance' => null, 'stamina' => null, 'skill_fist' => null, 'skill_fist_tries' => null, 'skill_club' => null, 'skill_club_tries' => null, 'skill_sword' => null, 'skill_sword_tries' => null, 'skill_axe' => null, 'skill_axe_tries' => null, 'skill_dist' => null, 'skill_dist_tries' => null, 'skill_shielding' => null, 'skill_shielding_tries' => null, 'skill_fishing' => null, 'skill_fishing_tries' => null , 'deleted' => null, 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null);
-	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'lastlogout', 'blessings', 'balance', 'stamina', 'skill_fist', 'skill_fist_tries', 'skill_club', 'skill_club_tries', 'skill_sword', 'skill_sword_tries', 'skill_axe', 'skill_axe_tries', 'skill_dist', 'skill_dist_tries', 'skill_shielding', 'skill_shielding_tries', 'skill_fishing', 'skill_fishing_tries', 'deleted', 'create_ip', 'create_date', 'comment', 'hide_char', 'hide_skills', 'hide_set');
+	public $data = array('name' => null, 'group_id' => null, 'account_id' => null, 'level' => null, 'vocation' => null, 'health' => null, 'healthmax' => null, 'experience' => null, 'lookbody' => null, 'lookfeet' => null, 'lookhead' => null, 'looklegs' => null, 'looktype' => null, 'lookaddons' => null, 'maglevel' => null, 'mana' => null, 'manamax' => null, 'manaspent' => null, 'soul' => null, 'town_id' => null, 'posx' => null, 'posy' => null, 'posz' => null, 'conditions' => null, 'cap' => null, 'sex' => null, 'lastlogin' => null, 'lastip' => null, 'save' => null, 'skull' => null, 'skulltime' => null, 'lastlogout' => null, 'blessings' => null, 'deletion' => null, 'deleted' => null, 'balance' => null, 'stamina' => null, 'skill_fist' => null, 'skill_fist_tries' => null, 'skill_club' => null, 'skill_club_tries' => null, 'skill_sword' => null, 'skill_sword_tries' => null, 'skill_axe' => null, 'skill_axe_tries' => null, 'skill_dist' => null, 'skill_dist_tries' => null, 'skill_shielding' => null, 'skill_shielding_tries' => null, 'skill_fishing' => null, 'skill_fishing_tries' => null , 'create_ip' => null, 'create_date' => null, 'comment' => null, 'hide_char' => null, 'signature' => null, 'marriage_status' => null, 'marriage_spouse' => null, 'loyalty_ranking' => null);
+	public static $fields = array('id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'health', 'healthmax', 'experience', 'lookbody', 'lookfeet', 'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'mana', 'manamax', 'manaspent', 'soul', 'town_id', 'posx', 'posy', 'posz', 'conditions', 'cap', 'sex', 'lastlogin', 'lastip', 'save', 'skull', 'skulltime', 'lastlogout', 'blessings', 'deletion', 'deleted', 'balance', 'stamina', 'skill_fist', 'skill_fist_tries', 'skill_club', 'skill_club_tries', 'skill_sword', 'skill_sword_tries', 'skill_axe', 'skill_axe_tries', 'skill_dist', 'skill_dist_tries', 'skill_shielding', 'skill_shielding_tries', 'skill_fishing', 'skill_fishing_tries', 'create_ip', 'create_date', 'comment', 'hide_char', 'signature', 'marriage_status', 'marriage_spouse', 'loyalty_ranking');
 	public static $skillNames = array('fist', 'club', 'sword', 'axe', 'dist', 'shielding', 'fishing');
 	public $items;
 	public $storages;
@@ -295,6 +295,8 @@ class Player extends ObjectData
 	public function getAccountID(){return $this->data['account_id'];}
 	public function setName($value){$this->data['name'] = $value;}
 	public function getName(){return $this->data['name'];}
+	public function getMarriageStatus(){return $this->data['marriage_status'];}
+	public function getMarriage(){return $this->data['marriage_spouse'];}
 	public function setGroupID($value){$this->data['group_id'] = $value;}
 	public function getGroupID(){return $this->data['group_id'];}
 	public function setVocation($value){$this->data['vocation'] = $value;}
@@ -351,6 +353,10 @@ class Player extends ObjectData
 	public function getStamina(){return $this->data['stamina'];}
 	public function setDeleted($value){$this->data['deleted'] = (int) $value;}
 	public function isDeleted(){return (bool) $this->data['deleted'];}
+	public function setLoyaltyRanking($value){$this->data['loyalty_ranking'] = (int) $value;}
+	public function isLoyaltyRanking(){return (bool) $this->data['loyalty_ranking'];}
+	public function setDeletion($value){$this->data['deletion'] = (int) $value;}
+	public function getDeletion(){return $this->data['deletion'];}
 	public function setLookBody($value){$this->data['lookbody'] = $value;}
 	public function getLookBody(){return $this->data['lookbody'];}
 	public function setLookFeet($value){$this->data['lookfeet'] = $value;}
@@ -376,14 +382,10 @@ class Player extends ObjectData
 	public function getCreateDate(){return $this->data['create_date'];}
 	public function setHidden($value){$this->data['hide_char'] = (int) $value;}
 	public function isHidden(){return (bool) $this->data['hide_char'];}
-	public function isHiddenSkills(){return (bool) $this->data['hide_skills'];}
-	public function setHiddenSkills($value){$this->data['hide_skills'] = (int) $value;}
-	
-	public function isHiddenSet(){return (bool) $this->data['hide_set'];}
-	public function setHiddenSet($value){$this->data['hide_set'] = (int) $value;}
-	
-	public function setComment($value){$this->data['comment'] = $value;}
+	public function setComment($value){$this->data['comment'] = htmlspecialchars(trim($value));}
 	public function getComment(){return $this->data['comment'];}
+	public function setSignature($value){$this->data['signature'] = htmlspecialchars(trim($value));}
+	public function getSignature(){return $this->data['signature'];}
 /*
  * for compability with old scripts
 */

@@ -16,7 +16,7 @@ if($action == "") {
 						<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
 						<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
 						<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>						
-						<div class="Text" >Active Guilds on ' .htmlspecialchars($config['site']['serverName']). '</div>
+						<div class="Text" >Active Guilds on ' .htmlspecialchars($config['server']['serverName']). '</div>
 						<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/global/content/box-frame-vertical.gif);" /></span>
 						<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/global/content/table-headline-border.gif);" ></span> 
 						<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/global/content/box-frame-edge.gif);" /></span>
@@ -44,7 +44,7 @@ if($action == "") {
 													foreach($guilds_list as $guild)
 													{
 														if(is_int($showed_guilds / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $showed_guilds++;
-														$description = $guild->getDescription();														
+														$description = $guild->getDescription();
 														$newlines   = array("\r\n", "\n", "\r");
 														$description_with_lines = str_replace($newlines, '<br />', $description, $count);
 														if($count < $config['site']['guild_description_lines_limit'])
@@ -278,7 +278,7 @@ if($action == "view")
 													<TD>
 														<div id="GuildInformationContainer">
 															'.$description.'<br><br>
-															The guild was founded on Maddox on '.date("M d Y",$guild->getCreateDate()).'.<BR>
+															The guild was founded on '.$config['server']['serverName'].' on '.date("M d Y",$guild->getCreateDate()).'.<BR>
 															It is currently active.<BR>
 														</div>
 													</TD>
@@ -702,7 +702,8 @@ if($action == "view")
 												else {
 													$main_content .= '
 														<TR BGCOLOR=#D4C0A1>
-															<TD WIDTH=100%><B>Name</B></TD>
+															<TD WIDTH=70%><B>Name</B></TD>
+															<TD WIDTH=30%><B>Invitation Date</B></TD>
 														</TR>';
 													$show_accept_invite = 0;
 													$showed_invited = 1;
@@ -714,7 +715,11 @@ if($action == "view")
 														if(is_int($showed_invited / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $showed_invited++;
 														$main_content .= '
 															<TR BGCOLOR='.$bgcolor.'>
-																<TD><A HREF="?subtopic=characters&name='.urlencode($invited_player->getName()).'">'.htmlspecialchars($invited_player->getName()).'</A></TD>															
+																<TD><A HREF="?subtopic=characters&name='.urlencode($invited_player->getName()).'">'.htmlspecialchars($invited_player->getName()).'</A></TD>';
+															$invitedID = $invited_player->getId();
+															$getInviteDate = $SQL->query("SELECT `date` FROM `guild_invites` WHERE `player_id` = '$invitedID'")->fetch();
+															$main_content .= '
+																<TD>'.date("M d Y",$getInviteDate['date']).'</TD>
 															</TR>';
 													}
 													
@@ -933,7 +938,7 @@ if($action == "create") {
 			$new_guild->setName($guild_name);
 			$new_guild->setOwner($player);
 			$new_guild->setDescription('New guild. Leader must edit this text :)');
-			$new_guild->setGuildLogo('image/gif', Website::getFileContents('./images/default_guild_logo.gif'));
+			$new_guild->setGuildLogo('image/gif', Website::getFileContents('./images/guildlogos/default_logo.gif'));
 			
 			$new_guild->save();
 			$ranks = $new_guild->getGuildRanksList(true);
@@ -3821,7 +3826,7 @@ if($action == "guildwars") {
 															{
 																case 0:
 																{
-																	$main_content .= "<b>Pending acceptation</b><br />Invited on " . date("M d Y, H:i:s", $war['started']) . " for 4 hours war.<br />";
+																	$main_content .= "<b>Pending acceptation</b><br />Invited on " . date("M d Y, H:i:s", $war['started']) . " for " . (($war['ended'] - $war['started']) / 3600) . " hours war.<br />";
 																	if($guild_leader && $war['guild2'] == $guild->getID())
 																	{
 																		$main_content .= '<br /><a href="?subtopic=guilds&action=guildwar_accept&GuildName=' . $guild_name . '&war=' . $war['id'] . '" onclick="return confirm(\'Are you sure that you want ACCEPT that invitation for 2 hours war?\');" style="cursor: pointer;">accept invitation to war</a>';
@@ -3882,7 +3887,7 @@ if($action == "guildwars") {
 																{
 																	foreach($warFrags[$war['id']] as $frag)
 																	{
-																		$main_content .= date("j M Y, H:i", $frag['time']) . " <span style=\"font-weight: bold; color: " . ($frag['killerguild'] == $war['guild1'] ? "red" :"lime") . ";\">+</span><a href=\"?subtopic=characters&name=" . urlencode($frag['killer']) . "\"><b>".htmlspecialchars($frag['killer'])."</b></a> killed <a href=\"?subtopic=characters&name=".urlencode($frag['target'])."\"> " . htmlspecialchars($frag['target']) . "</a><br>";
+																		$main_content .= date("j M Y, H:i", $frag['time']) . " <span style=\"font-weight: bold; color: " . ($frag['killerguild'] == $war['guild1'] ? "red" :"lime") . ";\">+</span><a href=\"?subtopic=characters&name=" . urlencode($frag['killer']) . "\"><b>".htmlspecialchars($frag['killer'])."</b></a> killed <a href=\"?subtopic=characters&name=".urlencode($frag['target'])."\"> " . htmlspecialchars($frag['target']) . "</a>";
 																	}
 																}
 																else
