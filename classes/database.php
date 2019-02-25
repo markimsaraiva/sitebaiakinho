@@ -161,7 +161,7 @@ class Database extends PDO
 
 	public static function getAvailableDrivers()
 	{
-		if(isConnected() || connect())
+		if($this->isConnected() || $this->connect())
 			return parent::getAvailableDrivers();
 		else
 			new Error_Critic('', 'Website is not connected to database. Cannot execute getAvailableDrivers()');

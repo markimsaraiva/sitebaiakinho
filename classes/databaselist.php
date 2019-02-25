@@ -76,8 +76,7 @@ class DatabaseList extends DatabaseHandler implements Iterator, Countable
 		{
 			if(!is_object($this->data[$id]))
 			{
-				$reflect = new ReflectionClass($this->class);
-				$_tmp = $reflect->newInstanceArgs(array());
+				$_tmp = new $this->class();
 				$_tmp->loadData($this->data[$id]);
 				return $_tmp;
 			}
@@ -102,24 +101,19 @@ class DatabaseList extends DatabaseHandler implements Iterator, Countable
 	public function setClass($class)
 	{
 		$this->class = $class;
-		$instance = new ReflectionClass($this->class);
-		$properties = $instance->getStaticProperties();
-		$this->fields = $properties['fields'];
-		if(isset($properties['extraFields']))
-		{
-			$extraFields = $properties['extraFields'];
-			if(isset($extraFields))
-				foreach($extraFields as $extraField)
-				{
-					if(!isset($extraField[2]))
-						$this->extraFields[] = new SQL_Field($extraField[0], $extraField[1]);
-					else
-						$this->extraFields[] = new SQL_Field($extraField[0], $extraField[1], $extraField[2]);
-					$this->tables[$extraField[1]] = $extraField[1];
-				}
-		}
-		$this->table = $properties['table'];
-		$this->tables[$this->table] = $this->table;
+		$instance = new $this->class();
+		$this->fields = $instance::$fields;
+		if(isset($instance::$extraFields))
+			foreach($instance::$extraFields as $extraField)
+			{
+				if(!isset($extraField[2]))
+					$this->extraFields[] = new SQL_Field($extraField[0], $extraField[1]);
+				else
+					$this->extraFields[] = new SQL_Field($extraField[0], $extraField[1], $extraField[2]);
+				$this->tables[$extraField[1]] = $extraField[1];
+			}
+		$this->table = $instance::$table;
+		$this->tables[$instance::$table] = $instance::$table;
 	}
 
 	public function setFilter($filter)

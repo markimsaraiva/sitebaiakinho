@@ -90,12 +90,16 @@ function SendAjaxCip(a_Parameters, a_Options)
 }
 
 
-AjaxCipParameters = function() {};
+AjaxCipParameters = function()
+{
+  this.m_Parameters = {};
+};
 
 
 AjaxCipParameters.prototype = {
+//  m_Parameters: {},
+  
   initializeParameters: function() {
-    this.m_Parameters = {};
     this.m_Parameters.DataType = null;
     this.m_Parameters.Target = null;
     this.m_Parameters.UpdateType = 0;
@@ -893,7 +897,6 @@ AjaxCipComponentHistoryContainer = new (function() {
           this.m_GlobalHistory.splice(i, 1);
           --i;
           if (i < this.m_CurrentIndex) {
-
             --this.m_CurrentIndex;
           }
         }

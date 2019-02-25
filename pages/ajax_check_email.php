@@ -3,7 +3,6 @@ if(!defined('INITIALIZED'))
 	exit;
 
 $ok = "/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}/";
-echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';
 $email = trim($_REQUEST['email']);
 if(empty($email))
 {
@@ -21,10 +20,10 @@ if(strlen($email) < 255)
 			if($email_db->isLoaded())
 				echo '<font color="red">Account with this e-mail already exist.</font>';
 			else
-				echo '<font color="green">Good e-mail.</font>';
+				echo '<font color="green">Good email.</font>';
 		}
 		else
-			echo '<font color="green">Good e-mail.</font>';
+			echo '<font color="green">Good email.</font>';
 	}
 	else
 		echo '<font color="red">Wrong e-mail format.</font>';

@@ -2,15 +2,18 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';
 $account = strtoupper(trim($_REQUEST['account']));
 if(empty($account))
 {
 	echo '<font color="red">Please enter an account number.</font>';
 	exit;
 }
-if(strlen($account) < 32)
+if(strlen($account) < 32 )
 {
+	if (strlen($account) < 6){
+		echo '<font color="red">Account name is too lower (min. 6 chars).</font>';
+		exit;
+	}
 	if(!check_account_name($account))
 	{
 		echo '<font color="red">Invalid account name format. Use only A-Z and numbers 0-9.</font>';

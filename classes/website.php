@@ -118,21 +118,12 @@ class Website extends WebsiteErrors
 		return file_exists($path);
 	}
 
-	public static function updatePasswordEncryption()
+	public static function setPasswordsEncryption($encryption)
 	{
-		$encryptionTypeLowerd = strtolower(self::getServerConfig()->getValue('passwordType'));
-		if (empty($encryptionTypeLowerd)) { // TFS 1.1+
-			$encryptionTypeLowerd = $config['site']['encryptionType'];
-			if (empty($encryptionTypeLowerd)) {
-				$encryptionTypeLowerd = 'sha1';
-			}
-		}
-
-		if (isset(self::$passwordsEncryptions[$encryptionTypeLowerd])) {
-			self::$passwordsEncryption = $encryptionTypeLowerd;
-		} else {
+		if(isset(self::$passwordsEncryptions[strtolower($encryption)]))
+			self::$passwordsEncryption = strtolower($encryption);
+		else
 			new Error_Critic('#C-12', 'Invalid passwords encryption ( ' . htmlspecialchars($encryption) . '). Must be one of these: ' . implode(', ', self::$passwordsEncryptions));
-		}
 	}
 	
 	public static function getPasswordsEncryption()
@@ -236,9 +227,35 @@ class Website extends WebsiteErrors
 		}
 		return $lastCountryCode;
 	}
+
+	public static function antiSql($string) {		   
+		$string = str_replace(" or ", "", $string);
+		$string = str_replace("select ", "", $string);
+		$string = str_replace("delete ", "", $string);
+		$string = str_replace("create ", "", $string);
+		$string = str_replace("drop ", "", $string);
+		$string = str_replace("update ", "", $string);
+		$string = str_replace("drop table", "", $string);
+		$string = str_replace("show table", "", $string);
+		$string = str_replace("applet", "", $string);
+		$string = str_replace("object", "", $string);
+		$string = str_replace("'", "", $string);
+		$string = str_replace("#", "", $string);
+		$string = str_replace("=", "", $string);
+		$string = str_replace("--", "", $string);
+		$string = str_replace("-", "", $string);
+		$string = str_replace(";", "", $string);
+		$string = str_replace("*", "", $string);		   
+		$string = trim($string);		   
+		$string = strip_tags($string);		   
+		if(!get_magic_quotes_gpc()) {		      
+			$string = addslashes($string);		      
+			return $string;
+		}
+	}
 	
-	public static function newSessionKey() {
-		srand(time());
+	function newSessionKey() {
+		srand(mktime());
 		$lenght = 0;
 		$sessionKey = "";
 		while ($lenght < 30) {
@@ -251,7 +268,7 @@ class Website extends WebsiteErrors
 		return $sessionKey;
 	}
 	
-	public static function generateSessionKey() {
+	function generateSessionKey() {
 		global $SQL;
 		while (true) {
 			$sessionKey = Website::newSessionKey();

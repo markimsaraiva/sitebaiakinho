@@ -2,7 +2,7 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-class Error_Critic extends Error
+class Error_Critic
 {
 	public function __construct($id = '', $text = '', $errors = array())
 	{

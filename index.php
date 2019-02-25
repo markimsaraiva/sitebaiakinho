@@ -10,11 +10,6 @@ define('INITIALIZED', true);
 // if not defined before, set 'false' to load all normal
 if(!defined('ONLY_PAGE'))
 	define('ONLY_PAGE', false);
-
-define('AJAXREQUEST', false);
-//header("X-Content-Type-Options: nosniff");
-//header("X-FRAME-OPTIONS: DENY");
-//header("X-XSS-Protection: 1");
 	
 // check if site is disabled/requires installation
 include_once('./system/load.loadCheck.php');
@@ -41,14 +36,16 @@ include_once('./system/load.compat.php');
 // LOAD PAGE
 include_once('./system/load.page.php');
 // LOAD PAGE END
+
 // LAYOUT
 // with ONLY_PAGE we return only page text, not layout
-if(in_array($_REQUEST['subtopic'], array("play", "refresh", "client_options_serverscript"))) {
+if (in_array($_REQUEST['subtopic'], array("play", "refresh", "client_options_serverscript"))) {
 	echo $main_content;
 } else {
-    if (!ONLY_PAGE)
-        include_once('./system/load.layout.php');
-	else
+	if(!ONLY_PAGE) {
+		include_once('./system/load.layout.php');
+	} else {
 		echo $main_content;
+	}
 }
 // LAYOUT END

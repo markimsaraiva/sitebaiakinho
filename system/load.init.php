@@ -4,6 +4,7 @@ if(!defined('INITIALIZED'))
 
 $time_start = microtime(true);
 session_start();
+date_default_timezone_set("America/Sao_Paulo");
 
 function autoLoadClass($className)
 {

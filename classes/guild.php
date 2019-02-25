@@ -128,7 +128,7 @@ class Guild extends ObjectData
 
 	public function addInvitation($playerId, $reloadInvites = false)
 	{
-		$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName('guild_invites') . ' (' . $this->getDatabaseHandler()->fieldName('player_id') . ', ' . $this->getDatabaseHandler()->fieldName('guild_id') . ', ' . $this->getDatabaseHandler()->fieldName('date') . ') VALUES (' . $this->getDatabaseHandler()->quote($playerId) . ', ' . $this->getDatabaseHandler()->quote($this->getID()) . ', ' . time() . ')');
+		$this->getDatabaseHandler()->query('INSERT INTO ' . $this->getDatabaseHandler()->tableName('guild_invites') . ' (' . $this->getDatabaseHandler()->fieldName('player_id') . ', ' . $this->getDatabaseHandler()->fieldName('guild_id') . ') VALUES (' . $this->getDatabaseHandler()->quote($playerId) . ', ' . $this->getDatabaseHandler()->quote($this->getID()) . ')');
 		if($reloadInvites)
 			$this->getInvitations(true);
 	}
