@@ -2,117 +2,263 @@
 if(!defined('INITIALIZED'))
 	exit;
 
-if(count($config['site']['worlds']) > 1)
-{
-	foreach($config['site']['worlds'] as $idd => $world_n)
-	{
-		if($idd == (int) $_REQUEST['world'])
-		{
-			$world_id = $idd;
-			$world_name = $world_n;
+$cache_sec = 1;
+$info = array(
+	0 => array($config['server']['location'], date("d/m/Y")),
+	1 => array('EUA', date("d/m/Y"))
+);
+
+$id=0;
+if(isset($_POST['world'])) {
+	$f = null;
+	foreach($config['site']['worlds'] as $k => $v)
+		if($v == $_POST['world']) {
+			$f = true;
+			$id = $k;
+			break;
 		}
-	}
-}
-if(!isset($world_id))
-{
-	$world_id = 0;
-	$world_name = $config['server']['serverName'];
-}
-if(count($config['site']['worlds']) > 1)
-{
-	$main_content .= '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
-	<FORM ACTION="" METHOD=get><INPUT TYPE="hidden" NAME="subtopic" VALUE="whoisonline"><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>World Selection</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
-	<TABLE BORDER=0 CELLPADDING=1><TR><TD>Players online on world:</TD><TD><SELECT SIZE="1" NAME="world">';
-	foreach($config['site']['worlds'] as $id => $world_n)
-	{
-		if($id == $world_id)
-			$main_content .= '<OPTION VALUE="'.htmlspecialchars($id).'" selected="selected">'.htmlspecialchars($world_n).'</OPTION>';
-		else
-			$main_content .= '<OPTION VALUE="'.htmlspecialchars($id).'">'.htmlspecialchars($world_n).'</OPTION>';
-	}
-	$main_content .= '</SELECT> </TD><TD><INPUT TYPE="image" NAME="Submit" ALT="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif">
-		</TD></TR></TABLE></TABLE></FORM></TABLE>';
-}
-$orderby = 'name';
-if(isset($_REQUEST['order']))
-{
-	if($_REQUEST['order']== 'level')
-		$orderby = 'level';
-	elseif($_REQUEST['order'] == 'vocation')
-		$orderby = 'vocation';
-}
-$players_online_data = $SQL->query('SELECT ' . $SQL->tableName('accounts') . '.' . $SQL->fieldName('flag') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('name') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('vocation') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('promotion') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('level') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('skull') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('looktype') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('lookaddons') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('lookhead') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('lookbody') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('looklegs') . ', ' . $SQL->tableName('players') . '.' . $SQL->fieldName('lookfeet') . ' FROM ' . $SQL->tableName('accounts') . ', ' . $SQL->tableName('players') . ' WHERE ' . $SQL->tableName('players') . '.' . $SQL->fieldName('world_id') . ' = ' . $SQL->quote($world_id) . ' AND ' . $SQL->tableName('players') . '.' . $SQL->fieldName('online') . ' = ' . $SQL->quote(1) . ' AND ' . $SQL->tableName('accounts') . '.' . $SQL->fieldName('id') . ' = ' . $SQL->tableName('players') . '.' . $SQL->fieldName('account_id') . ' ORDER BY ' . $SQL->fieldName($orderby))->fetchAll();
-$number_of_players_online = 0;
-$vocations_online_count = array(0,0,0,0,0); // change it if you got more then 5 vocations
-$players_rows = '';
-foreach($players_online_data as $player)
-{
-	$vocations_online_count[$player['vocation']] += 1;
-	$bgcolor = (($number_of_players_online++ % 2 == 1) ?  $config['site']['darkborder'] : $config['site']['lightborder']);
-		//start guild
-	$player_id = $SQL->query('SELECT rank_id from players where name = "'.htmlspecialchars($player['name']).'"')->fetch();
-	$player_id = $player_id['rank_id'];
-	$has_guild = $SQL->query('SELECT guild_id from guild_ranks where id = '. $player_id .'')->fetch();
-	$has_guild = $has_guild['guild_id'];
-	if($has_guild == 0){
-		$guild_do_player = "No Guild";
-	}else{
-		$guild_do_player = $SQL->query('SELECT name from guilds where id = '.$has_guild.' > 0')->fetch();
-		$guild_do_player = $guild_do_player ['name'];
-	}
-	
-	//end guild
-	$players_rows .= '<TR BGCOLOR='.$bgcolor.'><TD WIDTH=5%><img src="' . $config['site']['outfit_images_url'] . '?id=' . $player['looktype'] . '&addons=' . $player['lookaddons'] . '&head=' . $player['lookhead'] . '&body=' . $player['lookbody'] . '&legs=' . $player['looklegs'] . '&feet=' . $player['lookfeet'] . '" alt="" /></td><TD WIDTH=30%><A HREF="?subtopic=characters&name='.urlencode($player['name']).'">'.htmlspecialchars($player['name']).'</A></TD><TD WIDTH=25%><center><A HREF="?subtopic=guilds&action=show&guild='.$has_guild.'">'.$guild_do_player .'</A>'.$guild_d_player.'</center></TD><TD WIDTH=8%><center>'.$player['level'].'</center></TD><TD WIDTH=20%><center>'.htmlspecialchars($vocation_name[$player['promotion']][$player['vocation']]).'</center></TD></TR>';
-}		
-if($config['site']['private-servlist.com_server_id'] > 0)
-{
-	$main_content.= '<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD WIDTH=10% CLASS=white><center><B>Players Online Chart</B></TD></TR></TABLE><table align="center"><tr><td><img src="http://private-servlist.com/server-chart/' . $config['site']['private-servlist.com_server_id'] . '.png" width="500px" /></td></tr></table>';
-}
-if($number_of_players_online == 0)
-{
-	//server status - server empty
-	$main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=white><B>Server Status</B></TD></TR><TR BGCOLOR='.$config['site']['darkborder'].'><TD><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=1><TR><TD>Currently no one is playing on <b>'.htmlspecialchars($config['site']['worlds'][$world_id]).'</b>.</TD></TR></TABLE></TD></TR></TABLE><BR>';
-}
-else
-{
-	//server status - someone is online
-	$main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=white><B>Server Status</B></TD></TR><TR BGCOLOR='.$config['site']['darkborder'].'><TD><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=1><TR><TD>Currently '.$number_of_players_online.' players are online on <b>'.htmlspecialchars($config['site']['worlds'][$world_id]).'</b>.</TD></TR></TABLE></TD></TR></TABLE><BR>';
+	if(!$f)
+		$_POST['world'] = $config['site']['worlds'][0];
+} else $_POST['world'] = $config['site']['worlds'][0];
 
+$order = 'name_asc';
+if(isset($_REQUEST['order']) && in_array($_REQUEST['order'], array('name_desc', 'level_asc','level_desc','vocation_asc','vocation_desc')))
+	$order = $_REQUEST['order'];
 
-	$main_content .= '<table width="200" cellspacing="1" cellpadding="0" border="0" align="center">
-		<tbody>
+if(count($config['site']['worlds']) > 1) {
+	$main_content ='
+<form action="?subtopic=whoisonline" method="post">
+	<div class="TableContainer">
+		<table class="Table1" cellpadding="0" cellspacing="0">
+			<div class="CaptionContainer">
+				<div class="CaptionInnerContainer">
+					<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+					<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+					<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+					<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+					<div class="Text">World Selection</div>
+					<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+					<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+					<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+					<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+				</div>
+			</div>
 			<tr>
-				<tr bgcolor="'.$config['site']['darkborder'].'">
-				<td><img src="images/vocations/sorcerer.png" /></td>
-				<td><img src="images/vocations/druid.png" /></td>
-				<td><img src="images/vocations/paladin.png" /></td>
-				<td><img src="images/vocations/knight.png" /></td>
+				<td>
+					<div class="InnerTableContainer">
+						<table width="100%">
+							<tr>
+								<td style="vertical-align:middle" class="LabelV150">World Name:</td>
+								<td style="width:170px">
+									<select size="1" name="world" style="width:165px">';
+foreach($config['site']['worlds'] as $v)
+	$main_content .= '<option value="'.$v.'"'.($v == $_POST['world'] ? ' selected="selected"' : '').'>'.$v.'</option>';
+$main_content .= '
+									</select>
+								</td>
+								<td style="text-align:left">
+									<div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)">
+										<div onmouseover="MouseOverBigButton(this)" onmouseout="MouseOutBigButton(this)"><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif)"></div>
+											<input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif"/>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
 			</tr>
-			<tr>
-				<tr bgcolor="'.$config['site']['vdarkborder'].'">
-				<td style="text-align: center;"><strong style="color:white">Sorcerers</strong></td>
-				<td style="text-align: center;"><strong style="color:white">Druids</strong></td>
-				<td style="text-align: center;"><strong style="color:white">Paladins</strong></td>
-				<td style="text-align: center;"><strong style="color:white">Knights</strong></td>
-			</tr>
-			<tr>
-				<TR BGCOLOR="'.$config['site']['lightborder'].'">
-				<td style="text-align: center;">'.$vocations_online_count[1].'</td>
-				<td style="text-align: center;">'.$vocations_online_count[2].'</td>
-				<td style="text-align: center;">'.$vocations_online_count[3].'</td>
-				<td style="text-align: center;">'.$vocations_online_count[4].'</td>
-			</tr>
-		</tbody>
+		</table>
+	</div>
+</form><br/>
+';
+}
+$main_content .=
+'<div class="TableContainer">
+	<table class="Table1" cellpadding="0" cellspacing="0">
+		<div class="CaptionContainer">
+			<div class="CaptionInnerContainer">
+				<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+				<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+				<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+				<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+				<div class="Text">World Information</div>
+				<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+				<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+				<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+				<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+			</div>
+		</div>
+		<tr>
+			<td>
+				<div class="InnerTableContainer">
+					<table width="100%">
+						<tr>
+							<td class="LabelV150"><b>Status:</b></td>
+							<td>O'.($config['status']['serverStatus_online'] == 1 ? 'n' : 'ff').'line</td>
+						</tr>
+						<tr>
+							<td class="LabelV150"><b>Players Online:</b></td>
+							<td>';
+$f = 'cache/whoisonline-'.$_POST['world'].'-'.$order.'.tmp';
+$ff = 'cache/whoisonline-'.$_POST['world'].'-record.tmp';
+if(file_exists($f) && filemtime($f) > (time() - $cache_sec)) {
+	$cp = file_get_contents($f);
+	$cached = null;
+	if(file_exists($f) && filemtime($f) > (time() - $cache_sec)) {
+		$e = explode('|', file_get_contents($ff));
+		$n = $e[0];
+		$c = $e[1];
+		$cached = true;
+	}
+}
+else {
+	$cp = '';
+	$n = 0;
+	$q = 'SELECT * FROM players WHERE world_id='.$id.' AND online=1';
+	if(in_array($order, array('name_asc','name_desc','level_asc','level_desc')))
+		$q .= ' ORDER BY '.str_replace('_', ' ', $order);
+
+	if(in_array($order, array('vocation_asc','vocation_desc'))) {
+		$a = array();
+		foreach($SQL->query($q)->fetchAll() as $p)
+			$a[] = array($p['name'], $p['level'], $vocation_name[$p['promotion']][$p['vocation']]);
+		function cmp($a, $b) {
+			$r = strcmp($a[2], $b[2]);
+			$r = $GLOBALS['order'] == 'vocation_desc' ? ($r == 1 ? -1 : ($r == -1 ? 1 : 0)) : $r;
+			return ($r == 0 && $a[1] < $b[1]) ? 1 : $r;
+		}
+		usort($a, 'cmp');
+		foreach($a as $p) {
+			$n++;
+			$cp .= '<tr class="'.(is_int($n/2)?'Odd':'Even').'" style="text-align:right"><td style="width:70%;text-align:left"><a href="?subtopic=characters&name='.urlencode($p[0]).'">'.$p[0].'</a></td><td style="width:10%">'.$p[1].'</td><td style="width:20%">'.str_replace(' ','&#160;',$p[2]).'</td></tr>';
+		}
+
+	}
+	else {
+		$l = array();
+		
+		foreach($SQL->query($q)->fetchAll() as $p) {
+			$n++;
+			$cp .= '<tr class="'.(is_int($n/2)?'Odd':'Even').'" style="text-align:right">';
+			$cp .= '<td style="width:70%;text-align:left">';
+			if($order == 'name_asc') {
+				$tmp = strtoupper($p['name'][0]);
+				if(!in_array($tmp, $l)) {
+					$l[] = $tmp;
+					$cp .= '<a name="'.$tmp.'"></a>';
+				}
+			}
+			$cp .= '<a href="?subtopic=characters&name='.urlencode($p['name']).'">'.$p['name'].'</a></td><td style="width: 10%">'.$p['level'].'</td><td style="width:20%">'.str_replace(' ','&#160;',$vocation_name[$p['promotion']][$p['vocation']]).'</td></tr>';
+		}
+		
+	}
+	file_put_contents($f, $cp);
+}
+if(!$cached) {
+	$r=$SQL->query('SELECT MAX(record) as r,MAX(timestamp) as t FROM server_record WHERE world_id='.$id)->fetch();
+	$c = $r['r'].' players (on '.date('M&#160;d&#160;Y,&#160;H:i:s&#160;T', $r['t']).')';
+	file_put_contents($ff, $n.'|'.$c);
+}
+$main_content .= $n.' Players Online</td>
+						</tr>
+						<tr>
+							<td class="LabelV150"><b>Online Record:</b></td>
+							<td>'.$c.'</td>
+						</tr>
+						<tr>
+							<td class="LabelV150"><b>Creation Date:</b></td>
+							<td>'.$info[$id][1].'</td>
+						</tr>
+						<tr>
+							<td class="LabelV150"><b>Location:</b></td>
+							<td>'.$info[$id][0].'</td>
+						</tr>
+						<tr>
+							<td class="LabelV150"><b>PvP Type:</b></td>
+							<td>';
+$w=strtolower($config['server']['worldType']);
+if(in_array($w, array('pvp','2','normal','open','openpvp')))
+	$main_content .= 'Open PvP';
+elseif(in_array($w, array('no-pvp','nopvp','non-pvp','nonpvp','1','safe','optional','optionalpvp')))
+	$main_content .= 'Optional PvP';
+elseif(in_array($w, array('pvp-enforced','pvpenforced','pvp-enfo','pvpenfo','pvpe','enforced','enfo','3','war','hardcore','hardcorepvp')))
+	$main_content .= 'Hardcore PvP';
+$main_content .= '</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		</tr>
 	</table>
-	<div style="text-align: center;">&nbsp;</div>';
+</div><br/>
+	<div class="TableContainer">
+		<table class="Table2" cellpadding="0" cellspacing="0">
+		<div class="CaptionContainer">
+		<div class="CaptionInnerContainer">
+		<span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+		<span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+		<span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+		<span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+		<div class="Text">Players Online';
+if($order == 'name_asc')
+	$main_content .= '<span class="TableHeadlineNavigation"> [
+	<a href="#A">A</a>
+	<a href="#B">B</a>
+	<a href="#C">C</a>
+	<a href="#D">D</a>
+	<a href="#E">E</a>
+	<a href="#F">F</a>
+	<a href="#G">G</a>
+	<a href="#H">H</a>
+	<a href="#I">I</a>
+	<a href="#J">J</a>
+	<a href="#K">K</a>
+	<a href="#L">L</a>
+	<a href="#M">M</a>
+	<a href="#N">N</a>
+	<a href="#O">O</a>
+	<a href="#P">P</a>
+	<a href="#Q">Q</a>
+	<a href="#R">R</a>
+	<a href="#S">S</a>
+	<a href="#T">T</a>
+	<a href="#U">U</a>
+	<a href="#V">V</a>
+	<a href="#W">W</a>
+	<a href="#X">X</a>
+	<a href="#Y">Y</a>
+	<a href="#Z">Z</a> ]&#160;&#160;</span>';
+$main_content .= '</div>
+<span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>
+<span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>
+<span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+<span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>
+</div>
+</div>
+<tr>
+<td>
+<div class="InnerTableContainer">
+<table width="100%">
+<tr class="LabelH">
+<td style="text-align:left;width:50%">Name&#160;&#160;<small style="font-weight:normal">[<a href="?subtopic=whoisonline&world='.$_POST['world'].'&order=name_'.($order == 'name_asc' ? 'desc' : 'asc').'">sort</a>]</small>
+<img class="sortarrow" src="'.$layout_name.'/images/'.($order == 'name_asc' ? 'content/order_desc' : ($order == 'name_desc' ? 'content/order_asc' : 'news/blank')).'.gif"/></td>
+<td style="text-align:left;width:30%">Level&#160;&#160;
+<small style="font-weight:normal">[<a href="?subtopic=whoisonline&world='.$_POST['world'].'&order=level_'.($order == 'level_asc' ? 'desc' : 'asc').'">sort</a>]</small>
+<img class="sortarrow" src="'.$layout_name.'/images/'.($order == 'level_asc' ? 'content/order_desc' : ($order == 'level_desc' ? 'content/order_asc' : 'news/blank')).'.gif"/></td>
+<td style="text-align:left;width:50%">Vocation&#160;&#160;<small style="font-weight:normal">[<a href="?subtopic=whoisonline&world='.$_POST['world'].'&order=vocation_'.($order == 'vocation_asc' ? 'desc' : 'asc').'">sort</a>]</small>
+<img class="sortarrow" src="'.$layout_name.'/images/'.($order == 'vocation_asc' ? 'content/order_desc' : ($order == 'vocation_desc' ? 'content/order_asc' : 'news/blank')).'.gif"/></td>
+</tr>';
 
-	//list of players
-	$main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'">
-	<TD CLASS="white"><b>Outfit</b></TD><TD><A HREF="?subtopic=whoisonline&order=name&world='.$world_id.'" CLASS=white>Name</A></TD>
-	<TD><A HREF="?subtopic=guilds" CLASS=white><center>Guild</center></A></TD>
-	<TD><A HREF="?subtopic=whoisonline&order=level&world='.urlencode($world_id).'" CLASS=white><center>Level</center></A></TD>
-	<TD><A HREF="?subtopic=whoisonline&order=vocation&world='.urlencode($world_id).'" CLASS=white><center>Vocation</center></TD>
-	</TR>'.$players_rows.'</TABLE>';
-	//search bar
-	$main_content .= '<BR><FORM ACTION="?subtopic=characters" METHOD=post>  <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Search Character</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Name:</TD><TD><INPUT NAME="name" VALUE="" SIZE="29" MAXLENGTH="29"></TD><TD><INPUT TYPE="image" NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
-}
+$main_content .= $cp;
+if (!$cp){$main_content .='<tr><td colspan="3" align="center"><i>This server no has players online.</i></td></tr>';}
+$main_content .='
+</table>
+</div>
+</table>
+</div>
+</td>
+</tr>
+<br/>
+<form action="?subtopic=characters" method="post"><div class="TableContainer">  <table class="Table1" cellpadding="0" cellspacing="0">    <div class="CaptionContainer">      <div class="CaptionInnerContainer">        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>        <div class="Text">Search Character</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif)"></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif)"></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif)"></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer">          <table width="100%"><tr><td style="vertical-align:middle" class="LabelV150"><b>Character Name:</b></td><td style="width:170px"><input style="width:165px" name="name" value="" size="29" maxlength="29"/></td><td><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)"><div onmouseover="MouseOverBigButton(this)" onmouseout="MouseOutBigButton(this)"><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif)"></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif"></div></div></td></tr>          </table>        </div>  </table></div></td></tr></form></center>';
+?>

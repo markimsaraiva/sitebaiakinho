@@ -62,9 +62,6 @@ if(!$logged)
 					$passB = '<span style="color:red;">Password:</span>';
 					break;
 			}
-			if($error_captcha){
-				$main_content .= 'Verification code is empty or incorrect.<br/>';					
-			}
 				$main_content .= '
 					</div>
 						<div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div>
@@ -114,11 +111,6 @@ if(!$logged)
 																			<td class="LabelV120" ><span>'.$passB.'</span></td>
 																			<td><input type="password" name="password_login" size="35" maxlength="29" ></td>
 																		</tr>
-																		<tr> <td class="LabelV" ><span >Re-Captcha:</span></td>
-        <td>
-         <div class="g-recaptcha" data-sitekey="6LcNXhwTAAAAAH3nbANsJ816eMCbTjaoPZrjBA9K"></div>
-        </td>
-       </tr>
 																	</table>
 																	<div style="float: right; font-size: 1px;" >
 																		<input type="hidden" name="page" value="overview" >
@@ -222,10 +214,8 @@ if(!$logged)
 	}
 else
 {
-
 	$account_id = $account_logged->getId();
 	if($account_id == 1) die("<body bgcolor=#000000><center><br><br><br><br><br><br><br><font color='red'><b>This account is blocked for this site.</b><br><br></font><a href='?subtopic=accountmanagement&action=logout'><img src='images/block.png' width=300></a></center></body>");	
-	
 	//Here start our new accountmanagement ;D
 	if($action == "")
 	{
@@ -307,7 +297,7 @@ else
 																				</div>
 																			</form>
 																			<div style="font-size:1px;height:4px;"></div>
-																				<form action="?subtopic=doacao" method="post" style="padding:0px;margin:0px;">
+																				<form action="?subtopic=donate" method="post" style="padding:0px;margin:0px;">
 																					<div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton_green.gif)">
 																						<div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_green_over.gif);"></div>
 																							<input class="ButtonText" type="image" name="Get Premium" alt="Get Premium" src="'.$layout_name.'/images/buttons/_sbutton_getpremium.gif">
@@ -694,7 +684,7 @@ else
 							<nobr>[<a href="#Registration" >Registration</a>]</nobr> 
 						</td>
 						<td>
-							<form action="?subtopic=doacao" method="post" style="padding:0px;margin:0px;" >
+							<form action="?subtopic=donate" method="post" style="padding:0px;margin:0px;" >
 								<div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton_green.gif)" >
 									<div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_green_over.gif);" ></div>
 										<input class="ButtonText" type="image" name="Get Premium" alt="Get Premium" src="'.$layout_name.'/images/buttons/_sbutton_getpremium.gif" >
@@ -1049,8 +1039,6 @@ else
 					if ($config['site']['smtp_enabled'])
 					{
 						$mail->IsSMTP();
-						$mail->SMTPDebug  = 0; 
-						$mail->SMTPSecure = "ssl"; 
 						$mail->Host = $config['site']['smtp_host'];
 						$mail->Port = (int)$config['site']['smtp_port'];
 						$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -1221,8 +1209,6 @@ else
 						if ($config['site']['smtp_enabled'])
 						{
 							$mail->IsSMTP();
-							$mail->SMTPDebug  = 0; 
-							$mail->SMTPSecure = "ssl"; 
 							$mail->Host = $config['site']['smtp_host'];
 							$mail->Port = (int)$config['site']['smtp_port'];
 							$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -1301,8 +1287,6 @@ else
 								if ($config['site']['smtp_enabled'])
 								{
 									$mail->IsSMTP();
-									$mail->SMTPDebug  = 0; 
-									$mail->SMTPSecure = "ssl"; 
 									$mail->Host = $config['site']['smtp_host'];
 									$mail->Port = (int)$config['site']['smtp_port'];
 									$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -1688,8 +1672,7 @@ else
 												<td>
 													<input type="password" name="delete_password" size="30" maxlength="29" >
 												</td>
-											</tr>   
-											
+											</tr>          
 										</table>        
 									</div>  
 								</table>
@@ -1942,9 +1925,10 @@ function NameStateChanged()
 				    $char_to_copy->setAccount($account_logged);
 				    $char_to_copy->setSex($newchar_sex);
 				    $char_to_copy->setTown($newchar_town);
-					$char_to_copy->setPosX(155);
-					$char_to_copy->setPosY(52);
-					$char_to_copy->setPosZ(7);
+					$char_to_copy->setPosX(0);
+					$char_to_copy->setPosY(0);
+					$char_to_copy->setPosZ(0);
+					$char_to_copy->setBalance(0);					
 					$char_to_copy->setWorldID((int) $world_id);
 					$char_to_copy->setCreateIP(Visitor::getIP());
 					$char_to_copy->setCreateDate(time());

@@ -1,3 +1,15 @@
+  @font-face {
+
+      font-family: "helvetica";
+      src: url("helvetica.ttf") format("truetype");
+
+      }
+        @font-face {
+
+      font-family: "semplicita";
+      src: url("semplicita.ttf") format("truetype");
+
+      }
   body {
   margin: 0px;
   padding:  0px;
@@ -77,7 +89,7 @@
   margin-left: 50%;
 }
 #HeaderArtworkDiv {
-  position: absolute;
+ position: absolute;
   text-align: center;
   background-position: top left;
   background-attachment: scroll;
@@ -99,6 +111,7 @@
   margin: 0px;
   margin-left: auto;
   margin-right: auto;
+  margin-top:100px;
   padding: 0px;
   display: table;
 }
@@ -109,8 +122,8 @@
   margin-right: 15px;
   margin-left: 15px;
   padding: 0px;
-  font-family:  Arial, sans-serif;
-  font-size: 10pt;
+   font-family: "semplicita", Arial, "helvetica", sans-serif;
+  font-size: 15pt;
   font-weight: bold;
   line-height: 12pt;
   text-align: left;
@@ -130,7 +143,7 @@
 }
 #ThemeboxesColumn {
   position: absolute;
-  top: 0px;
+  top: -70px;
   right: 0px;
   width: 180px;
   margin-top: -144px;
@@ -143,14 +156,21 @@
   height: 1000px;
 }
 #Footer {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
-  font-size: 7pt;
+  -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: -webkit-linear-gradient(top,#efd100 0,#e2a233 38%,#f0c328 60%,#fff1a3 86%,#ffe13e 100%);
+    background-size: 1em 1em;
+    color: #f8b700;
+    display: inline-block;
+    line-height: 1em;
+    position: relative;
+    z-index: auto;
+  font-family: "semplicita", Arial, "helvetica", sans-serif;
+  font-size: 10pt;
   font-weight: normal;
   text-align: center;
-  position: relative;
   width: 100%;
   padding-bottom: 20px;
-  color: white;
 }
 * html #Footer {
   padding-bottom: 120px;
@@ -346,6 +366,7 @@
  */
 
 #Menu {
+  
   position: relative;
   left: 5px;
   top: 0px;
@@ -464,17 +485,35 @@
 }
 
 .Submenu {
+
   position: relative;
+  font-size:15px;
+  background-color: #0D2E2B;
   margin-left: 5px;
   margin-right: 5px;
-  background-color: #000605;
   width: 160px;
 }
 
+.Submenu .Submenuitem:hover{
+
+background: rgba(0,0,0,1);
+background: -moz-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(2,0,0,1) 1%, rgba(112,0,0,1) 50%, rgba(0,0,0,1) 100%);
+background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0,0,0,1)), color-stop(1%, rgba(2,0,0,1)), color-stop(50%, rgba(112,0,0,1)), color-stop(100%, rgba(0,0,0,1)));
+background: -webkit-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(2,0,0,1) 1%, rgba(112,0,0,1) 50%, rgba(0,0,0,1) 100%);
+background: -o-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(2,0,0,1) 1%, rgba(112,0,0,1) 50%, rgba(0,0,0,1) 100%);
+background: -ms-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(2,0,0,1) 1%, rgba(112,0,0,1) 50%, rgba(0,0,0,1) 100%);
+background: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(2,0,0,1) 1%, rgba(112,0,0,1) 50%, rgba(0,0,0,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#000000', GradientType=1 );
+}
 .Submenuitem {
+  text-align:center;
+
+background-color:black;
   position: relative;
   margin: 0px;
   padding: 0px;
+ 
+  border-bottom: 0.1em solid #3c3c3c;
 }
 
 .ActiveSubmenuItemIcon {
@@ -485,15 +524,17 @@
   height: 10px;
   background-repeat: no-repeat;
   visibility: hidden;
+
 }
 
-.SubmenuitemLabel {
+.SubmenuitemLabel{
+
   margin: 0px;
   border-top: 0;
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 15px;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid #4b7874;
   overflow: hidden;
 }
 
@@ -503,7 +544,38 @@
 .Submenu a:focus   { color: #d7d7d7; text-decoration: none; }
 .Submenu a:active  { color: white; text-decoration: none; }
 .Submenu a:hover   { color: white; text-decoration: none; }
+/* Bounce Out */
 
+.hvr-bounce-out {
+  margin: 0px;
+  border-top: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 15px;
+ -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: -webkit-linear-gradient(top,#efd100 0,#e2a233 38%,#f0c328 60%,#fff1a3 86%,#ffe13e 100%);
+    background-size: 1em 1em;
+    color: #f8b700;
+   overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+}
+
+.hvr-bounce-out:hover, .hvr-bounce-out:focus, .hvr-bounce-out:active {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+  -webkit-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+  transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+}
 /** -------------------------------
  *  Stylesheet declarations for the
  *  CONTENT AREA
@@ -598,13 +670,13 @@
 /* Content Links */
 
 .Content a {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family: "semplicita", Arial, "helvetica", sans-serif;
   font-weight: bold;
   color: #004294;
   text-decoration: none;
 }
 .Content a:hover {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family: "semplicita", Arial, "helvetica", sans-serif;
   font-weight: bold;
   text-decoration: underline;
   color: #0063DC;

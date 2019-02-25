@@ -8,8 +8,8 @@ class Account extends ObjectData
 	const LOADTYPE_NAME = 'name';
 	const LOADTYPE_MAIL = 'email';
 	public static $table = 'accounts';
-	public $data = array('name' => null, 'vip_time' => null, 'guild_points' => null, 'password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null, 'vote' => null);
-	public static $fields = array('id', 'vip_time', 'guild_points', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag', 'vote');
+	public $data = array('name' => null, 'vip_time' => null, 'guild_points' => null, 'backup_points' => null, 'password' => null, 'premdays' => null, 'lastday' => null, 'email' => null, 'key' => null, 'group_id' => null, 'create_ip' => null, 'create_date' => null, 'premium_points' => null, 'page_access' => null, 'location' => null, 'rlname' => null, 'email_new' => null, 'email_new_time' => null, 'email_code' => null, 'next_email' => null, 'last_post' => null, 'flag' => null, 'vote' => null);
+	public static $fields = array('id', 'vip_time', 'guild_points', 'backup_points', 'name', 'password', 'premdays', 'lastday', 'email', 'key', 'group_id', 'create_ip', 'create_date', 'premium_points', 'page_access', 'location', 'rlname', 'email_new', 'email_new_time', 'email_code', 'next_email', 'last_post', 'flag', 'vote');
 	public $players;
 	public $playerRanks;
 	public $guildAccess;
@@ -228,15 +228,13 @@ class Account extends ObjectData
 	public function setPremiumPoints($value){$this->data['premium_points'] = $value;}
 	public function getPremiumPoints(){return $this->data['premium_points'];}
 	public function setVipTime($value){$this->data['vip_time'] = $value;}
-
 	public function getVipTime(){return $this->data['vip_time'];}
-
 	public function setGuildPoints($value){$this->data['guild_points'] = $value;}
-
 	public function getGuildPoints(){return $this->data['guild_points'];}
+	public function setBackupPoints($value){$this->data['backup_points'] = $value;}
+	public function getBackupPoints(){return $this->data['backup_points'];}
 	public function setPageAccess($value){$this->data['page_access'] = $value;}
 	public function getPageAccess(){return $this->data['page_access'];}
-	
 	public function setLocation($value){$this->data['location'] = $value;}
 	public function getLocation(){return $this->data['location'];}
 	public function setRLName($value){$this->data['rlname'] = $value;}

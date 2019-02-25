@@ -1,93 +1,14 @@
-<div id="ContentHelper">
+<?PHP 
+$main_content .= '<center><h1>Lottery</h1><h3>Loterias acontecem a cada 2 horas</h3></center><br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><tr BGCOLOR="'.$config['site']['vdarkborder'].'"><td CLASS=white><center><b>Player Name</b></center></td><td CLASS=white width=184 colspan=2><center><b>Winning Item</b></center></td><td width=50 CLASS=white><center><b>World</b></center></td><td width=100 CLASS=white><center><b>Date and Time</b></center></td></tr>'; 
+$lottery = $SQL->query('SELECT id, name, item, world_id, item_name, date FROM lottery WHERE world_id = 0 ORDER BY id DESC;');
+foreach($lottery as $result) { 
+ $players++; 
+            if(is_int($players / 2)) 
+                $bgcolor = $config['site']['lightborder']; 
+            else 
+                $bgcolor = $config['site']['darkborder']; 
 
-        <script type="text/javascript" src="./layouts/tibiarl/newsticker.js"></script>
-
-        
-          
-
-            
-
-           
-
-            <div class="Border_2">
-
-                <div class="Border_3">
-
-                  <div class="BoxContent" style="background-image:url(./layouts/tibiarl/images/content/scroll.gif);">
-
-                
-<table width="100%" border="0" cellpadding="4" cellspacing="1">
-<tbody>
-	<tr>
-		<td class="white" colspan="3" bgcolor="#505050"><span class="style4">Informações da Loteria</span></td>
-	</tr>
-	<tr>
- 		<td colspan="3" bgcolor="#f1e0c6"><span class="style4"<>A loteria VIP funciona assim: A cada 2 horas o server sorteia um player que estiver online para receber 2 Premium Points no nosso site para poder gastar na <a href="?subtopic=shopsystem">Shop</a>. Então você só precisa estar online e ter sorte para ganhar! <font color="red">Além disso, quanto mais MCs você tiver aberto, maior sua chance de ganhar!.</font></span></td>
-	</tr>
-			
-	<tr>
- 		<td colspan="3" bgcolor="#f1e0c6"><span class="style4">Se vocÊ ainda não sabe, é possí­vel transferir seus pontos do site para outra conta ou vender para outros jogadores usando os comandos encontrados <a href="?subtopic=sellpoints">Aqui</a></span></td>
-	</tr>
-
-		<td colspan="3" bgcolor="#d4c0a1"><span class="style4"><center><img src="images/loteria.jpg"></center></span>
-		</td>
-	</tr>
-	
-	
-	<tr>
-  		<td class="white" colspan="3" bgcolor="#505050">
-			<span class="style4">
-				<center>Premio da Loteria</center>
-			</span>
-		</td>
-	</tr>
-
-	<tr>
-	<tr bgcolor="#d4c0a1">
-	
-	</tr>
-	<tr>
-	<tr>
-	<tr>
-  		<td colspan="3" bgcolor="#f1e0c6">
-			<span class="style4">
-				<i>1 Premium Point
-			</span>
-		</td>
-	</tr>
-	<tr>
-		<td class="white" colspan="3" bgcolor="#505050">
-			<span class="style4">
-				<center><b>BaiakNew Server</b></center>
-			</span>
-		</td>
-	</tr>
-</tbody>
-</table>
-</center>
-
-<div style="text-align: right;"><font color="0000FF"><b></b></font></div></br> 
-
-                  </div>
-
-                </div>
-
-            </div>
-
-          <div class="Border_1" style="background-image:url(./layouts/tibiarl/images/content/border-1.gif);"></div>
-
-          <div class="CornerWrapper-b"><div class="Corner-bl" style="background-image:url(./layouts/tibiarl/images/content/corner-bl.gif);"></div></div>
-
-          <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url(./layouts/tibiarl/images/content/corner-br.gif);"></div></div>
-
-          </div>
-
-                <div id="ThemeboxesColumn">
-
-                  <div id="DeactivationContainerThemebox" onclick="DisableDeactivationContainer();"></div>
-
-                  <div id="RightArtwork">
-
-                   
-
-              </div>
+$main_content .= '<TR BGCOLOR='.$bgcolor.'><TD WIDTH=35%><center><a href="?subtopic=characters&name='.urlencode($result['name']).'">'.$result['name'].'</a></center></td><TD WIDTH=5%><img src=\'/item_images/'.urlencode($result['item']).'.gif\'></td><TD WIDTH=30%><center>'.$result['item_name'].'</center></td><TD WIDTH=7%><center>HardStyller</center></td></td><TD WIDTH=30%><center>'.$result['date'].'</center></td></tr>'; 
+} 
+$main_content .= '</table>'; 
+?>

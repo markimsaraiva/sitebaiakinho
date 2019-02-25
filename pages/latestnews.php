@@ -1,59 +1,68 @@
 <?php
+
 $main_content .= '
 <div class="InnerTableContainer">
-	<table>
-		<tbody>
-			<tr>
-				<td>
-					<div class="TableShadowContainerRightTop">
-						<div class="TableShadowRightTop" style="background-image: url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
-					</div>
-						<div class="TableContentAndRightShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-rm.gif);">
-							<div class="TableContentContainer">
-								<table class="TableContent" style="border: 1px solid #faf0d7;">
-									<tbody>
-										<tr style="background-color: #505050;">
-										</tr>
-											<tr class="Table" style="background-color: #d4c0a1;">
-												<td style="width: 800; border: 1px; border-style: solid; border-color: #FAF0D7;">
-													<div class="NewsHeadline">
-														<div class="NewsHeadlineBackground" style="background-image:url(' . $layout_name . '/images/news/newsheadline_background.gif)">
-															<table border="0">
-																<tr>
-																	<td style="text-align: center; font-weight: bold;">
-																		<font color="white">Most powerful guilds</font>
-																	</td>
-																</tr>
-															</table>
-														</div>
-													</div>
-												<table border="0" cellspacing="3" cellpadding="4" width="100%">
-											<tr>';
-												foreach($SQL->query('SELECT `g`.`id` AS `id`, `g`.`name` AS `name`,`g`.`logo_gfx_name` AS `logo`, COUNT(`g`.`name`) as `frags` FROM `killers` k LEFT JOIN `player_killers` pk ON `k`.`id` = `pk`.`kill_id` LEFT JOIN `players` p ON `pk`.`player_id` = `p`.`id` LEFT JOIN `guild_ranks` gr ON `p`.`rank_id` = `gr`.`id` LEFT JOIN `guilds` g ON `gr`.`guild_id` = `g`.`id` WHERE `k`.`unjustified` = 1 AND `k`.`final_hit` = 1 GROUP BY `name` ORDER BY `frags` DESC, `name` ASC LIMIT 0, 4;') as $guild)
-												$main_content .= '              
-													<td style="width: 25%; text-align: center;">
-														<a href="?subtopic=guilds&action=show&guild=' . $guild['id'] . '"><img src="/guild_image.php?id=' . $guild['id'] . '" width="64" height="64" border="0"/><br />' . $guild['name'] . '</a><br />' . $guild['frags'] . ' kills
-													</td>';
-												$main_content .= '
-																			</tr>
-																		</table>
-																	</td>
-																</tr>
-															</tbody>
-														</table>
-													</div>
-												</div>
-											<div class="TableShadowContainer">
-										<div class="TableBottomShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-bm.gif);">
-									<div class="TableBottomLeftShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
-								<div class="TableBottomRightShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<table>
+<tbody>
+<tr>
+<td>
+<div class="TableShadowContainerRightTop">
+<div class="TableShadowRightTop" style="background-image: url('.$layout_name.'/images/content/table-shadow-rt.gif);"></div>
+</div>
+<div class="TableContentAndRightShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-rm.gif);">
+<div class="TableContentContainer">
+<table class="TableContent" style="border: 1px solid #faf0d7;">
+<tbody>
+<tr style="background-color: #505050;">
+</tr>
+<tr class="Table" style="background-color: #d4c0a1;">
+<td style="width: 800; border: 1px; border-style: solid; border-color: #FAF0D7;">
+<div class="NewsHeadline">
+<div class="NewsHeadlineBackground" style="background-image:url(' . $layout_name . '/images/news/newsheadline_background.gif)">
+<table border="0">
+<tr>
+<td style="text-align: center; font-weight: bold;">
+<font color="white">Most powerful guilds</font>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<table border="0" cellspacing="3" cellpadding="4" width="100%">
+<tr>';
+foreach($SQL->query('SELECT `g`.`id` AS `id`, `g`.`name` AS `name`,
+`g`.`logo_gfx_name` AS `logo`, COUNT(`g`.`name`) as `frags`
+FROM `killers` k
+LEFT JOIN `player_killers` pk ON `k`.`id` = `pk`.`kill_id`
+LEFT JOIN `players` p ON `pk`.`player_id` = `p`.`id`
+LEFT JOIN `guild_ranks` gr ON `p`.`rank_id` = `gr`.`id`
+LEFT JOIN `guilds` g ON `gr`.`guild_id` = `g`.`id`
+WHERE `k`.`unjustified` = 1 AND `k`.`final_hit` = 1
+GROUP BY `name`
+ORDER BY `frags` DESC, `name` ASC
+LIMIT 0, 4;') as $guild)
+        $main_content .= '              <td style="width: 25%; text-align: center;">
+                        <a href="?subtopic=guilds&action=show&guild=' . $guild['id'] . '"><img class="img" src="/guild_image.php?id=' . $guild['id'] . '" width="64" height="64" border="0"/><br />' . $guild['name'] . '</a><br />' . $guild['frags'] . ' kills
+                </td>';
+$main_content .= '</tr>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="TableShadowContainer">
+<div class="TableBottomShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-bm.gif);">
+<div class="TableBottomLeftShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-bl.gif);"></div>
+<div class="TableBottomRightShadow" style="background-image: url('.$layout_name.'/images/content/table-shadow-br.gif);"></div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <br />';
 if(!defined('INITIALIZED'))
 	exit;
@@ -273,10 +282,6 @@ $featured_article = $SQL->query("SELECT * FROM z_featured_article ORDER BY id DE
 						<div class="Border_3">
 							<div class="BoxContent" style="background-image:url('.$layout_name.'/images/content/scroll.gif);">
 								<div id="TeaserThumbnail">';
-								if(!empty($featured['read_more'])){
-									$news_content .= '
-									<a href="'.$featured['read_more'].'">';
-								}
 								$news_content .= '
 										<img src="'.$layout_name.'/images/news/announcement.jpg" width="150" height="100" border=0 alt="" />';
 								if(!empty($featured['read_more'])){
@@ -287,15 +292,16 @@ $featured_article = $SQL->query("SELECT * FROM z_featured_article ORDER BY id DE
 								</div>';
 								if(!empty($featured['read_more'])){
 								$news_content .= '
-								<a id="Link" href="'.$featured['read_more'].'">&raquo; read more</a>';
+								<a id="Link" href="'.$featured['read_more'].'"></a>';
 								}
-								$news_content .= '
-								<div id="TeaserText">
-									<div style="position: relative; top: -2px; margin-bottom: 2px;" >
-										<b>'.$featured['title'].'</b>
-									</div>
-									'.$featured['text'].'
-								</div>        
+								
+                                                                $news_content .= '
+                                                                <div id="TeaserText">
+                                                                        <b>IP:</b> HardStyller.com</font> - <b>VERSION:</b> 8.60 - <b>PORT:</b> 7171 <b><a href="./downloads/pvp.exe">CLIENTE PR&Oacute;PRIO 8.60</a></b><br><br>
+                                                                        &nbsp&nbsp&nbsp&nbsp&nbsp&nbspUtilizamos <b>Mapa Styller</b> várias quests, hunts, eventos e sistemas que irão tornar esse jogo um <b>Novo</b> mundo para vocês tibianos.<br>
+                                                                        Faça parte dessa história, marque sua presença, e chame seu Team!!! Você não pode perder !!!<br>
+                                                                        Possuímos <b>Bônus para iniciantes</b> no baú do templo, e <b>Dias Donate no Shop Guild</b> para times que entrarem.. Aproveite !!<br>
+                                                                </div>        
 							</div>
 						</div>
 					</div>

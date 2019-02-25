@@ -144,7 +144,7 @@ function LoadMenu() {
   document.getElementById("submenu_" + activeSubmenuItem).style.color = "white";
   document.getElementById("ActiveSubmenuItemIcon_" + activeSubmenuItem).style.visibility = "visible";
   if (self.name.lastIndexOf("&") == -1) {
-    self.name = "news=1&community=0&wars=0&events=0&account=0&team=0&shops=0&";
+    self.name = "news=1&library=0&community=0&forum=0&account=0&team=0&shops=0&";
   }
   FillMenuArray();
   InitializeMenu();
@@ -242,16 +242,8 @@ function MouseOverMenuItem(source) {
 }
 function MouseOutMenuItem(source) {
   source.firstChild.style.visibility = "hidden";
-}
-function MouseOverSubmenuItem(source)
-{
-  source.style.backgroundColor = "#3c3c3c";
-}
-function MouseOutSubmenuItem(source)
-{
-  source.style.backgroundColor = "#000605";
-}
 
+}
 
 // display payment standby message
 function PaymentStandBy(a_Source, a_Case) {

@@ -108,52 +108,16 @@ if($config['site']['send_emails'])
 						<p>Password: <i>You will set new password when you press on link.</i></p>
 						<br />
 						<p>Press on link to set new password. This link will work until next >new password request< in Lost Account Interface.</p>
-						<p><a href="http://'.$config['server']['url'].'/?subtopic=lostaccount&action=checkcode&code='.urlencode($newcode).'&character='.urlencode($nick).'">'.$config['server']['url'].'/?subtopic=lostaccount&action=checkcode&code='.urlencode($newcode).'&character='.urlencode($nick).'</a></p>
+						<p><a href="'.$config['server']['url'].'/?subtopic=lostaccount&action=checkcode&code='.urlencode($newcode).'&character='.urlencode($nick).'">'.$config['server']['url'].'/?subtopic=lostaccount&action=checkcode&code='.urlencode($newcode).'&character='.urlencode($nick).'</a></p>
 						<p>or open page: <i>'.$config['server']['url'].'/?subtopic=lostaccount&action=checkcode</i> and in field "code" write <b>'.htmlspecialchars($newcode).'</b></p>
 						<br /><p>If you don\'t want to change password to your account just delete this e-mail.
 						<p><u>It\'s automatic e-mail from OTS Lost Account System. Do not reply!</u></p>
 						</body>
 						</html>';
-						
-						$to = ''.$account->getCustomField('email').'';
-                        $subject = ''.$config['server']['serverName'].' - Set >new password to account<';
-                        $ch = curl_init();
-						curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-						curl_setopt($ch, CURLOPT_USERPWD, 'api:key-bd707c304c5bdde366741ffc56dde227');
-						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-						curl_setopt($ch, CURLOPT_URL, 
-									  'https://api.mailgun.net/v2/baiaknew.com/messages');
-						curl_setopt($ch, CURLOPT_POSTFIELDS, 
-										array('from' => 'Baiak New <noreply@baiaknew.com>',
-											  'to' => $to,
-											  'subject' => $subject,
-											  'html' => $mailBody,
-											  'text' => $mailBody));
-						$result = curl_exec($ch);
-						$info = curl_getinfo($ch);
-						curl_close($ch);
-
-						if($info['http_code'] == 200){ 
-							$account->set('email_code', $newcode);
-							$account->set('next_email', (time() + $config['site']['email_lai_sec_interval']));
-							$account->save();
-							$main_content .= '<br />Link with informations needed to set new password has been sent to account e-mail address. You should receive this e-mail in 15 minutes. Please check your inbox/spam directory.';							
-						}else{
-							$account->set('next_email', (time() + 60));
-							$account->save();
-							$main_content .= '<br />'. $mail->ErrorInfo.' An error occorred while sending email! Try again or contact with admin.';
-						}
-						
-						
-						/*
 						$mail = new PHPMailer();
 						if ($config['site']['smtp_enabled'])
 						{
 							$mail->IsSMTP();
-							$mail->SMTPDebug  = 0; 
-                            $mail->SMTPSecure = "tls"; 
-							$mail->Mailer = "smtp";
 							$mail->Host = $config['site']['smtp_host'];
 							$mail->Port = (int)$config['site']['smtp_port'];
 							$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -161,14 +125,12 @@ if($config['site']['send_emails'])
 							$mail->Password = $config['site']['smtp_pass'];
 						}
 						else
-						$mail->IsMail();
+							$mail->IsMail();
 						$mail->IsHTML(true);
-						$mail->SMTPSecure = "tls"; 
 						$mail->From = $config['site']['mail_address'];
 						$mail->AddAddress($account->getCustomField('email'));
 						$mail->Subject = $config['server']['serverName']." - Link to >set new password to account<";
 						$mail->Body = $mailBody;
-						
 						if($mail->Send())
 						{
 							$account->set('email_code', $newcode);
@@ -180,10 +142,8 @@ if($config['site']['send_emails'])
 						{
 							$account->set('next_email', (time() + 60));
 							$account->save();
-							$main_content .= '<br />'. $mail->ErrorInfo.' An error occorred while sending email! Try again or contact with admin.';
+							$main_content .= '<br />An error occorred while sending email! Try again or contact with admin.';
 						}
-						
-						*/
 					}
 					else
 						$main_content .= 'Invalid e-mail to account of character <b>'.htmlspecialchars($nick).'</b>. Try again.';
@@ -385,44 +345,10 @@ if($config['site']['send_emails'])
 									<p><u>It\'s automatic e-mail from OTS Lost Account System. Do not reply!</u></p>
 									</body>
 									</html>';
-									
-									$to = ''.$account->getCustomField('email').'';
-									$subject = ''.$config['server']['serverName'].' - Set >new password to account<';
-									$ch = curl_init();
-									curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-									curl_setopt($ch, CURLOPT_USERPWD, 'api:key-bd707c304c5bdde366741ffc56dde227');
-									curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-									curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-									curl_setopt($ch, CURLOPT_URL, 
-												  'https://api.mailgun.net/v2/baiaknew.com/messages');
-									curl_setopt($ch, CURLOPT_POSTFIELDS, 
-													array('from' => 'Baiak New <noreply@baiaknew.com>',
-														  'to' => $to,
-														  'subject' => $subject,
-														  'html' => $mailBody,
-														  'text' => $mailBody));
-									$result = curl_exec($ch);
-									$info = curl_getinfo($ch);
-									curl_close($ch);
-
-									if($info['http_code'] == 200){ 
-										$account->set('email_code', $newcode);
-										$account->set('next_email', (time() + $config['site']['email_lai_sec_interval']));
-										$account->save();
-										$main_content .= '<br />Link with informations needed to set new password has been sent to account e-mail address. You should receive this e-mail in 15 minutes. Please check your inbox/spam directory.';							
-									}else{
-										$account->set('next_email', (time() + 60));
-										$account->save();
-										$main_content .= '<br />'. $mail->ErrorInfo.' An error occorred while sending email! Try again or contact with admin.';
-									}
-									/*
 									$mail = new PHPMailer();
 									if ($config['site']['smtp_enabled'])
 									{
 										$mail->IsSMTP();
-										$mail->SMTPDebug  = 0; 
-										$mail->SMTPSecure = "tls"; 
-										$mail->Mailer = "smtp";
 										$mail->Host = $config['site']['smtp_host'];
 										$mail->Port = (int)$config['site']['smtp_port'];
 										$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -432,12 +358,10 @@ if($config['site']['send_emails'])
 									else
 										$mail->IsMail();
 									$mail->IsHTML(true);
-									$mail->SMTPSecure = "tls"; 
 									$mail->From = $config['site']['mail_address'];
 									$mail->AddAddress($account->getCustomField('email'));
 									$mail->Subject = $config['server']['serverName']." - New password to your account";
 									$mail->Body = $mailBody;
-									
 									if($mail->Send())
 									{
 										$main_content .= '<br /><small>Sent e-mail with your account name and password to new e-mail. You should receive this e-mail in 15 minutes. You can login now with new password!';
@@ -445,7 +369,7 @@ if($config['site']['send_emails'])
 									else
 									{
 										$main_content .= '<br /><small>An error occorred while sending email! You will not receive e-mail with this informations.';
-									}*/
+									}
 								}
 								else
 								{
@@ -618,9 +542,6 @@ if($config['site']['send_emails'])
 						if ($config['site']['smtp_enabled'])
 						{
 							$mail->IsSMTP();
-							$mail->SMTPDebug  = 0; 
-							$mail->SMTPSecure = "tls"; 
-							$mail->Mailer = "smtp";
 							$mail->Host = $config['site']['smtp_host'];
 							$mail->Port = (int)$config['site']['smtp_port'];
 							$mail->SMTPAuth = $config['site']['smtp_auth'];
@@ -631,12 +552,10 @@ if($config['site']['send_emails'])
 						else
 							$mail->IsMail();
 						$mail->IsHTML(true);
-						$mail->SMTPSecure = "tls"; 
 						$mail->From = $config['site']['mail_address'];
 						$mail->AddAddress($account->getCustomField('email'));
 						$mail->Subject = $config['server']['serverName']." - New password to your account";
 						$mail->Body = $mailBody;
-						
 						if($mail->Send())
 						{
 							$main_content .= '<br /><small>New password work! Sent e-mail with your password and account name. You should receive this e-mail in 15 minutes. You can login now with new password!';

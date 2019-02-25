@@ -1,25 +1,48 @@
 <?PHP
 # Account Maker Config
-$config['site']['serverPath'] = "/home/bkmagnata/PROJECT/";
+$config['site']['serverPath'] = "/home/baiakinho/";
 $config['site']['useServerConfigCache'] = false;
-$config['site']['worlds'] = array(0 => 'BaiakNew');
-$towns_list[0] = array(1 => 'BaiakNew');
+$config['site']['worlds'] = array(0 => 'HardStyller');
+$towns_list[0] = array(1 => 'Blood City');
 
-$config['site']['outfit_images_url'] = 'images/outfit.php';
-$config['site']['item_images_url'] = '/images/items/';
+$config['site']['outfit_images_url'] = '/outfit.php';
+$config['site']['item_images_url'] = 'http://item-images.ots.me/960/';
 $config['site']['item_images_extension'] = '.gif';
 $config['site']['flag_images_url'] = 'http://flag-images.ots.me/';
 $config['site']['flag_images_extension'] = '.png';
 $config['site']['players_group_id_block'] = 3;
-$config['site']['limitDeath'] = 10;
+$config['site']['limitDeath'] = 5;
 $config['site']['levelVideo'] = 150;
+
+# PAGE: donate.php
+$config['site']['usePagseguro'] = true; //true show / false hide
+$config['site']['usePaypal'] = false;	//true show / false hide
+$config['site']['useDeposit'] = true;	//true show / false hide
+$config['site']['useZaypay'] = false;	//true show / false hide
+$config['site']['useContenidopago'] = false;	//true show / false hide
+$config['site']['useOnebip'] = false;	//true show / false hide
+
+# Pagseguro config By IVENSPONTES
+$config['pagSeguro']['email'] = "eliton_cnb@hotmail.com"; //Email Pagseguro
+$config['pagSeguro']['token'] = "B462B6CE61784785B9BE5929716ADDB9"; // TOKEN
+$config['pagSeguro']['urlRedirect'] = 'http://tibia.com/?subtopic=donate&action=final'; //turn off redirect and notifications in pagseguro.com.br
+$config['pagSeguro']['urlNotification'] = 'http://tibia.com/retpagseguro.php'; //your return location
+
+$config['pagSeguro']['productName'] = 'Premium Points';
+$config['pagSeguro']['productValue'] = 1.00; 	// 1.50 = R$ 1,50 etc...
+$config['pagSeguro']['doublePoints'] = false; 	## Double points - true is on / false is off
+
+$config['pagSeguro']['host'] = 'localhost';		## YOUR HOST
+$config['pagSeguro']['database'] = 'baiak860';	## DATABASE
+$config['pagSeguro']['databaseUser'] = 'root';	## USER
+$config['pagSeguro']['databasePass'] = 'notile';		## PASSWORD
 
 # Create Account Options
 $config['site']['one_email'] = false;
 $config['site']['create_account_verify_mail'] = false;
 $config['site']['verify_code'] = true;
 $config['site']['email_days_to_change'] = 3;
-$config['site']['newaccount_premdays'] = 999;
+$config['site']['newaccount_premdays'] = 0;
 $config['site']['send_register_email'] = false;
 
 # Create Character Options
@@ -30,21 +53,13 @@ $config['site']['max_players_per_account'] = 15;
 
 # Emails Config
 $config['site']['send_emails'] = true;
-$config['site']['mail_address'] = "flyffbaiak@gmail.com";
+$config['site']['mail_address'] = "xxx@xxxx.com.br";
 $config['site']['smtp_enabled'] = true;
-$config['site']['smtp_host'] = "smtp.gmail.com";
-$config['site']['smtp_port'] = "587";
+$config['site']['smtp_host'] = "smtp.xxxxx.com.br";
+$config['site']['smtp_port'] = 587;
 $config['site']['smtp_auth'] = true;
-$config['site']['smtp_user'] = "flyffbaiak@gmail.com";
-$config['site']['smtp_pass'] = "thor120193";
-
-# PAGE: accountmanagement.php
-$config['site']['send_mail_when_change_password'] = true;
-$config['site']['send_mail_when_generate_reckey'] = true;
-$config['site']['generate_new_reckey'] = true;
-$config['site']['generate_new_reckey_price'] = 500;
-
-
+$config['site']['smtp_user'] = "xxx@xxx.com.br";
+$config['site']['smtp_pass'] = "xxx";
 
 # PAGE: whoisonline.php
 $config['site']['private-servlist.com_server_id'] = 1;
@@ -57,7 +72,13 @@ Format: number, 0 [disable] or higher
 # PAGE: characters.php
 $config['site']['quests'] = array('Annihilator' => 5000,'Demon Helmet' => 2645,'Pits of Inferno' => 5550);
 $config['site']['show_skills_info'] = true;
-$config['site']['show_vip_storage'] = 0;
+$config['site']['show_vip_storage'] = 1;
+
+# PAGE: accountmanagement.php
+$config['site']['send_mail_when_change_password'] = true;
+$config['site']['send_mail_when_generate_reckey'] = true;
+$config['site']['generate_new_reckey'] = true;
+$config['site']['generate_new_reckey_price'] = 500;
 
 # PAGE: guilds.php
 $config['site']['guild_need_level'] = 8;
